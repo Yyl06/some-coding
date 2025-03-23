@@ -1,0 +1,37 @@
+# Ignore VSCode settings (optional)
+.vscode/
+
+# Ignore Visual Studio files
+*.sdf
+*.suo
+*.vcxproj*
+*.filters
+*.lastbuildstate
+
+# Ignore build files
+*.obj
+*.log
+*.tlog
+*.pdb
+*.ilk
+*.idb
+*.ipch
+*.cache
+*.sln.docstates
+
+# Ignore generated files
+*.exe
+*.out
+*.bin
+
+# Ignore Assembly-related files
+*.sln
+*.asm
+*.obj
+*.log
+*.tlog
+*.filters
+*.sdf
+*.suo
+*.vcxproj*
+*.lastbuildstate

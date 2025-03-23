@@ -1,0 +1,4 @@
+Basic Arithmetic Operations : + - * /
+Power/Roots ~ Higher
+Logarithm (log10) / Natural Logarithm (ln)
+Trigonometry (sin cos tan)

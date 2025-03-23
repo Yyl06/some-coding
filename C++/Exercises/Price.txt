@@ -1,0 +1,23 @@
+1.  Start
+2.  Print "Enter Fish Type(Kembung, Kerisi, Siakap, Tongkol, Tenggiri)"
+3.  Read fishType
+4.  Print "Enter Weight in KG: "
+5.  Read weight
+6.
+7.  if fishType == "Kembung"
+    7.1 pricePerKG = 9.00
+8.  else if fishType == "Kerisi"
+    8.1 pricePerKG = 10.00
+9.  else if fishType == "Siakap"
+    9.1 pricePerKG = 12.00
+10. else if fishType == "Tongkol"
+    10.1 pricePerKG = 8.00
+11. else if fishType == "Tenggiri"
+    11.1 pricePerKG = 15.00
+12. else
+    12.1 Print "FishType Invalid."
+13. End if
+
+14. totalPrice = pricePerKG * weight
+15. Print "Total Price, RM", totalPrice
+16. End
