@@ -1,7 +1,3 @@
-//Name : YONG YUAN LIN(A24DW0325)
-//Topic : Data Library
-//Assignment 1 : List Array
-
 #include <iostream>
 #include <string>
 using std::string;
@@ -14,7 +10,7 @@ void add(){
     if(count == 0){
         std::cout << "this book will be adding at beginning" << std::endl;
         std::cout << "please enter title of the book" << std::endl;
-        std::cin >> book [0];
+        std::cin >> book[0];
         std::cout << "success add book" << std::endl;
         count++;
     }else{

@@ -11,9 +11,6 @@ void SetName(std::string &Name){
     std::cout << "Your Name : " << Name << "\n";
     x++;
     }
-    
-  
-    
 }
 
 int main(){

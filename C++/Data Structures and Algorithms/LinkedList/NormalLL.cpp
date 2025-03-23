@@ -1,5 +1,5 @@
-#ifndef GAY_H
-#define GAY_H
+#ifndef LL_H
+#define LL_H
 #include <iostream>
 using namespace std;
 

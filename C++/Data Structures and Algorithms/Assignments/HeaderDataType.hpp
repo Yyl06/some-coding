@@ -1,10 +1,3 @@
-/* ----------------- Lab Skill 2----------------------------
-Section : 44
-Name : YONG YUAN LIN
-No Matric Card : A24DW0325
-Topic : Stack
-------------------------------------------------------------- */
-
 #include <string>
 using std::string;
 
