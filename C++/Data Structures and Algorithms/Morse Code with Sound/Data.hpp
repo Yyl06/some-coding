@@ -109,7 +109,6 @@ inline string Morse::searchMorse(AVLNode *Node, char letter){
     return (letter < Node->data) ? searchMorse(Node->Left, letter) : searchMorse(Node->Right, letter);
 }
 
-
 inline string Morse::textToMorse(string text){
     string Morse = "";
     for(char c : text){

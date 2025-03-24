@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
@@ -28,6 +29,7 @@ class Book{
         }
         void returnBook(){ Availability = false; }
         virtual ~Book() = default;
+        friend class Librarian;
 };
 
 class ReferenceBook : public Book{
@@ -40,6 +42,13 @@ class ReferenceBook : public Book{
         }
         bool bookAvailability() override{
             return false;
+        }
+};
+
+class Librarian{
+    public:
+        static void changeBookStatus(Book &b, bool status){
+            b.Availability = status;
         }
 };
 
