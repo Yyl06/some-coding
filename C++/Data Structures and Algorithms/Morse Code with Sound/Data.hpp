@@ -1,10 +1,10 @@
 #ifndef DATA_hpp
 #define DATA_hpp
 #include "Node.hpp"
-#include <iostream>
 #include <thread>
 #include <chrono>
 #include <windows.h>
+#include <sstream>
 using std::string, std::max;
 
 const int DotDuration = 150;
@@ -40,6 +40,8 @@ class Morse{
         void BuildTree();
         string textToMorse(string text);
         void playMorseSound(const string &Morse);
+        char searchCharacter(AVLNode *node, const string &morseSymbol);
+        string morseToText(const string &Morse);
 };
 
 inline AVLNode *Morse::rotateRight(AVLNode *y){
@@ -139,5 +141,33 @@ inline void Morse::playMorseSound(const string &Morse){
         }
     }
 }
+
+inline char Morse::searchCharacter(AVLNode *node, const string &morseSymbol) {
+    if (!node) return '\0';  // Return null character if not found
+
+    if (node->Morse == morseSymbol) {
+        return node->data;
+    }
+
+    if (morseSymbol < node->Morse) {
+        return searchCharacter(node->Left, morseSymbol);
+    } else {
+        return searchCharacter(node->Right, morseSymbol);
+    }
+}
+
+
+inline string Morse::morseToText(const string &Morse) {
+    std::stringstream ss(Morse);
+    string morseSymbol, text = "";
+
+    while (ss >> morseSymbol) {  // Read Morse symbols separated by spaces
+        char decodedChar = searchCharacter(Root, morseSymbol);
+        text += (decodedChar != '\0') ? decodedChar : '?'; // '?' for unknown symbols
+    }
+
+    return text;
+}
+
 
 #endif

@@ -1,6 +1,5 @@
 #ifndef MorseCodes_hpp
 #define MorseCodes_hpp
-#include <iostream>
 #include "Data.hpp"
 using std::string;
 
