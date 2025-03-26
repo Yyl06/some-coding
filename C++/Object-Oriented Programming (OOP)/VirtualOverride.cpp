@@ -2,7 +2,7 @@
 
 class Shape{
     public:
-    virtual void Shapes() = 0;
+    virtual void Shapes() = 0; //pure virtual; must be overrided
 };
 
 class Circle : public Shape{
