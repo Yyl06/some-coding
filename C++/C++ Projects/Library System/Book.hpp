@@ -1,18 +1,26 @@
 #pragma once
 #include <iostream>
-using std::string, std::cout;
+#include <ctime>
+#include "Users.hpp"
+using std::string;
+using std::cout;
 
 class Book{
     protected:
-        string Title, Author;
+        string Title;
+        string Author;
         bool Availability;
+        time_t dueDate;
 
     public:
-        Book(string t, string a) : Title(t), Author(a), Availability(false){};
+        Book(string t, string a) : Title(t), Author(a), Availability(false), dueDate(0){};
 
         virtual void DisplayInfo(){
             cout << "Title: " << Title << ", Author: " << Author;
-            cout << (Availability ? " (Borrowed)\n" : " (Available)\n");
+            if(Availability){
+                cout << " (Borrowed, Due: " << ctime(&dueDate) << ")\n";
+            }
+            cout << " (Available)\n";
         };
 
         string getTitle(){ return Title; }
@@ -22,10 +30,10 @@ class Book{
         void borrowBook(){
             if(bookAvailability()){
                 Availability = true;
+                dueDate = time(0) + (maxBorrowDays * 86400);
             }
         }
-        void returnBook(){ Availability = false; }
-        virtual ~Book() = default;
+        void returnBook(){ Availability = false; dueDate = 0; }
         friend class Librarian;
 };
 
@@ -37,7 +45,5 @@ class ReferenceBook : public Book{
             cout << "Book is only for Referencing." << "\n";
             cout << "Title: " << Title << "\nAuthor: " << Author << "\n(Reference Only)";
         }
-        bool bookAvailability() override{
-            return false;
-        }
+        bool bookAvailability() override{ return false; }
 };
