@@ -11,16 +11,16 @@ const int maxBorrowDays = 14;
 
 class User{
     string userName;
-    string pass;
+    string password;
     string role;
     std::vector<string> History;
     std::map<string, time_t> borrowedBooks;
 
     public:
-        User(string u, string p, string r) : userName(u), pass(p), role(r) {}
+        User(string u, string p, string r) : userName(u), password(p), role(r) {}
         string getUsername(){ return userName; }
         string getRoles(){ return role; }
-        bool authenticate(string u, string p){ return (userName == u && pass == p); }
+        bool authenticate(string u, string p){ return (userName == u && password == p); }
         bool canBorrow(){ return borrowedBooks.size() < borrowLimit; }
         void borrowBook(string title);
         void returnBook(string title);
