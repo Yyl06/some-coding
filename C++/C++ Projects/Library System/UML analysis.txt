@@ -1,0 +1,49 @@
+1. Classes and Relationships
+Book (Base Class)
+
+Attributes: Title, Author, Availability, dueDate
+
+Methods: DisplayInfo(), borrowBook(), returnBook()
+
+Friend Class: Librarian
+
+Virtual method: bookAvailability() (for extensibility)
+
+
+ReferenceBook (Derived from Book)
+
+Overrides DisplayInfo()
+
+Overrides bookAvailability() to always return false (cannot be borrowed)
+
+
+User
+
+Attributes: userName, pass, role, History, borrowedBooks (map<title, dueDate>)
+
+Methods: authenticate(), canBorrow(), borrowBook(), returnBook(), checkOverDueBook(), displayHistory()
+
+Limits borrowing to 3 books
+
+Tracks overdue books and calculates fines
+
+
+Library
+
+Attributes: Shelf (vector<Book*>), Users (vector<User>)
+
+Methods: Add(), RemoveBook(), SearchBook(), searchByKeyWord(), Display()
+
+Handles file I/O for books and users
+
+
+2. Relationships
+Library contains multiple Books (Aggregation: Library → Book*)
+
+Library manages multiple Users (Aggregation: Library → User)
+
+User borrows Books (Association: User → Book)
+
+Librarian (potential future class) may manage Books and Users (Aggregation: Librarian → Library)
+
+

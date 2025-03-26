@@ -1,12 +1,9 @@
 Problem Statements
 -Single user doesn't had borrowing book limits
-Objectives(solutions) - User can only borrow up to 3 books only by fixing the number.
+Objectives(solutions) - to add user limitations function borrowing books in the library system management to 3 books at most.
 
 -No due date tracking user borrowed books, Users can't check due dates of borrowed books 
-Objectives(solutions) - make a function that tracks due dates (view due date) that has borrowed and overdue with automatic fine calculations.
-
--Unable to display previous records of user of borrowing, returning
-Objectives - Display Old records by adding a log, via book codes
+Objectives(solutions) - To make a function that tracks due dates (view due date) that has borrowed and overdue with automatic fine calculations in the library system management
 
 -Database became huge, contains too much books, users can't find it one by one
-Objectives - Alphabetic sort function implementation? or Search via keyword function Implementation?
+Objectives - To make a Search via keyword function Implementation in the library system management
