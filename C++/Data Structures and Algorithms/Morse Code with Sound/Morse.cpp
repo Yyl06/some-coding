@@ -17,14 +17,6 @@ int main(){
 
     std::cout << "Playing Morse Code...." << std::endl;
     MorseCode.playMorseSound(Morse);
-
-
-    string inputMorse;
-    std::cout << "Enter Morse Code to Decode: ";
-    std::getline(std::cin, inputMorse);
-
-    string decodedText = MorseCode.morseToText(inputMorse);
-    std::cout << "Decoded Text: " << decodedText << std::endl;
-
+    
     return 0;
 }
