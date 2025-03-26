@@ -122,19 +122,20 @@ inline string Morse::textToMorse(string text){
 }
 
 inline void Morse::playMorseSound(const string &Morse){
-    for(char c : Morse){
+    for(size_t i = 0; i < Morse.length(); i++){
+        char c = Morse[i];
         if(c == '.'){
             Beep(800, DotDuration);
             std::this_thread::sleep_for(std::chrono::milliseconds(ElementGap));
-        }else if(c == '-'){
+        } else if(c == '-'){
             Beep(800, DashDuration);
             std::this_thread::sleep_for(std::chrono::milliseconds(ElementGap));
-        }else if(c == ' ' && (c == 0 || Morse[c - 1] != ' ')){
-            std::this_thread::sleep_for(std::chrono::milliseconds(LetterGap));
-        }else if(c == '/' && (c == 0 || Morse[c - 1] != '/')){
-            std::this_thread::sleep_for(std::chrono::milliseconds(WordGap));
-        }else{
-            std::this_thread::sleep_for(std::chrono::milliseconds(ElementGap));
+        } else if(c == ' '){
+            if(i + 1 < Morse.length() && Morse[i + 1] == ' '){
+                std::this_thread::sleep_for(std::chrono::milliseconds(WordGap - ElementGap));
+            } else {
+                std::this_thread::sleep_for(std::chrono::milliseconds(LetterGap - ElementGap));
+            }
         }
     }
 }
