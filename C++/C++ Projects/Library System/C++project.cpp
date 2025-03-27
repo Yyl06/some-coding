@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include "Book.hpp"
+#include <fstream>
+#include <sstream>
 #include "Librarian.hpp"
 #include "Library.hpp"
 #include "Users.hpp"
