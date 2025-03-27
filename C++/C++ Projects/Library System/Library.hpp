@@ -136,7 +136,7 @@ inline void Library::checkOverdueBooks(User &user){
     user.checkOverDueBook();
 }
 
-User* Library::authenticateUser(const string& username, const string& password) {
+inline User* Library::authenticateUser(const string& username, const string& password) {
     for (auto& user : Users) { // Assuming `Users` is a vector<User>
         if (user.authenticate(username, password)) {
             return &user; // Return pointer to authenticated user
