@@ -3,7 +3,6 @@
 #include "Book.hpp"
 #include <fstream>
 #include <sstream>
-#include "Librarian.hpp"
 #include "Library.hpp"
 #include "Users.hpp"
 using std::string, std::cout, std::cin;
@@ -72,16 +71,21 @@ void Library::loadUsersFromFile() {
 
 using namespace std;
 
+#include <iostream>
+#include "Library.hpp"
+
+using namespace std;
+
 int main() {
     Library library;
+    User* loggedInUser = nullptr; // Stores the logged-in user
     int choice;
-    string title, author, username;
+    string title, author, username, password, role;
 
     while (true) {
         cout << "\nLibrary System:\n";
-        cout << "1. Add Book\n2. Add Reference Book\n"
-        << "3. Remove Book\n4. Search Book via Keywords\n5. Borrow Book\n6. Return Book\n7. Display Books\n8. Exit\nChoice: ";
-        
+        cout << "1. Register User\n2. Login\n3. Add Book\n4. Add Reference Book\n5. Remove Book\n6. Search Book\n7. Borrow Book\n8. Return Book\n9. Display Books\n10. Logout\n11. Exit\nChoice: ";
+
         if (!(cin >> choice)) {
             cin.clear();
             cin.ignore(1000, '\n');
@@ -91,46 +95,86 @@ int main() {
         cin.ignore(); // Clear newline from buffer
 
         switch (choice) {
-            case 1:
-                cout << "Enter title: "; getline(cin, title);
-                cout << "Enter author: "; getline(cin, author);
-                library.Add(title, author, false);
+            case 1: { // Register User
+                cout << "Enter username: ";
+                getline(cin, username);
+
+                cout << "Enter password: ";
+                getline(cin, password);
+
+                cout << "Enter role (User/Librarian): ";
+                getline(cin, role);
+
+                if (role != "User" && role != "Librarian") {
+                    cout << "Invalid role! Must be 'User' or 'Librarian'.\n";
+                    break;
+                }
+
+                library.registerUser(username, password, role);
+                cout << "User registered successfully!\n";
                 break;
-            case 2:
-                cout << "Enter title: "; getline(cin, title);
-                cout << "Enter author: "; getline(cin, author);
-                library.Add(title, author, true); // Reference book
+            }
+            case 2: { // Login
+                cout << "Enter username: ";
+                getline(cin, username);
+                cout << "Enter password: ";
+                getline(cin, password);
+
+                loggedInUser = library.authenticateUser(username, password);
+                if (loggedInUser) {
+                    cout << "Login successful! Welcome, " << loggedInUser->getUsername() << ".\n";
+                } else {
+                    cout << "Invalid username or password.\n";
+                }
                 break;
-            case 3:
-                cout << "Enter title: "; getline(cin, title);
-                library.RemoveBook(title);
+            }
+            case 3: // Add Book
+            case 4: // Add Reference Book
+            case 5: // Remove Book
+                if (!loggedInUser || loggedInUser->getRole() != "Librarian") {
+                    cout << "Access denied! Only librarians can manage books.\n";
+                    break;
+                }
+                cout << "Enter title: ";
+                getline(cin, title);
+                if (choice == 3 || choice == 4) {
+                    cout << "Enter author: ";
+                    getline(cin, author);
+                    library.Add(title, author, choice == 4); // True for ReferenceBook
+                } else {
+                    library.RemoveBook(title);
+                }
                 break;
-            case 4:
-                cout << "Enter Keyword to search: "; getline(cin, title);
+            case 6: // Search Book
+                cout << "Enter keyword to search: ";
+                getline(cin, title);
                 library.searchByKeyWord(title);
                 break;
-            case 5:
-                cout << "Enter username: "; getline(cin, username);
-                cout << "Enter book title: "; getline(cin, title);
-                if (User* user = library.getUser(username)) {
-                    library.borrowBook(*user, title);
-                } else {
-                    cout << "User not found!\n";
+            case 7: // Borrow Book
+            case 8: // Return Book
+                if (!loggedInUser) {
+                    cout << "Please log in first.\n";
+                    break;
                 }
+                cout << "Enter book title: ";
+                getline(cin, title);
+                if (choice == 7)
+                    library.borrowBook(*loggedInUser, title);
+                else
+                    library.returnBook(*loggedInUser, title);
                 break;
-            case 6:
-                cout << "Enter username: "; getline(cin, username);
-                cout << "Enter book title: "; getline(cin, title);
-                if (User* user = library.getUser(username)) {
-                    library.returnBook(*user, title);
-                } else {
-                    cout << "User not found!\n";
-                }
-                break;
-            case 7:
+            case 9: // Display Books
                 library.Display();
                 break;
-            case 8:
+            case 10: // Logout
+                if (loggedInUser) {
+                    cout << "Logged out successfully.\n";
+                    loggedInUser = nullptr;
+                } else {
+                    cout << "You're not logged in.\n";
+                }
+                break;
+            case 11: // Exit
                 cout << "Exiting system...\n";
                 return 0;
             default:

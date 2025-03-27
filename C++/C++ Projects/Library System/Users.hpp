@@ -27,6 +27,7 @@ class User{
         void returnBook(string title);
         void checkOverDueBook();
         bool hasBook(const string &title);
+        string getRole() const { return role; }
         friend class Library;
 };
 

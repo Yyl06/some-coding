@@ -36,6 +36,7 @@ class Library{
         bool borrowBook(User &user, string title);
         void returnBook(User &user, string title);
         void checkOverdueBooks(User &user);
+        User* authenticateUser(const string& username, const string& password);
 };
 
 inline Library::Library(){
@@ -49,8 +50,6 @@ inline Library::~Library(){
 }
 
 //No return type, if no function type if specified, compiler will be so confused ass
-
-
 inline void Library::Add(string title, string author, bool isReference){
     if(isReference){
         Shelf.push_back(new ReferenceBook(title, author));
@@ -137,3 +136,11 @@ inline void Library::checkOverdueBooks(User &user){
     user.checkOverDueBook();
 }
 
+User* Library::authenticateUser(const string& username, const string& password) {
+    for (auto& user : Users) { // Assuming `Users` is a vector<User>
+        if (user.authenticate(username, password)) {
+            return &user; // Return pointer to authenticated user
+        }
+    }
+    return nullptr; // Return nullptr if authentication fails
+}
