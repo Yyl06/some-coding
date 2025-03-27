@@ -45,5 +45,3 @@ Library manages multiple Users (Aggregation: Library → User)
 User borrows Books (Association: User → Book)
 
 Librarian (potential future class) may manage Books and Users (Aggregation: Librarian → Library)
-
-
