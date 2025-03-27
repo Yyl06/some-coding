@@ -3,7 +3,8 @@
 #include <vector>
 #include <iostream>
 #include <ctime>
-using std::string;
+#include "Book.hpp"
+using std::string, std::cout;
 
 const int borrowLimit = 3;
 const double lateFeePerDay = 2.50;
@@ -36,19 +37,28 @@ inline void User::borrowBook(string title) {
         return;
     }
     time_t now = time(0); // Current time as borrowing timestamp
-    borrowedBooks[title] = now;
-    History.push_back(title);
+    time_t duedate = now + (maxBorrowDays * 86400);
+    borrowedBooks[title] = duedate;
     std::cout << "Book '" << title << "' borrowed successfully!\n";
+    std::cout << "Due date: " << ctime(&duedate);
 }
 
 inline void User::returnBook(string title) {
     auto it = borrowedBooks.find(title);
-    if (it != borrowedBooks.end()) {
-        borrowedBooks.erase(it); // Remove book from borrowed list
-        std::cout << "Book returned successfully: " << title << "\n";
-    } else {
-        std::cout << "You haven't borrowed this book.\n";
+    if (it == borrowedBooks.end()) {
+        std::cout << "You don't have this book.\n";
+        return;
     }
+
+    time_t now = time(0);
+    if (now > it->second) { // Fix: Only charge if past due
+        int daysLate = (now - it->second) / 86400;
+        double fine = daysLate * lateFeePerDay;
+        std::cout << "Book returned late! Fine: $" << fine << "\n";
+    }
+
+    borrowedBooks.erase(it);
+    std::cout << "Book returned successfully.\n";
 }
 
 inline void User::checkOverDueBook() {
@@ -57,18 +67,19 @@ inline void User::checkOverDueBook() {
     
     std::cout << "Checking overdue books...\n";
     for (const auto& book : borrowedBooks) {
-        double daysPassed = difftime(now, book.second) / (60 * 60 * 24); // Convert seconds to days
-        if (daysPassed > maxBorrowDays) {
+        time_t dueDate = book.second;
+        if (now > dueDate){
             overdueFound = true;
-            double fine = (daysPassed - maxBorrowDays) * lateFeePerDay;
-            std::cout << "Overdue: " << book.first << " | Days overdue: " << (daysPassed - maxBorrowDays) << " | Fine: $" << fine << "\n";
+            int daysOverdue = (now - dueDate) / 86400; // Convert seconds to days
+            double fine = daysOverdue * lateFeePerDay;
+            std::cout << "Overdue: " << book.first << " | Days overdue: " << daysOverdue << " | Fine: $" << fine << "\n";
         }
     }
-    
     if (!overdueFound) {
         std::cout << "No overdue books!\n";
     }
 }
+
 
 inline bool User::hasBook(const string &title) {
     return borrowedBooks.find(title) != borrowedBooks.end();
