@@ -36,27 +36,35 @@ void Library::loadFromFile() {
     File.close();
 }
 
-void Library::saveUsersToFile(){
+void Library::saveUsersToFile() {
     std::ofstream File("Users.txt", std::ios::out);
+    if (!File) {
+        std::cerr << "Error: Could not open Users.txt for writing!\n";
+        return;
+    }
+
     for (const auto &user : Users) {
-        File << user.getUsername() << ", " << user.getRoles();
-        for (const auto &book : user.borrowedBooks){
-            File << "," << book.first << " " << book.second; // title, dueDate
+        File << user.getUsername() << "," << user.getPassword() << "," << user.getRole();
+        for (const auto &book : user.borrowedBooks) {
+            File << "," << book.first << " " << book.second;
         }
         File << "\n";
     }
     File.close();
 }
 
+
 void Library::loadUsersFromFile() {
     std::ifstream File("Users.txt", std::ios::out);
-    string username, role, line;
+    string username, role, line, pass;
     while (std::getline(File, line)) {
         std::istringstream iss(line);
         std::getline(iss, username, ',');
+        std::getline(iss, pass, ',');
         std::getline(iss, role, ',');
 
-        User newUser(username, "password", role);
+        User newUser(username, pass, role);
+
         string bookTitle;
         time_t dueDate;
         while (iss >> bookTitle >> dueDate) { 

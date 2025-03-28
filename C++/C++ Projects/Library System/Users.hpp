@@ -20,6 +20,7 @@ class User{
     public:
         User(string u, string p, string r) : userName(u), password(p), role(r) {}
         string getUsername() const { return userName; }
+        string getPassword() const { return password; }
         string getRoles() const { return role; }
         bool authenticate(string u, string p){ return (userName == u && password == p); }
         bool canBorrow(){ return borrowedBooks.size() < borrowLimit; }
