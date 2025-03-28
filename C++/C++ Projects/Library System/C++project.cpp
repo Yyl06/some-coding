@@ -12,6 +12,7 @@ void Library::saveToFile() {
     for (const auto &Book : Shelf) {
         File << Book->getTitle() << "," << Book->getAuthor() << "," << Book->statusBook() << ","
                 << (dynamic_cast<ReferenceBook*>(Book) ? "Reference" : "Normal") << "\n";
+                //use dynamic_cast when especially in cases where type safety is critical (e.g., when dealing with polymorphic classes)
     }
     File.close();
 }
@@ -38,7 +39,7 @@ void Library::loadFromFile() {
 
 void Library::saveUsersToFile() {
     std::ofstream File("Users.txt", std::ios::out);
-    if (!File) {
+    if (!File){
         std::cerr << "Error: Could not open Users.txt for writing!\n";
         return;
     }
@@ -140,9 +141,9 @@ int main() {
                 if (choice == 3 || choice == 4) {
                     cout << "Enter author: ";
                     getline(cin, author);
-                    library.Add(title, author, choice == 4); // True for ReferenceBook
+                    library.addBook(title, author, choice == 4); // True for ReferenceBook
                 } else {
-                    library.RemoveBook(title);
+                    library.removeBook(title);
                 }
                 break;
             case 6: // Search Book

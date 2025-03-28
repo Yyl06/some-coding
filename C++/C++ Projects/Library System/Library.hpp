@@ -16,8 +16,15 @@ class Library{
         void loadUsersFromFile();
 
     public:
-        Library();
-        ~Library();
+        Library(){
+            loadFromFile();
+            loadUsersFromFile();
+        }
+        ~Library(){
+            saveToFile();
+            saveUsersToFile();
+            for (auto B : Shelf) { delete B; }
+        }
         void registerUser(string u, string p, string r) {
             Users.push_back(User(u, p, r));
             std::cout << "User registered.\n";
@@ -28,39 +35,29 @@ class Library{
             }
             return nullptr;
         }
-        void Add(string title, string author, bool isReference);
-        void RemoveBook(string title);
+        void addBook(string title, string author, bool isReference);
+        void removeBook(string title);
         void searchByKeyWord(string keyword);
         void Display();
         User *loginUser(string username, string password);
         bool borrowBook(User &user, string title);
         void returnBook(User &user, string title);
         void checkOverdueBooks(User &user);
-        User* authenticateUser(const string& username, const string& password);
+        User* authenticateUser(const string &username, const string &password);
 };
 
-inline Library::Library(){
-    loadFromFile();
-    loadUsersFromFile();
-}
-inline Library::~Library(){
-    saveToFile();
-    saveUsersToFile();
-    for (auto B : Shelf) { delete B; }
-}
-
 //No return type, if no function type if specified, compiler will be so confused ass
-inline void Library::Add(string title, string author, bool isReference){
+inline void Library::addBook(string title, string author, bool isReference){
     if(isReference){
         Shelf.push_back(new ReferenceBook(title, author));
     }else{
-            Shelf.push_back(new Book(title, author));
+        Shelf.push_back(new Book(title, author));
     }
     saveToFile();
-    cout << "Book Added Successfully! " << "\n";
+    cout << "Book added Successfully! " << "\n";
 }
 
-inline void Library::RemoveBook(string title){
+inline void Library::removeBook(string title){
     for (auto it = Shelf.begin(); it != Shelf.end(); ++it) {
         if ((*it)->getTitle() == title) {
             delete *it;
@@ -136,7 +133,7 @@ inline void Library::checkOverdueBooks(User &user){
     user.checkOverDueBook();
 }
 
-inline User* Library::authenticateUser(const string& username, const string& password) {
+inline User* Library::authenticateUser(const string &username, const string &password) {
     for (auto& user : Users) { // Assuming `Users` is a vector<User>
         if (user.authenticate(username, password)) {
             return &user; // Return pointer to authenticated user

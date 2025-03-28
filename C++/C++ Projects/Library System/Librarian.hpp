@@ -10,13 +10,13 @@ class Librarian {
         }
     
         void addBook(Library &lib, Book* b) {
-            lib.Add(b->getTitle(), b->getAuthor(), dynamic_cast<ReferenceBook*>(b) != nullptr);
+            //use dynamic_cast when especially in cases where type safety is critical (e.g., when dealing with polymorphic classes)
+            lib.addBook(b->getTitle(), b->getAuthor(), dynamic_cast<ReferenceBook*>(b) != nullptr);
             std::cout << "Book added to the library.\n";
         }
     
         void removeBook(Library &lib, string title) {
-            lib.RemoveBook(title); // Just call Library’s function
+            lib.removeBook(title); // Just call Library’s function
         }
         
     };
-    

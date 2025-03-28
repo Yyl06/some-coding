@@ -1,0 +1,79 @@
+@startuml System.puml
+
+class User {
+    - string userName
+    - string password
+    - string role
+    - vector<string> History
+    - map<string, time_t> borrowedBooks
+    + User(string u, string p, string r)
+    + string getUsername() const
+    + string getPassword() const
+    + string getRoles() const
+    + bool authenticate(string u, string p)
+    + bool canBorrow()
+    + void borrowBook(string title)
+    + void returnBook(string title)
+    + void checkOverDueBook()
+    + bool hasBook(const string &title)
+    + string getRole() const
+    + friend class Library
+}
+
+class Library {
+    - vector<Book*> Shelf
+    - vector<User> Users
+    - void saveToFile()
+    - void loadFromFile()
+    - void saveUsersToFile()
+    - void loadUsersFromFile()
+    + Library()
+    + ~Library()
+    + void registerUser(string u, string p, string r)
+    + User* getUser(string username)
+    + void addBook(string title, string author, bool isReference)
+    + void removeBook(string title)
+    + void searchByKeyWord(string keyword)
+    + void Display()
+    + User* loginUser(string username, string password)
+    + bool borrowBook(User &user, string title)
+    + void returnBook(User &user, string title)
+    + void checkOverdueBooks(User &user)
+    + User* authenticateUser(const string &username, const string &password)
+}
+
+class Librarian {
+    + void changeBookStatus(Book &b, bool status)
+    + void addBook(Library &lib, Book* b)
+    + void removeBook(Library &lib, string title)
+}
+
+class Book {
+    # string Title
+    # string Author
+    # bool Availability
+    # time_t dueDate
+    + Book(string t, string a)
+    + virtual void DisplayInfo()
+    + string getTitle()
+    + string getAuthor()
+    + bool statusBook()
+    + virtual bool bookAvailability()
+    + void borrowBook()
+    + void returnBook()
+    + friend class Librarian
+}
+
+class ReferenceBook {
+    + ReferenceBook(string t, string a)
+    + void DisplayInfo() override
+    + bool bookAvailability() override
+}
+
+User "1" -- "*" Library : manages
+Library "1" -- "*" Book : contains
+User "1" -- "*" Book : borrows
+Librarian "1" -- "1" Library : oversees
+ReferenceBook --|> Book
+
+@enduml
