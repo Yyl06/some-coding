@@ -5,24 +5,25 @@
 #include <sstream>
 #include "Library.hpp"
 #include "Users.hpp"
-using std::string, std::cout, std::cin;
+using std::string, std::cout, std::cin, std::getline;
 
 void Library::saveToFile() {
-    std::ofstream OutFile("Books.txt");
+    std::ofstream File("Books.txt", std::ios::app);
     for (const auto &Book : Shelf) {
-        OutFile << Book->getTitle() << "," << Book->getAuthor() << "," << Book->statusBook() << ","
+        File << Book->getTitle() << "," << Book->getAuthor() << "," << Book->statusBook() << ","
                 << (dynamic_cast<ReferenceBook*>(Book) ? "Reference" : "Normal") << "\n";
     }
-    OutFile.close();
+    File.close();
 }
 
 void Library::loadFromFile() {
-    std::ifstream InFile("Books.txt");
+    std::ifstream File("Books.txt", std::ios::in);
     string title, author, status, type;
-    while (std::getline(InFile, title, ',') &&
-        std::getline(InFile, author, ',') &&
-        std::getline(InFile, status, ',') &&
-        std::getline(InFile, type)) {
+    Shelf.clear();
+    while (std::getline(File, title, ',') &&
+        std::getline(File, author, ',') &&
+        std::getline(File, status, ',') &&
+        std::getline(File, type)) {
         if (type == "Reference") {
             Shelf.push_back(new ReferenceBook(title, author));
         } else {
@@ -32,25 +33,25 @@ void Library::loadFromFile() {
             Shelf.back()->borrowBook();
         }
     }
-    InFile.close();
+    File.close();
 }
 
 void Library::saveUsersToFile(){
-    std::ofstream OutFile("Users.txt");
+    std::ofstream File("Users.txt", std::ios::out);
     for (const auto &user : Users) {
-        OutFile << user.getUsername() << ", " << user.getRoles();
-        for (const auto &book : user.borrowedBooks) {
-            OutFile << ", " << book.first << " " << book.second; // title, dueDate
+        File << user.getUsername() << ", " << user.getRoles();
+        for (const auto &book : user.borrowedBooks){
+            File << "," << book.first << " " << book.second; // title, dueDate
         }
-        OutFile << "\n";
+        File << "\n";
     }
-    OutFile.close();
+    File.close();
 }
 
 void Library::loadUsersFromFile() {
-    std::ifstream InFile("Users.txt");
+    std::ifstream File("Users.txt", std::ios::out);
     string username, role, line;
-    while (std::getline(InFile, line)) {
+    while (std::getline(File, line)) {
         std::istringstream iss(line);
         std::getline(iss, username, ',');
         std::getline(iss, role, ',');
@@ -63,18 +64,9 @@ void Library::loadUsersFromFile() {
         }
         Users.push_back(newUser);
     }
-    InFile.close();
+    File.close();
 }
 
-#include <iostream>
-#include "Library.hpp"
-
-using namespace std;
-
-#include <iostream>
-#include "Library.hpp"
-
-using namespace std;
 
 int main() {
     Library library;
@@ -97,10 +89,10 @@ int main() {
         switch (choice) {
             case 1: { // Register User
                 cout << "Enter username: ";
-                getline(cin, username);
+                std::getline(cin, username);
 
                 cout << "Enter password: ";
-                getline(cin, password);
+                std::getline(cin, password);
 
                 cout << "Enter role (User/Librarian): ";
                 getline(cin, role);
@@ -157,7 +149,7 @@ int main() {
                     break;
                 }
                 cout << "Enter book title: ";
-                getline(cin, title);
+                std::getline(cin, title);
                 if (choice == 7)
                     library.borrowBook(*loggedInUser, title);
                 else
