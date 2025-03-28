@@ -1,6 +1,4 @@
 #include <iostream>
-#include <ctime>
-#include <cstdlib>
 using std::string, std::cout, std::cin;
 
 class Inventory{
@@ -78,9 +76,7 @@ class Foods{
     string Name;
 
     public:
-        Foods(int id, string name) : id(rand()), Name(name){
-            srand(time(0)); // Seed the random number generator
-            id = rand() % 10000;
+        Foods(int id, string name) : id(id), Name(name){
             std::cout << "Order ID: " << id << "\n";
             std::cout << "Ordered: " << name << "\n";
         }
@@ -127,8 +123,6 @@ class Guest{
     : Name(n), id(id), PhoneNo(num), address(a), RoomNo(roomnum), Helper(helper), chef(c), housekeeper(h) {}
 
     void checkIn(){
-        srand(time(0));
-        this->RoomNo = rand() % 1000;
         if(Helper->CheckRoomAvailability()){
             Helper->BookRoom(this->RoomNo, "Hotel Suite");
         }
