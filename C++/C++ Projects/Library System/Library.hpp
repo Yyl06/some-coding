@@ -71,16 +71,16 @@ inline void Library::removeBook(string title){
 }
 
 inline bool Library::borrowBook(User &user, string title) {
-    if (!user.canBorrow()) {
+    if (!user.canBorrow()){
         std::cout << "You have reached the borrowing limit (3 books).\n";
         return false;
     }
-    if (user.hasBook(title)) {
+    if (user.hasBook(title)){
         std::cout << "You already borrowed this book.\n";
         return false;
     }
-    for (auto book : Shelf) {
-        if (book->getTitle() == title) {
+    for (auto book : Shelf){
+        if (book->getTitle() == title){
             if (!book->bookAvailability()) { // Check reference book
                 std::cout << "This is a reference book and cannot be borrowed.\n";
                 return false;
@@ -108,7 +108,7 @@ inline void Library::returnBook(User &user, string title){
     std::cerr << "Book return failed." << '\n';
 }
 
-inline void Library::searchByKeyWord(string keyword) {
+inline void Library::searchByKeyWord(string keyword){
     std::cout << "Searching the Books for keyword.." << keyword << "\n";
     bool found = false;
     for (auto book : Shelf) {
