@@ -21,8 +21,7 @@ class Book{
                 cout << " (Borrowed, Due: " << ctime(&dueDate) << ")\n";
             }
             cout << " (Available)\n";
-        };
-
+        }
         string getTitle(){ return Title; }
         string getAuthor(){ return Author; }
         bool statusBook(){ return Availability; }
