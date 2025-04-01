@@ -8,13 +8,12 @@
 using std::string, std::cout, std::cin, std::getline;
 
 void Library::saveToFile(){
-	std::ofstream File("Books.txt", std::ios::app);
+	std::ofstream File("Books.txt", std::ios::out);
 	for(const auto &Book : Shelf){
 		File << Book->getTitle()
 		<< "," << Book->getAuthor() << "," << Book->statusBook() << ","
 		<< (dynamic_cast<ReferenceBook *>(Book) ? "Reference" : "Normal") << "\n";
-		// use dynamic_cast when especially in cases where type safety is critical
-		// (e.g., when dealing with polymorphic classes)
+		// use dynamic_cast when especially in cases where type safety is critical (e.g., when dealing with polymorphic classes)
 	}
 	File.close();
 }
@@ -23,8 +22,8 @@ void Library::loadFromFile(){
 	std::ifstream File("Books.txt", std::ios::in);
 	string title, author, status, type;
 	Shelf.clear();
-	while(std::getline(File, status, ',') && std::getline(File, title, ',') &&
-		std::getline(File, author, ',') && std::getline(File, type)){
+	while(std::getline(File, title, ',') && std::getline(File, author, ',') &&
+		std::getline(File, status, ',') && std::getline(File, type)){
 		if(type == "Reference"){
 			Shelf.push_back(new ReferenceBook(title, author));
 		}else{
@@ -286,7 +285,7 @@ int main(){
 				}
 				cout << "Enter title: ";
 				getline(cin, title);
-				if(choice == 3 || choice == 4){
+				if(choice == 1 || choice == 2){
 					cout << "Enter author: ";
 					getline(cin, author);
 					library.addBook(title, author, choice == 4); // True for ReferenceBook
