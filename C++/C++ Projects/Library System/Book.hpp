@@ -40,9 +40,7 @@ class ReferenceBook : public Book{
     public:
         ReferenceBook(string t, string a) : Book(t,a) {};
         void DisplayInfo() override{
-            cout << "Book unavailable." << "\n";
-            cout << "Book is only for Referencing." << "\n";
-            cout << "Title: " << Title << "\nAuthor: " << Author << "\n(Reference Only)";
+            cout << "\nTitle: " << Title << "\nAuthor: " << Author << "(Reference Only)";
         }
         bool bookAvailability() override{ return false; }
 };

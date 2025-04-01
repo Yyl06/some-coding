@@ -160,7 +160,7 @@ void User::borrowBook(string title){
 	time_t now = time(0); // Current time as borrowing timestamp
 	time_t duedate = now + (maxBorrowDays * 86400);
 	borrowedBooks[title] = duedate;
-	std::cout << "Book '" << title << "' borrowed successfully!\n";
+	std::cout << "Book '" << title << " borrowed successfully!\n";
 	std::cout << "Due date: " << ctime(&duedate);
 }
 
@@ -263,7 +263,7 @@ int main(){
 		}
 
 		while(loggedInUser){
-			cout << "\nLibrary System:";
+			cout << "\n\nLibrary System:";
 			cout << "\n1. Add Book\n2. Add Reference Book\n3. Remove Book\n4. Search Book\n5. Borrow Book\n6. Return Book\n7. Display Books\n"
 					"8. Logout\n9. Exit\nChoice: ";
 
@@ -288,7 +288,7 @@ int main(){
 				if(choice == 1 || choice == 2){
 					cout << "Enter author: ";
 					getline(cin, author);
-					library.addBook(title, author, choice == 4); // True for ReferenceBook
+					library.addBook(title, author, choice == 2); // True for ReferenceBook
 				}else{
 					library.removeBook(title);
 				}
@@ -306,7 +306,7 @@ int main(){
 				}
 				cout << "Enter book title: ";
 				std::getline(cin, title);
-				if(choice == 7){
+				if(choice == 5){
 					library.borrowBook(*loggedInUser, title);
 				}else{
 					library.returnBook(*loggedInUser, title);

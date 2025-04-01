@@ -2,6 +2,7 @@
 #include "Book.hpp"
 #include "Library.hpp"
 #include "Users.hpp"
+//Yong Hern
 
 class Librarian {
     public:
@@ -18,5 +19,4 @@ class Librarian {
         void removeBook(Library &lib, string title) {
             lib.removeBook(title); // Just call Library’s function
         }
-        
     };
