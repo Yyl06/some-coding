@@ -1,10 +1,10 @@
 #pragma once
 #include <map>
-#include <vector>
 #include <iostream>
 #include <ctime>
 #include "Book.hpp"
 using std::string, std::cout;
+//Xuan Hui
 
 const int borrowLimit = 3;
 const double lateFeePerDay = 2.50;
@@ -14,7 +14,6 @@ class User{
     string userName;
     string password;
     string role;
-    std::vector<string> History;
     std::map<string, time_t> borrowedBooks;
 
     public:

@@ -4,7 +4,7 @@
 #include "Users.hpp"
 using std::string;
 using std::cout;
-
+//Syahmi + Yuan Lin
 class Book{
     protected:
         string Title;
@@ -14,7 +14,6 @@ class Book{
 
     public:
         Book(string t, string a) : Title(t), Author(a), Availability(false), dueDate(0){};
-
         virtual void DisplayInfo(){
             cout << "Title: " << Title << ", Author: " << Author;
             if(Availability){
@@ -40,7 +39,7 @@ class ReferenceBook : public Book{
     public:
         ReferenceBook(string t, string a) : Book(t,a) {};
         void DisplayInfo() override{
-            cout << "\nTitle: " << Title << "\nAuthor: " << Author << "(Reference Only)";
+            cout << "Title: " << Title << "\nAuthor: " << Author << "(Reference Only)\n";
         }
         bool bookAvailability() override{ return false; }
 };

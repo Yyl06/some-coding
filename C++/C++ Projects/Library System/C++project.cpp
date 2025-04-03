@@ -7,6 +7,7 @@
 #include <string>
 using std::string, std::cout, std::cin, std::getline;
 
+//Declared functions written on cpp to improve code maintainability(changes made by YuanLin)
 void Library::saveToFile(){
 	std::ofstream File("Books.txt", std::ios::out);
 	for(const auto &Book : Shelf){
@@ -74,7 +75,6 @@ void Library::loadUsersFromFile(){
 	File.close();
 }
 
-// No return type, if no function type if specified, compiler will be so confused ass
 void Library::addBook(string title, string author, bool isReference){
 	if(isReference){
 		Shelf.push_back(new ReferenceBook(title, author));
@@ -193,9 +193,7 @@ void User::checkOverDueBook(){
 			overdueFound = true;
 			int daysOverdue = (now - dueDate) / 86400; // Convert seconds to days
 			double fine = daysOverdue * lateFeePerDay;
-			std::cout << "Overdue: " << book.first
-								<< " | Days overdue: " << daysOverdue << " | Fine: $" << fine
-								<< "\n";
+			std::cout << "Overdue: " << book.first << " | Days overdue: " << daysOverdue << " | Fine: $" << fine << "\n";
 		}
 	}
 	if(!overdueFound){
@@ -203,6 +201,7 @@ void User::checkOverDueBook(){
 	}
 }
 
+//Junyu
 int main(){
 	Library library;
 	User *loggedInUser = nullptr; // Stores the logged-in user
@@ -278,7 +277,7 @@ int main(){
 			switch(choice){
 			case 1: // Add Book
 			case 2: // Add Reference Book
-			case 3: // Remove Book
+			case 3: // Remove Book(Fallthrough)
 				if(!loggedInUser || loggedInUser->getRole() != "Librarian"){
 					cout << "Access denied! Only librarians can manage books.\n";
 					break;
@@ -293,11 +292,13 @@ int main(){
 					library.removeBook(title);
 				}
 				break;
+
 			case 4: // Search Book
 				cout << "Enter keyword to search: ";
 				getline(cin, title);
 				library.searchByKeyWord(title);
 				break;
+
 			case 5: // Borrow Book
 			case 6: // Return Book
 				if(!loggedInUser){
@@ -312,10 +313,13 @@ int main(){
 					library.returnBook(*loggedInUser, title);
 				}
 				break;
+
 			case 7: // Display Books
 				library.Display();
 				break;
+
 			case 8: // Logout
+			//After logging out will back to the login section above
 				if(loggedInUser){
 					cout << "Logged out successfully.\n";
 					loggedInUser = nullptr;
@@ -323,9 +327,11 @@ int main(){
 					cout << "You're not logged in.\n";
 				}
 				break;
+
 			case 9: // Exit
 				cout << "Exiting system...\n";
 				return 0;
+
 			default:
 				cout << "Invalid choice!\n";
 			}

@@ -5,6 +5,7 @@
 #include "Book.hpp"
 #include "Users.hpp"
 using std::cout, std::string;
+//Yuan Lin
 
 class Library{
     private:
@@ -46,7 +47,6 @@ class Library{
         User* authenticateUser(const string &username, const string &password);
 };
 
-
 inline void Library::Display(){
     for(const auto &it : Shelf){
         it->DisplayInfo();
@@ -56,6 +56,7 @@ inline void Library::Display(){
 inline void Library::checkOverdueBooks(User &user){
     user.checkOverDueBook();
 }
+
 User* Library::authenticateUser(const string &username, const string &password){
     for (auto& user : Users) { // Assuming `Users` is a vector<User>
         if (user.authenticate(username, password)) {

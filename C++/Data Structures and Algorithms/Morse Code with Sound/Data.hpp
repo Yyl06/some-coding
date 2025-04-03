@@ -34,9 +34,9 @@ class Morse{
 
         void BuildTree() {
             string morseCodes[27] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
-                                     "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
-                                     "..-", "...-", ".--", "-..-", "-.--", "--..", "/"};
-                                     
+                                    "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+                                    "..-", "...-", ".--", "-..-", "-.--", "--..", "/"};
+                                    
             char letters[27] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
                                 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' '};
         
@@ -124,8 +124,6 @@ inline AVLNode *Morse::Insert(AVLNode *Node, char letter, string Morse) {
 
     return Node;
 }
-
-
 
 inline string Morse::searchMorse(AVLNode *Node, char letter){
     if(!Node){
