@@ -24,11 +24,11 @@ void Library::loadFromFile(){
 	string title, author, status, type, dueDateStr;
 	Shelf.clear();
 
-	while(std::getline(File, title, ',')
-	&& std::getline(File, author, ',')
-	&& std::getline(File, status, ',')
-	&& std::getline(File, type, ',')
-	&& std::getline(File, dueDateStr)){
+	while(getline(File, title, ',')
+	&& getline(File, author, ',')
+	&& getline(File, status, ',')
+	&& getline(File, type, ',')
+	&& getline(File, dueDateStr)){
 		Book *b;
 		if(type == "Reference"){
 			b = new ReferenceBook(title, author);
@@ -64,9 +64,9 @@ void Library::loadUsersFromFile(){
 	string username, role, line, pass;
 	while(std::getline(File, line)){
 		std::istringstream iss(line);
-		std::getline(iss, username, ',');
-		std::getline(iss, pass, ',');
-		std::getline(iss, role, ',');
+		getline(iss, username, ',');
+		getline(iss, pass, ',');
+		getline(iss, role, ',');
 
 		User newUser(username, pass, role);
 

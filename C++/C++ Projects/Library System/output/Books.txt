@@ -1,2 +1,2 @@
-The Alchemist,Paulo Coelho,1,Normal,0
+The Alchemist,Paulo Coelho,0,Normal,0
 The C++ Programming Language,Bjarne Stroustrup,1,Reference,0
