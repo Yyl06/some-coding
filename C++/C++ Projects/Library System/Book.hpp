@@ -2,8 +2,7 @@
 #include <iostream>
 #include <ctime>
 #include "Users.hpp"
-using std::string;
-using std::cout;
+using std::string, std::cout;
 //Syahmi + Yuan Lin
 class Book{
     protected:
@@ -13,7 +12,10 @@ class Book{
         time_t dueDate;
 
     public:
-        Book(string t, string a) : Title(t), Author(a), Availability(false), dueDate(0){};
+        Book(string t, string a) : Title(t), Author(a), Availability(true), dueDate(0){};
+        void setDueDate(time_t t) { dueDate = t; }
+        time_t getDueDate() const { return dueDate; }
+        void setAvailability(bool a) { Availability = a; }
         virtual void DisplayInfo(){
             cout << "Title: " << Title << ", Author: " << Author;
             if(Availability){
@@ -27,8 +29,10 @@ class Book{
         virtual bool bookAvailability(){ return true; }
         void borrowBook(){
             if(bookAvailability()){
-                Availability = true;
-                dueDate = time(0) + (maxBorrowDays * 86400);
+                Availability = false;
+                time_t now = time(0);
+                //86400 seconds in a day
+                dueDate = now + (maxBorrowDays * 86400);
             }
         }
         void returnBook(){ Availability = false; dueDate = 0; }

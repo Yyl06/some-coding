@@ -12,8 +12,8 @@ void Library::saveToFile(){
 	std::ofstream File("Books.txt", std::ios::out);
 	for(const auto &Book : Shelf){
 		File << Book->getTitle()
-		<< "," << Book->getAuthor() << "," << Book->statusBook() << ","
-		<< (dynamic_cast<ReferenceBook *>(Book) ? "Reference" : "Normal") << "\n";
+		<< "," << Book->getAuthor() << "," << (Book->statusBook() ? "1" : "0") << ","
+		<< (dynamic_cast<ReferenceBook *>(Book) ? "Reference" : "Normal") << "," << Book->getDueDate() << "\n";
 		// use dynamic_cast when especially in cases where type safety is critical (e.g., when dealing with polymorphic classes)
 	}
 	File.close();
@@ -21,18 +21,23 @@ void Library::saveToFile(){
 
 void Library::loadFromFile(){
 	std::ifstream File("Books.txt", std::ios::in);
-	string title, author, status, type;
+	string title, author, status, type, dueDateStr;
 	Shelf.clear();
-	while(std::getline(File, title, ',') && std::getline(File, author, ',') &&
-		std::getline(File, status, ',') && std::getline(File, type)){
+
+	while(std::getline(File, title, ',')
+	&& std::getline(File, author, ',')
+	&& std::getline(File, status, ',')
+	&& std::getline(File, type, ',')
+	&& std::getline(File, dueDateStr)){
+		Book *b;
 		if(type == "Reference"){
-			Shelf.push_back(new ReferenceBook(title, author));
+			b = new ReferenceBook(title, author);
 		}else{
-			Shelf.push_back(new Book(title, author));
+			b = new Book(title, author);
 		}
-		if (status == "1"){
-			Shelf.back()->borrowBook();
-		}
+		b->setAvailability(status == "1" ? false : true);  // 1 = Borrowed
+		b->setDueDate(std::stoll(dueDateStr));  // Restore due date
+		Shelf.push_back(b);
 	}
 	File.close();
 }
@@ -113,6 +118,8 @@ bool Library::borrowBook(User &user, string title){
 				std::cout << "This is a reference book and cannot be borrowed.\n";
 				return false;
 			}
+
+			
 			book->borrowBook();
 			user.borrowBook(title);
 			saveToFile();
@@ -127,9 +134,10 @@ bool Library::borrowBook(User &user, string title){
 void Library::returnBook(User &user, string title){
 	for(auto book : Shelf){
 		if (book->getTitle() == title && book->statusBook() == true){
+			if(user.returnBook(title)){
 			book->returnBook();
-			user.returnBook(title);
 			saveToFile();
+			}
 			return;
 		}
 	}
@@ -140,8 +148,7 @@ void Library::searchByKeyWord(string keyword){
 	std::cout << "Searching the Books for keyword.." << keyword << "\n";
 	bool found = false;
 	for(auto book : Shelf){
-		if(book->getTitle().find(keyword) != string::npos ||
-				book->getAuthor().find(keyword) != string::npos){
+		if(book->getTitle().find(keyword) != string::npos || book->getAuthor().find(keyword) != string::npos){
 			book->DisplayInfo();
 			found = true;
 		}
@@ -164,11 +171,11 @@ void User::borrowBook(string title){
 	std::cout << "Due date: " << ctime(&duedate);
 }
 
-void User::returnBook(string title){
+bool User::returnBook(string title){
 	auto it = borrowedBooks.find(title);
 	if(it == borrowedBooks.end()){
 		std::cout << "You don't have this book.\n";
-		return;
+		return false;
 	}
 
 	time_t now = time(0);
@@ -180,6 +187,7 @@ void User::returnBook(string title){
 
 	borrowedBooks.erase(it);
 	std::cout << "Book returned successfully.\n";
+	return true;
 }
 
 void User::checkOverDueBook(){

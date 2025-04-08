@@ -1,8 +1,2 @@
-The Alchemist,Paulo Coelho ,0,Normal
-The Silent Patient,Alex Michaelides ,0,Normal
-1984,George Orwell ,0,Normal
-To Kill a Mockingbird,Harper Lee ,0,Normal
-Dune,Frank Herbert ,0,Normal
-The Oxford English Dictionary,Unknown,0,Reference
-The C++ Programming Language,Bjarne Stroustrup,0,Reference
-Dune,Frank Herbert,0,Normal
+The Alchemist,Paulo Coelho,1,Normal,0
+The C++ Programming Language,Bjarne Stroustrup,1,Reference,0

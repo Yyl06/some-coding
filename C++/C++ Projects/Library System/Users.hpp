@@ -24,7 +24,7 @@ class User{
         bool authenticate(string u, string p){ return (userName == u && password == p); }
         bool canBorrow(){ return borrowedBooks.size() < borrowLimit; }
         void borrowBook(string title);
-        void returnBook(string title);
+        bool returnBook(string title);
         void checkOverDueBook();
         bool hasBook(const string &title);
         string getRole() const { return role; }
