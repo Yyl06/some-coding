@@ -46,7 +46,7 @@ class Morse{
 }
         
         void Insert(char letter, string Morse){
-            Root =Insert(Root, letter, Morse);
+            Root = Insert(Root, letter, Morse);
         }
         string getMorse(char letter){ return searchMorse(Root, letter); }
         string textToMorse(string text);
@@ -100,23 +100,23 @@ inline AVLNode *Morse::Insert(AVLNode *Node, char letter, string Morse) {
 
     int balance = getBalance(Node);
 
-    // **LEFT-LEFT (LL) CASE**
+    // LEFT-LEFT (LL) CASE
     if (balance > 1 && getBalance(Node->Left) >= 0) {
         return rotateRight(Node);
     }
 
-    // **RIGHT-RIGHT (RR) CASE**
+    // RIGHT-RIGHT (RR) CASE
     if (balance < -1 && getBalance(Node->Right) <= 0) {
         return rotateLeft(Node);
     }
 
-    // **LEFT-RIGHT (LR) CASE**
+    // LEFT-RIGHT (LR) CASE
     if (balance > 1 && getBalance(Node->Left) < 0) {
         Node->Left = rotateLeft(Node->Left);
         return rotateRight(Node);
     }
 
-    // **RIGHT-LEFT (RL) CASE**
+    // RIGHT-LEFT (RL) CASE
     if (balance < -1 && getBalance(Node->Right) > 0) {
         Node->Right = rotateRight(Node->Right);
         return rotateLeft(Node);

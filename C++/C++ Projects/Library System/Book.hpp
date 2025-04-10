@@ -3,7 +3,7 @@
 #include <ctime>
 #include "Users.hpp"
 using std::string, std::cout;
-//Syahmi + Yuan Lin
+//Syahmi + Yuan Lin + Xuan Hui
 class Book{
     protected:
         string Title;
@@ -23,6 +23,7 @@ class Book{
             }
             cout << " (Available)\n";
         }
+
         string getTitle(){ return Title; }
         string getAuthor(){ return Author; }
         bool statusBook(){ return Availability; }

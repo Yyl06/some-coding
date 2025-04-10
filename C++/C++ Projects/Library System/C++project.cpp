@@ -215,14 +215,14 @@ int main(){
 	User *loggedInUser = nullptr; // Stores the logged-in user
 
 	while(true){
-		int choice, chars;
+		int choice, option;
 		string title, author, username, password, role;
 
 		while(!loggedInUser){
 			cout << "1. Register User\n2. Login User\n";
 			cout << "Choice: ";
 
-			if (!(cin >> chars)){
+			if (!(cin >> option)){
 				cin.clear();
 				cin.ignore(1000, '\n');
 				cout << "Invalid input! Enter a number.\n";
@@ -230,7 +230,7 @@ int main(){
 			}
 			cin.ignore();
 
-			switch (chars){
+			switch (option){
 			case 1: { // Register User
 				cout << "Enter username: ";
 				std::getline(cin, username);

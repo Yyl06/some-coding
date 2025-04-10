@@ -1,3 +1,13 @@
+class Animals{
+    Animals(){
+        System.out.println("Animal Constructor");
+    }
+}
+class Dog extends Animals{
+    Dog(){
+        System.out.println("Dog Constructor");
+    }
+}
 public class DataValues{
         public static void main(String[] args) {
         int a = 10 , e = 20 , f = 30;
