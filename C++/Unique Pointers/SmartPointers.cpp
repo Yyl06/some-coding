@@ -34,5 +34,7 @@ int main(){
         std::weak_ptr<Entity> wEntity = sEntity;
         e1 = sEntity;
     }
+    std::unique_ptr<Entity> e3 = std::make_unique<Entity>();
+    e3->Print();
     return 0;
 }
