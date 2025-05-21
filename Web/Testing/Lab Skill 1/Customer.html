@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            form{
+                border: 2px solid black;
+            }
+        </style>
+        <title>Registration</title>
+    </head>
+    <h1>Kindly Fill in The registration Form</h1>
+
+    <form action="info.php" >
+        First Name*<br>
+        <input type="text" name="fname" required><br>
+        Last Name:<br>
+        <input type="text" name="lname" placeholder="Enter your name"><br>
+        Email<br>
+        <input type="email" name="email"><br>
+        Password<br>
+        <input type= "password" name="password"><br>
+        date of birth<br>
+        <input type="date" name="dob"><br>
+
+        <fieldset>
+            <legend>Gender:<br></legend>
+            <input type="radio" name="gender" value="Male" checked>Male
+            <input type="radio" name="gender" value="Female">Female
+        </fieldset>
+
+        <fieldset>
+            <legend>Contact Preferences:<br></legend>
+            <input type="checkbox" name="mobile" value="Mobile">Mobile
+            <input type="checkbox" name="email" value="Email">Email
+            <input type="checkbox" name="small" value="Small">Small
+        </fieldset>
+
+        <br>Weight:<br>
+        <input type="number" name="weight" min="0" max="1000"><br>
+
+        Height(cm):<br>
+        <input type="number" name="height" min="100" max="200"><br>
+
+
+        <fieldset>
+            <legend>Address:<br></legend>
+            <input type="text" name="address1" placeholder="Address Line 1"><br>
+            <input type="text" name="address2" placeholder="Address Line 2"><br>
+            Postcode:<br>
+            <input type="number" name="postcode" min="00000" max="99999"><br>
+            State:<br>
+            <input type="text" name="state"><br>
+            Country:<br>
+            <input type="text" name="country"><br>
+        </fieldset>
+        
+        <fieldset>
+            <legend>Preferred Payment method</legend>
+            <input type="radio" name="payment" value="cc" checked>Credit
+            <input type="radio" name="payment" value="dc">Debit
+        </fieldset>
+        
+        <input type="submit" name="Register" value="Register">
+        <input type="reset" name="Reset" value="Reset">
+        <br>*required
+    </form>
+</html>
