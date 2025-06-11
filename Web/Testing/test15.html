@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function myFunc(){
+            let no1 = parseInt(document.getElementById("no1").value);
+            let no2 = parseInt(document.getElementById("no2").value);
+            let result = no1 + no2;
+            document.getElementById("result").innerHTML = "The result is: " + result.toString();
+}
+        </script>
+    </head>
+<body>
+
+<h2 id="demo">What Can JavaScript Do?</h2>
+<p id="demo1">JavaScript can change HTML content.</p>
+
+<script>
+alert("this is an alert box");
+let answer = confirm("are you ok?");
+const age = prompt("what is your student id number?");
+const name = prompt("whhat is your name?" , "no name");
+alert("Hello " + name + ", your student id number is " + age + "years old.");
+</script>
+
+<input type="number" id="no1" placeholder="Enter first number">
+<input type="number" id="no2" placeholder="Enter second number">
+<button onclick="myFunc()">Add</button>
+<p id="result"></p>
+</body>
+</html>

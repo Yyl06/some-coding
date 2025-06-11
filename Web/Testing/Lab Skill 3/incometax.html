@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tax Calculation</title>
+        <script>
+            function calcTax(){
+                const income = parseFloat(document.getElementById('income').value);
+                let tax = 0;
+                const Brackets =[
+                    {limit: 5000, rate: 0},
+                    {limit: 20000, rate: 1},
+                    {limit: 35000, rate: 3},
+                    {limit: 50000, rate: 8},
+                    {limit: 70000, rate: 13},
+                    {limit: 100000, rate: 21},
+                    {limit: 250000, rate: 24},
+                    {limit: 400000, rate: 24.5},
+                    {limit: 600000, rate: 25},
+                    {limit: 1000000, rate: 26},
+                    {limit: 2000000, rate: 28},
+                    {limit: Infinity, rate: 30},
+                ];
+
+                let prevLimit = 0;
+                for(let i =0 ; i < Brackets.length ; i++){
+                    let CurrLimit = Brackets[i].limit;
+                    let CurrRate = Brackets[i].rate;
+
+                    if (income > prevLimit) {
+                        let taxableAmount = Math.min(income, CurrLimit) - prevLimit;
+                        tax += taxableAmount * (CurrRate / 100);
+                        prevLimit = CurrLimit;
+
+                    if (income <= CurrLimit) {
+                        // Income falls within this bracket, stop
+                        break;
+                    }
+                } else {
+                    // Income less or equal to previous limit, no more tax
+                    break;
+                }
+            }
+                document.getElementById('result').innerHTML = "The tax on an income of " + income.toFixed(2) + " is: " + tax.toFixed(2);
+            }
+        </script>
+    </head>
+    <body>
+        <h2>Income tax calculator</h2>
+
+        <label for="income">Enter Income:</label><br>
+        <input type="number" id="income" step="0.01" required><br><br>
+        <button onclick="calcTax()">Calculate</button>
+
+        <p class="result" id="result">Result</p>
+    </body>
+</html>

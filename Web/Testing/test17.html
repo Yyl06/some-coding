@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h2>JS switch</h2>
+        <p id="demo"></p>
+
+        <script>
+            var dayNo = prompt("Enter a number (1~7)");
+            var text = "";
+            switch (dayNo){
+                case 1:
+                    text = "Monday";
+                    break;
+                case 2:
+                    text = "Tuesday";
+                    break;
+                case 3:
+                    text = "Wednesday";
+                    break;
+                default:
+                    text = "Other day";
+            }
+            document.getElementById("demo").innerHTML = text;
+        </script>
+    </body>
+</html>

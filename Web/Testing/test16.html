@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Grade Checker</title>
+        <script>
+            function checkResult(){
+                var mark = parseFloat(document.getElementById("mark").value);
+                var result = "";
+
+                if (mark >= 80){
+                    result = "You got an A";
+                } else if (mark >= 60) {
+                    result = "B - Good";
+                } else if (mark >= 40) {
+                    result = "C - Pass";
+                } else {
+                    result = "D - Failed";
+                }
+
+                alert("Your result is:" + result);
+            }
+        </script>
+    </head>
+    <body>
+        <h2>Enter Your Mark</h2>
+        <input type="number" id="mark" placeholder="Enter mark">
+        <button onclick="checkResult()">Check Result</button>
+    </body>
+</html>

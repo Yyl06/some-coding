@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Age check</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <script>
+            function checkeli(){
+                const Fname = document.getElementById("Fname").value.trim();
+                const Lname = document.getElementById("Lname").value.trim();
+                const age = parseInt(document.getElementById("age").value);
+                const output = document.getElementById("output");
+                const image = document.getElementById("image");
+
+                if(Fname === "" || Lname === "" || isNaN(age)){
+                    alert("Please enter a valid name or age.");
+                    return;
+                }
+
+                if(age < 18){
+                    alert("Hi " + Fname + " " + Lname + ", you are not eligible to vote. You need to wait another" + (18 - age) + " years to vote.");
+                    image.src = "https://cdn.pixabay.com/photo/2023/03/04/20/44/student-cartoon-7830116_960_720.png";
+                    image.alt = "Adult";
+                }else{
+                    alert("Hi " + Fname + " " + Lname + ", you are eligible to vote.");
+                    image.src = "https://cdn-icons-png.flaticon.com/512/2922/2922510.png";
+                    image.alt = "Adult";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Voting eligibility</h1>
+            <p>Vote check:</p>
+            <label for="First name">First Name</label><br>
+            <input class="w3-input w3-border" type="text" id="Fname"><br>
+
+            <label for="Last name">Last Name</label><br>
+            <input class="w3-input w3-border" type="text" id="Lname"><br>
+
+            <label for="Age">Age</label><br>
+            <input class="w3-input w3-border" type="number" id="age"><br>
+
+            <button onclick="checkeli()" class="w3-button w3-blue w3-block">Check</button>
+
+            <p id="output"></p>
+            <img id="image" src="" alt="" style="display:block; margin: 10px auto;">
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+
+            function Calc(op){
+                const num1 = parseFloat(document.getElementById("num1").value);
+                const num2 = parseFloat(document.getElementById("num2").value);
+                let result;
+                
+                if(isNaN(num1) || isNaN(num2)){
+                    alert("Enter valid numbers");
+                    return;
+                }
+                    switch(op){
+                        case "Add":
+                            result = num1 + num2;
+                            break;
+                        case "Subtract":
+                            result = num1 - num2;
+                            break;
+                        case "Multiply":
+                            result = num1 * num2;
+                            break;
+                        case "Divide":
+                            if(num2 === 0){
+                                alert("Cannot divide numbers with 0!");
+                                return;
+                            }else{
+                                result = num1 / num2;
+                            }
+                            break;
+                        default:
+                            alert("Invalid operation selected");
+                            return;
+                    }
+                    document.getElementById("result").value = result.toFixed(2);
+                }
+        </script>
+    </head>
+    <body>
+        <h1>Calculator</h1>
+        <label for="num1">Enter 1st number</label>
+        <input type="number" id="num1" placeholder="10"><br>
+
+        <label for="num2">Enter 2nd Number</label>
+        <input type="number" id="num2" placeholder="5"><br>
+
+        <label for="result">Result: </label>
+        <input type="number" id="result" readonly><br>
+        <br>
+        <label for="op">Select Operation</label><br>
+        <button onclick="Calc('Add')">Add</button>
+        <button onclick="Calc('Subtract')">Subtract</button>
+        <button onclick="Calc('Multiply')">Multiply</button>
+        <button onclick="Calc('Divide')">Division</button><br>
+    </body>
+</html>

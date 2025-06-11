@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Product Price</title>
+        <script>
+            function calcTax() {
+                const input1 = parseFloat(document.getElementById('input1').value);
+                const result = document.getElementById('result');
+
+                if(isNaN(input1) || input1 < 0){
+                    result.textContent = "Please enter a valid number.";
+                    return;
+                }
+
+                const tax = input1 * 0.06;
+                result.textContent = "The tax after 6% is: " + tax.toFixed(2);
+            }
+        </script>
+    </head>
+    <body>
+        <h2>Tax Calculator</h2>
+        <label for="priceInput">Enter product price: </label>
+        <input type="number" id="input1" placeholder="e.g. 99.99" step="0.01">
+        <button onclick="calcTax()">Calculate Tax</button>
+        <p id="result"></p>
+    </body>
+</html>
