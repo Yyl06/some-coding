@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Unit Converter</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
+                color: #333;
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                font-size: 16px;
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+            label {
+                display: block;
+                margin-bottom: 10px;
+            }
+        </style>
+        <script>
+            function cmToMetere(){
+                var cm = parseFloat(document.getElementById("num1").value);
+                var Meter = cm / 100;
+                document.getElementById("result").innerHTML = Meter.toFixed(2) + "m";
+            }
+            function metereToCm(){
+                var meter = parseFloat(document.getElementById("num1").value);
+                var cm = meter * 100;
+                document.getElementById("result").innerHTML = cm.toFixed(2) + "cm";
+            }
+            function metereToKm(){
+                var meter = parseFloat(document.getElementById("num1").value);
+                var km = meter / 1000;
+                document.getElementById("result").innerHTML = km.toFixed(3) + "km";
+            }
+            function kmToMetere(){
+                var km = parseFloat(document.getElementById("num1").value);
+                var meter = km * 1000;
+                document.getElementById("result").innerHTML = meter.toFixed(3) + "m";
+            }
+            function conversion(op){
+                switch (op) {
+                    case "cmToMetere":
+                        cmToMetere();
+                        break;
+
+                    case "metereToCm":
+                        metereToCm();
+                        break;
+
+                    case "metereToKm":
+                        metereToKm();
+                        break;
+
+                    case "kmToMetere":
+                        kmToMetere();
+                        break;
+
+                    default:
+                        document.getElementById("result").innerHTML = "Invalid operation";
+                        break;
+                }
+            }
+        </script>
+    </head>
+    <body class="w3-light-grey w3-padding-32">
+        <h1>Unit Converter</h1>
+        <label for="Input">Enter a Number: </label>
+        <input type="number" id="num1" placeholder="Enter a Number" required><br><br>
+
+        <label for="Choose 1">Choose an Operation!</label><br>
+        <button onclick="conversion('cmToMetere')">Convert Centimeter To Meter</button>
+        <button onclick="conversion('metereToCm')">Convert Meter To Centimeter</button>
+        <button onclick="conversion('metereToKm')">Convert Meter To Kilometer</button>
+        <button onclick="conversion('kmToMetere')">Convert Kilometer To Meter</button>
+
+        <p id="result">Result: </p>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Calculator</title>
+        <script>
+            function calc(op) {
+                const num1 = parseFloat(document.getElementById("num1").value);
+                const num2 = parseFloat(document.getElementById("num2").value);
+                let result;
+
+                if(isNaN(num1) || isNaN(num2)){
+                    alert("Enter valid numbers");
+                    return;
+                }
+                    switch (op) {
+                        case "add":
+                            result = num1 + num2;
+                            break;
+                        case "subtract":
+                            result = num1 - num2;
+                            break;
+                        case "multiply":
+                            result = num1 * num2;
+                            break;
+                        case "divide":
+                            if (num2 === 0){
+                                alert("Cannot divide by zero");
+                                return;
+                            }else{
+                                result = num1 / num2;
+                            }
+                        default:
+                            break;
+                    }
+                    document.getElementById("result").innerHTML = result.toFixed(2);
+                }
+
+            function clearField() {
+                document.getElementById("num1").value = "";
+                document.getElementById("num2").value = "";
+                document.getElementById("result").value = "";
+            }
+
+        </script>
+    </head>
+    <body>
+        <h1>Calculator</h1>
+        <label for="num1">Enter 1st number:</label>
+        <input type="number" id="num1" placeholder="e.g. 10"><br>
+
+        <label for="num2">Enter 2nd number</label>
+        <input type="number" id="num2" placeholder="e.g 5"><br>
+    
+        <p id="result">Result: </p>
+
+        <label for="Op">Select Operation:</label><br>
+        <button onclick="calc('add')">(+) operation</button>
+        <button onclick="calc('subtract')">Subtraction(-) operation</button>
+        <button onclick="calc('multiply')">Multiply(*) operation</button>
+        <button onclick="calc('divide')">Division(/) operation</button><br>
+        <br>
+        <button onclick="clearField()">Clear</button>
+
+    </body>
+</html>

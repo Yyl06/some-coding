@@ -35,3 +35,6 @@
 *.suo
 *.vcxproj*
 *.lastbuildstate
+
+#ignore temporary files
+*.pdf
