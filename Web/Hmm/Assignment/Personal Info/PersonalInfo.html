@@ -1,21 +1,80 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Personal Information</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    </head>
-    <body class="w3-container w3-light-grey">
+<head>
+    <title>Personal Information</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+        }
+
+        .info-box {
+            background-color: #2e2e2e;
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            text-align: center;
+            color: #00bcd4;
+            margin-bottom: 25px;
+        }
+
+        p, li {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            border-radius: 14px;
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #00e0ff;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #00ffc8;
+        }
+    </style>
+</head>
+<body class="w3-animate-opacity">
+    <div class="info-box w3-animate-top">
         <h2>Personal Information</h2>
-        <p><strong>Matric: </strong> A24DW0325</p>
-        <p><strong>Program and Section: </strong>1 DSPD - Diploma in Computer Science, Section 44</p>
-        <p><strong>Name: </strong>Yong Yuan Lin</p>
+        <p><strong>Matric:</strong> A24DW0325</p>
+        <p><strong>Program and Section:</strong> 1 DSPD - Diploma in Computer Science, Section 44</p>
+        <p><strong>Name:</strong> Yong Yuan Lin</p>
 
-        <img src="images/me.jpg" alt="My Picture" class="w3-image w3-round-large" style="max-width:200px">
+        <img src="images/me.jpg" alt="My Picture" class="w3-image">
 
-        <p><strong>CV: </strong></p>
+        <p><strong>CV:</strong></p>
         <ul>
             <li><a href="CV.html" target="_blank">View CV (HTML)</a></li>
             <li><a href="CV.pdf" download>Download CV (PDF)</a></li>
         </ul>
-    </body>
+    </div>
+</body>
 </html>

@@ -1,65 +1,139 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Calculator</title>
-        <script>
-            function calc(op) {
-                const num1 = parseFloat(document.getElementById("num1").value);
-                const num2 = parseFloat(document.getElementById("num2").value);
-                let result;
+<head>
+    <title>Calculator</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap">
+    <style>
+        body {
+            background-color: #1e1e1e;
+            font-family: 'Raleway', Arial, sans-serif;
+            color: #ddd;
+        }
 
-                if(isNaN(num1) || isNaN(num2)){
-                    alert("Enter valid numbers");
-                    return;
-                }
-                    switch (op) {
-                        case "add":
-                            result = num1 + num2;
-                            break;
-                        case "subtract":
-                            result = num1 - num2;
-                            break;
-                        case "multiply":
-                            result = num1 * num2;
-                            break;
-                        case "divide":
-                            if (num2 === 0){
-                                alert("Cannot divide by zero");
-                                return;
-                            }else{
-                                result = num1 / num2;
-                            }
-                        default:
-                            break;
-                    }
-                    document.getElementById("result").innerHTML = result.toFixed(2);
-                }
+        .calc-box {
+            max-width: 500px;
+            margin: 60px auto;
+            background-color: #2b2b2b;
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
 
-            function clearField() {
-                document.getElementById("num1").value = "";
-                document.getElementById("num2").value = "";
-                document.getElementById("result").value = "";
+        h1 {
+            text-align: center;
+            color: #00bcd4;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background-color: #3c3c3c;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #333;
+            color: #00bcd4;
+            padding: 10px 20px;
+            margin: 6px 4px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #00bcd4;
+            color: #111;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #111;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            color: #00ffc8;
+        }
+    </style>
+    <script>
+        function calc(op) {
+            const num1 = parseFloat(document.getElementById("num1").value);
+            const num2 = parseFloat(document.getElementById("num2").value);
+            let result;
+
+            if (isNaN(num1) || isNaN(num2)) {
+                alert("Enter valid numbers");
+                return;
             }
 
-        </script>
-    </head>
-    <body>
+            switch (op) {
+                case "add":
+                    result = num1 + num2;
+                    break;
+                case "subtract":
+                    result = num1 - num2;
+                    break;
+                case "multiply":
+                    result = num1 * num2;
+                    break;
+                case "divide":
+                    if (num2 === 0) {
+                        alert("Cannot divide by zero");
+                        return;
+                    } else {
+                        result = num1 / num2;
+                    }
+                    break;
+                default:
+                    return;
+            }
+            document.getElementById("result").innerHTML = `Result: ${result.toFixed(2)}`;
+        }
+
+        function clearField() {
+            document.getElementById("num1").value = "";
+            document.getElementById("num2").value = "";
+            document.getElementById("result").innerHTML = "Result:";
+        }
+    </script>
+</head>
+<body class="w3-animate-opacity">
+
+    <div class="calc-box w3-animate-top">
         <h1>Calculator</h1>
+
         <label for="num1">Enter 1st number:</label>
-        <input type="number" id="num1" placeholder="e.g. 10"><br>
+        <input type="number" id="num1" placeholder="e.g. 10">
 
-        <label for="num2">Enter 2nd number</label>
-        <input type="number" id="num2" placeholder="e.g 5"><br>
-    
-        <p id="result">Result: </p>
+        <label for="num2">Enter 2nd number:</label>
+        <input type="number" id="num2" placeholder="e.g. 5">
 
-        <label for="Op">Select Operation:</label><br>
-        <button onclick="calc('add')">(+) operation</button>
-        <button onclick="calc('subtract')">Subtraction(-) operation</button>
-        <button onclick="calc('multiply')">Multiply(*) operation</button>
-        <button onclick="calc('divide')">Division(/) operation</button><br>
-        <br>
-        <button onclick="clearField()">Clear</button>
+        <div id="result">Result:</div>
 
-    </body>
+        <label>Select Operation:</label>
+        <button class="btn" onclick="calc('add')">Add (+)</button>
+        <button class="btn" onclick="calc('subtract')">Subtract (-)</button>
+        <button class="btn" onclick="calc('multiply')">Multiply (*)</button>
+        <button class="btn" onclick="calc('divide')">Divide (/)</button>
+        <br><br>
+        <button class="btn" onclick="clearField()">Clear</button>
+    </div>
+
+</body>
 </html>

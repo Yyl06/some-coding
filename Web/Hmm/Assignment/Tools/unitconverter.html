@@ -1,89 +1,140 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Unit Converter</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
-                margin: 0;
-                padding: 20px;
-            }
-            h1 {
-                color: #333;
-            }
-            button {
-                background-color: #4CAF50;
-                color: white;
-                padding: 10px 20px;
-                font-size: 16px;
-                border: none;
-                border-radius: 12px;
-                cursor: pointer;
-                transition: 0.3s;
-            }
-            label {
-                display: block;
-                margin-bottom: 10px;
-            }
-        </style>
-        <script>
-            function cmToMetere(){
-                var cm = parseFloat(document.getElementById("num1").value);
-                var Meter = cm / 100;
-                document.getElementById("result").innerHTML = Meter.toFixed(2) + "m";
-            }
-            function metereToCm(){
-                var meter = parseFloat(document.getElementById("num1").value);
-                var cm = meter * 100;
-                document.getElementById("result").innerHTML = cm.toFixed(2) + "cm";
-            }
-            function metereToKm(){
-                var meter = parseFloat(document.getElementById("num1").value);
-                var km = meter / 1000;
-                document.getElementById("result").innerHTML = km.toFixed(3) + "km";
-            }
-            function kmToMetere(){
-                var km = parseFloat(document.getElementById("num1").value);
-                var meter = km * 1000;
-                document.getElementById("result").innerHTML = meter.toFixed(3) + "m";
-            }
-            function conversion(op){
-                switch (op) {
-                    case "cmToMetere":
-                        cmToMetere();
-                        break;
+<head>
+    <title>Unit Converter</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1e1e1e;
+            font-family: 'Raleway', sans-serif;
+            color: #ddd;
+        }
 
-                    case "metereToCm":
-                        metereToCm();
-                        break;
+        .converter-box {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 40px;
+            background-color: #2c2c2c;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
 
-                    case "metereToKm":
-                        metereToKm();
-                        break;
+        h1 {
+            color: #00bcd4;
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-                    case "kmToMetere":
-                        kmToMetere();
-                        break;
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
 
-                    default:
-                        document.getElementById("result").innerHTML = "Invalid operation";
-                        break;
-                }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #3c3c3c;
+            color: #fff;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #00bcd4;
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00ffc8;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 200, 0.3);
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 14px;
+            background-color: #111;
+            color: #00ffc8;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+    <script>
+        function cmToMetere() {
+            const cm = parseFloat(document.getElementById("num1").value);
+            if (isNaN(cm)) return showError();
+            const meter = cm / 100;
+            showResult(meter.toFixed(2) + " m");
+        }
+
+        function metereToCm() {
+            const meter = parseFloat(document.getElementById("num1").value);
+            if (isNaN(meter)) return showError();
+            const cm = meter * 100;
+            showResult(cm.toFixed(2) + " cm");
+        }
+
+        function metereToKm() {
+            const meter = parseFloat(document.getElementById("num1").value);
+            if (isNaN(meter)) return showError();
+            const km = meter / 1000;
+            showResult(km.toFixed(3) + " km");
+        }
+
+        function kmToMetere() {
+            const km = parseFloat(document.getElementById("num1").value);
+            if (isNaN(km)) return showError();
+            const meter = km * 1000;
+            showResult(meter.toFixed(3) + " m");
+        }
+
+        function showResult(text) {
+            document.getElementById("result").innerHTML = "Result: " + text;
+        }
+
+        function showError() {
+            document.getElementById("result").innerHTML = "Please enter a valid number.";
+        }
+
+        function conversion(op) {
+            switch (op) {
+                case "cmToMetere": cmToMetere(); break;
+                case "metereToCm": metereToCm(); break;
+                case "metereToKm": metereToKm(); break;
+                case "kmToMetere": kmToMetere(); break;
+                default: showResult("Invalid Operation");
             }
-        </script>
-    </head>
-    <body class="w3-light-grey w3-padding-32">
+        }
+    </script>
+</head>
+<body class="w3-animate-opacity">
+    <div class="converter-box w3-animate-top">
         <h1>Unit Converter</h1>
-        <label for="Input">Enter a Number: </label>
-        <input type="number" id="num1" placeholder="Enter a Number" required><br><br>
 
-        <label for="Choose 1">Choose an Operation!</label><br>
-        <button onclick="conversion('cmToMetere')">Convert Centimeter To Meter</button>
-        <button onclick="conversion('metereToCm')">Convert Meter To Centimeter</button>
-        <button onclick="conversion('metereToKm')">Convert Meter To Kilometer</button>
-        <button onclick="conversion('kmToMetere')">Convert Kilometer To Meter</button>
+        <label for="num1">Enter a Number:</label>
+        <input type="number" id="num1" placeholder="e.g. 1500" required>
+
+        <label>Choose an Operation:</label>
+        <button onclick="conversion('cmToMetere')">Centimeter → Meter</button>
+        <button onclick="conversion('metereToCm')">Meter → Centimeter</button>
+        <button onclick="conversion('metereToKm')">Meter → Kilometer</button>
+        <button onclick="conversion('kmToMetere')">Kilometer → Meter</button>
 
         <p id="result">Result: </p>
-    </body>
+    </div>
+</body>
 </html>

@@ -1,56 +1,131 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Tax Calculation</title>
-        <script>
-            function calcTax(){
-                const income = parseFloat(document.getElementById('income').value);
-                let tax = 0;
-                const Brackets =[
-                    {limit: 5000, rate: 0},
-                    {limit: 20000, rate: 1},
-                    {limit: 35000, rate: 3},
-                    {limit: 50000, rate: 8},
-                    {limit: 70000, rate: 13},
-                    {limit: 100000, rate: 21},
-                    {limit: 250000, rate: 24},
-                    {limit: 400000, rate: 24.5},
-                    {limit: 600000, rate: 25},
-                    {limit: 1000000, rate: 26},
-                    {limit: 2000000, rate: 28},
-                    {limit: Infinity, rate: 30},
-                ];
+<head>
+    <title>Income Tax Calculator</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap">
+    <style>
+        body {
+            background-color: #1e1e1e;
+            font-family: 'Raleway', Arial, sans-serif;
+            color: #ddd;
+        }
 
-                let prevLimit = 0;
-                for(let i =0 ; i < Brackets.length ; i++){
-                    let CurrLimit = Brackets[i].limit;
-                    let CurrRate = Brackets[i].rate;
+        .tax-box {
+            max-width: 600px;
+            margin: 60px auto;
+            background-color: #2b2b2b;
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
 
-                    if (income > prevLimit) {
-                        let taxableAmount = Math.min(income, CurrLimit) - prevLimit;
-                        tax += taxableAmount * (CurrRate / 100);
-                        prevLimit = CurrLimit;
+        h2 {
+            text-align: center;
+            color: #00bcd4;
+            margin-bottom: 30px;
+        }
 
-                    if (income <= CurrLimit) {
-                        // Income falls within this bracket, stop
-                        break;
-                    }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #3c3c3c;
+            color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00bcd4;
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00ffc8;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 200, 0.3);
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #111;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            color: #00ffc8;
+        }
+    </style>
+    <script>
+        function calcTax() {
+            const income = parseFloat(document.getElementById('income').value);
+            if (isNaN(income) || income < 0) {
+                document.getElementById('result').innerHTML = "Please enter a valid income amount.";
+                return;
+            }
+
+            let tax = 0;
+            const Brackets = [
+                { limit: 5000, rate: 0 },
+                { limit: 20000, rate: 1 },
+                { limit: 35000, rate: 3 },
+                { limit: 50000, rate: 8 },
+                { limit: 70000, rate: 13 },
+                { limit: 100000, rate: 21 },
+                { limit: 250000, rate: 24 },
+                { limit: 400000, rate: 24.5 },
+                { limit: 600000, rate: 25 },
+                { limit: 1000000, rate: 26 },
+                { limit: 2000000, rate: 28 },
+                { limit: Infinity, rate: 30 }
+            ];
+
+            let prevLimit = 0;
+            for (let i = 0; i < Brackets.length; i++) {
+                let currLimit = Brackets[i].limit;
+                let currRate = Brackets[i].rate;
+
+                if (income > prevLimit) {
+                    let taxableAmount = Math.min(income, currLimit) - prevLimit;
+                    tax += taxableAmount * (currRate / 100);
+                    prevLimit = currLimit;
+
+                    if (income <= currLimit) break;
                 } else {
-                    // Income less or equal to previous limit, no more tax
                     break;
                 }
             }
-                document.getElementById('result').innerHTML = "The tax on an income of " + income.toFixed(2) + " is: " + tax.toFixed(2);
-            }
-        </script>
-    </head>
-    <body>
-        <h2>Income tax calculator</h2>
 
-        <label for="income">Enter Income:</label><br>
-        <input type="number" id="income" step="0.01" required><br><br>
-        <button onclick="calcTax()">Calculate</button>
+            document.getElementById('result').innerHTML =
+                `The tax on an income of RM ${income.toFixed(2)} is: <strong>RM ${tax.toFixed(2)}</strong>`;
+        }
+    </script>
+</head>
+<body class="w3-animate-opacity">
+    <div class="tax-box w3-animate-top">
+        <h2>Income Tax Calculator</h2>
 
-        <p class="result" id="result">Result</p>
-    </body>
+        <label for="income">Enter Income (RM):</label>
+        <input type="number" id="income" step="0.01" placeholder="e.g. 50000" required>
+
+        <button onclick="calcTax()">Calculate Tax</button>
+
+        <p id="result">Result will appear here.</p>
+    </div>
+</body>
 </html>

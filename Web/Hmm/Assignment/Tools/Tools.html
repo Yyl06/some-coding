@@ -1,37 +1,98 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Simple Tools</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <style>
-            h3{
-                font-family: Arial, Helvetica, sans-serif;
-                color: #333;
-            }
-            ul, p{
-                font-family: Arial, Helvetica, sans-serif;
-                color: #555;
-                line-height: 1.6;
-            }
-            li{
-                font-family: Arial, Helvetica, sans-serif;
-                color: #555;
-                line-height: 1.6;
-                margin-bottom: 10px;
-            }
-        </style>
-    </head>
-    <body class="w3-light-grey w3-padding-32">
-        <div class="w3-content w3-card w3-white w3-padding w3-round-large" style="max-width:800px">
-            <h3>Tools Page</h3><br><br>
-            <p><a href="/Web/Hmm/Assignment/Main.html" class="w3-button w3-blue w3-round">Home</a></p>
-            <h3>Welcome to the Tools Page! Please Choose one for usage</h3>
-            <ul>
-                <li><a href="Calc.html">Simple Calculator</a></li>
-                <li><a href="bmi.html">BMI Checker</a></li>
-                <li><a href="incometax.html">Income Tax Calculator</a></li>
-                <li><a href="unitconverter.html">Unit Converter</a></li>
-            </ul>
-        </div>
-    </body>
+<head>
+    <title>Simple Tools</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap">
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #ddd;
+            font-family: 'Ubuntu', Arial, sans-serif;
+        }
+
+        .tools-box {
+            max-width: 800px;
+            margin: auto;
+            background-color: #2b2b2b;
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h3 {
+            color: #00bcd4;
+            margin-bottom: 20px;
+        }
+
+        p, ul, li, a {
+            color: #ccc;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        a:hover {
+            color: #ffffff;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 12px;
+        }
+
+        .tool-link {
+            display: inline-block;
+            background-color: #333;
+            color: #00bcd4;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .tool-link:hover {
+            background-color: #00bcd4;
+            color: #111;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+        }
+
+        .home-btn {
+            background-color: #607d8b;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        .home-btn:hover {
+            background-color: #78909c;
+        }
+    </style>
+</head>
+<body class="w3-animate-opacity w3-padding-32">
+    <div class="tools-box w3-animate-top">
+        <h3>Tools Page</h3>
+        <p><a href="/Web/Hmm/Assignment/Main.html" class="home-btn">← Home</a></p>
+
+        <h3>Welcome to the Tools Page! Please choose one to use:</h3>
+        <ul>
+            <li><a href="Calc.html" class="tool-link">Simple Calculator</a></li>
+            <li><a href="bmi.html" class="tool-link">BMI Checker</a></li>
+            <li><a href="incometax.html" class="tool-link">Income Tax Calculator</a></li>
+            <li><a href="unitconverter.html" class="tool-link">Unit Converter</a></li>
+        </ul>
+    </div>
+</body>
 </html>

@@ -1,87 +1,158 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CV</title>
+    <title>My CV - Yong Yuan Lin</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
-        h3{
-            font-family: Arial, Helvetica, sans-serif;
-            color: #333;
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #111;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
         }
-        p, ul{
-            font-family: Arial, Helvetica, sans-serif;
-            color: #555;
-            line-height: 1.6;
+
+        .section-box {
+            position: relative;
+            padding: 40px;
+            margin: 30px auto;
+            border-radius: 12px;
+            max-width: 1000px;
+            overflow: hidden;
         }
-        li{
-            margin-bottom: 10px;
+
+        .section-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .section-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-box h3 {
+            color: #00d0ff;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 5px;
+        }
+
+        .section-box ul {
+            padding-left: 20px;
+        }
+
+        .section-box a {
+            color: #00c8ff;
+            text-decoration: none;
+        }
+
+        .section-box a:hover {
+            text-decoration: underline;
+        }
+
+        .bg-personal {
+            background: url('images/tenor.gif') center/cover no-repeat;
+        }
+
+        .bg-education {
+            background: url('images/power.gif') center/cover no-repeat;
+        }
+
+        .bg-skills {
+            background: url('images/galaxy-brain.gif') center/cover no-repeat;
+        }
+
+        .bg-projects {
+            background: url('https://media1.tenor.com/m/Mu_fYpNXPrcAAAAd/vergil.gif') center/cover no-repeat;
+        }
+
+        .bg-languages {
+            background: url('https://media1.tenor.com/m/8XC0hcMF4jYAAAAC/minor-slepping-mistake-i-win.gif') center/cover no-repeat;
         }
     </style>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 </head>
-<body class="w3-light-grey w3-padding-32">
-    <div class="w3-content w3-card w3-white w3-padding w3-round-large" style="max-width: 800px"></div>
-    <h3>Personal Information</h3>
-    <p><strong>Name:</strong> Yong Yuan Lin</p>
-    <p><strong>Email:</strong> yuanlinplays@gmail.com</p>
-    <p><strong>Phone:</strong> +6018-2123306</p>
-    <p>
-        <strong>GitHub:</strong><a href="https://github.com/Yyl06/some-coding" target="_blank">My Github</a>
-    </p>
+<body class="w3-animate-opacity">
 
-    <h3>Objectives</h3>
-    <p>
-        A motivated kiddo that have an Game Development dream, likes to challenge limits of a programmer
-    </p>
-
-    <h3>Education</h3>
-    <p>Primary School: SJK (C) Kuo Kuang</p>
-    <p>Secondary School: SMK Mutiara Rini</p>
-    <p>
-        Currently Studying: College(University Teknologi Malaysia) - Diploma In Computer Science
-    </p>
-
-    <h3>Skills</h3>
-    <ul>
-        <li>Efficiency Problem Solving</li>
-        <li>Time management</li>
-        <li>Critical Thinking</li>
-    </ul>
-    <p>Experienced coding on</p>
-    <ul>
-        <li>C</li>
-        <li>C++</li>
-        <li>Java</li>
-        <li>Python</li>
-    </ul>
-
-    <p>Currently Learning</p>
-    <ul>
-        <li>JavaScript</li>
-        <li>HTML</li>
-        <li>CSS</li>
-        <li>PHP</li>
-        <li>SQL</li>
-        <li>Unity</li>
-        <li>C#</li>
-        <li>Unreal Engine</li>
-    </ul>
-
-    <h3>Projects</h3>
-    <ul>
-        <li>
-            <strong>Library Management System</strong> – Built using C++ with OOP, File Handling and STL Library
-        </li>
-        <li>
-            <strong>Morse Code Translator</strong> – Encodes/decodes using AVL Trees(no STL)
-        </li>
-    </ul>
-
-    <h3>Languages that i speak</h3>
-    <ul>
-        <li>Chinese (Native)</li>
-        <li>English (Fluent)</li>
-        <li>Malay (Fluent)</li>
-    </ul>
+    <div class="section-box bg-personal w3-animate-left">
+        <div class="section-overlay"></div>
+        <div class="section-content">
+            <h3>Personal Information</h3>
+            <p><strong>Name:</strong> Yong Yuan Lin</p>
+            <p><strong>Email:</strong> yuanlinplays@gmail.com</p>
+            <p><strong>Phone:</strong> +6018-2123306</p>
+            <p><strong>Matric:</strong> A24DW0325</p>
+            <p><strong>Program & Section:</strong> Diploma in Computer Science - 1 DSPD (Section 44)</p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/Yyl06/some-coding" target="_blank">Visit GitHub</a></p>
+        </div>
     </div>
+    <div class="section-box bg-education w3-animate-right">
+        <div class="section-overlay"></div>
+        <div class="section-content">
+            <h3>Objectives</h3>
+            <p>A motivated kiddo with a dream in Game Development. Enjoys challenging the limits of programming.</p>
+
+            <h3>Education</h3>
+            <ul>
+                <li><strong>Primary School:</strong> SJK (C) Kuo Kuang</li>
+                <li><strong>Secondary School:</strong> SMK Mutiara Rini</li>
+                <li><strong>Now:</strong> Universiti Teknologi Malaysia – Diploma In Computer Science</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-box bg-skills w3-animate-bottom">
+        <div class="section-overlay"></div>
+        <div class="section-content">
+            <h3>Skills</h3>
+            <ul>
+                <li>Efficient Problem Solving</li>
+                <li>Time Management</li>
+                <li>Critical Thinking</li>
+            </ul>
+
+            <h3>Experienced In</h3>
+            <ul>
+                <li>C</li>
+                <li>C++</li>
+                <li>Java</li>
+                <li>Python</li>
+            </ul>
+
+            <h3>Currently Learning</h3>
+            <ul>
+                <li>JavaScript, HTML, CSS</li>
+                <li>PHP, SQL</li>
+                <li>Unity (C#)</li>
+                <li>Unreal Engine</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-box bg-projects w3-animate-top">
+        <div class="section-overlay"></div>
+        <div class="section-content">
+            <h3>Projects</h3>
+            <ul>
+                <li><strong>Library Management System</strong> – Built using C++ with OOP, File Handling, and STL</li>
+                <li><strong>Morse Code Translator</strong> – Encodes/decodes using AVL Trees (no STL)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-box bg-languages w3-animate-zoom">
+        <div class="section-overlay"></div>
+        <div class="section-content">
+            <h3>Languages I Speak</h3>
+            <ul>
+                <li>Chinese (Native)</li>
+                <li>English (Fluent)</li>
+                <li>Malay (Fluent)</li>
+            </ul>
+        </div>
+    </div>
+
 </body>
 </html>
