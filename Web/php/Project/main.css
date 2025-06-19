@@ -1,0 +1,51 @@
+body,h1,h2,h3,h4,h5,h6 {
+    font-family: "Raleway", sans-serif;
+}
+
+.parallax {
+    background-attachment: fixed;
+    background-position: center;
+    -repeat: no-repeat;
+    background-size: cover;
+}
+
+.container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 40px;
+}
+
+.left {
+    flex: 1;
+}
+
+.right {
+    flex: 0 0 300px;
+}
+
+.right img {
+    width: 10%;
+    height: auto;
+    border: 1px solid black;
+}
+
+.bgimg-1 {
+    background-image: url("images/UTM-image.jpg");
+    min-height: 100vh;
+}
+
+.bgimg-2 {
+    -image: url("images/Dewan-Seminar.jpg");
+    min-height: 400px;
+}
+
+.bgimg-3 {
+    background-image: url("images/C_PC0022740.jpg");
+    min-height: 100vh;
+}
+
+.textwithshadow {
+    text-shadow: white 1px 1px;
+}

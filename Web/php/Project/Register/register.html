@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Register</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="../style.css">
+        <script src="register.js"></script>
+    </head>
+    <body class="w3-light-grey">
+        <div class="container w3-display-middle w3-card w3-white w3-padding-32 w3-round-large" style="width: 400px;">
+            <h2 class="w3-center w3-text-blue">User Registration</h2>
+            <form action="register.php" method="post" onsubmit="return validateForm()" class="container">
+                <label class="w3-text-black"><b>First Name</b></label>
+                <input type="text" class="w3-input w3-border w3-round" name="first_name" required>
+
+                <label class="w3-text-black"><b>Last Name</b></label>
+                <input class="w3-input w3-border w3-round" type="password" name="last_name">
+
+                <label class="w3-text-black"><b>Email</b></label>
+                <input class="w3-input w3-border w3-round" type="email" name="email" required>
+
+                <label class="w3-text-black">Contact Number</label>
+                <input class="w3-input w3-border w3-round" type="tel" name="contact_number" required pattern="[0-9]{10,15}" title="Enter a valid phone number">
+
+                <label class="w3-text-black">Username</label>
+                <input class="w3-input w3-border w3-round" type="text" placeholder="Enter username" name="username" required>
+
+                <label class="w3-text-black">Password</label>
+                    <div class="w3-row w3-margin-bottom">
+                    <input class="w3-input w3-border w3-round" type="password" name="password" id="password" required>
+                    <input class="w3-check w3-margin-top" type="checkbox" onclick="togglePassword()">
+                    <label class="w3-small">Show Password</label>
+                </div>
+
+                <label class="w3-text-black"><b>Role</b></label>
+                <select class="w3-select w3-border w3-round" name="role_id" required>
+                    <option value="" disabled selected>Choose role</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Staff</option>
+                    <option value="3">Student</option>
+                    <option value="4">Guest</option>
+                </select>
+
+                <button class="w3-button w3-blue w3-margin-top w3-round w3-block">Register</button>
+                <p class="w3-center w3-small w3-margin-top">Already have an account? <a href="../Login/login.html">Login here</a></p>
+            </form>
+        </div>
+        
+    </body>
+</html>
