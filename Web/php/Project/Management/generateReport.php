@@ -34,16 +34,16 @@ $result = mysqli_query($con, $sql);
     <title>Usage Report</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
-<body class="w3-light-grey">
+<body class="dark-theme">
     <div class="w3-container w3-padding-32">
         <h2 class="w3-text-blue">Facility Booking Report</h2>
 
         <div class="w3-bar w3-margin-bottom">
-            <a href="?type=daily" class="w3-bar-item w3-button <?php echo ($reportType === 'daily') ? 'w3-blue' : 'w3-light-grey'; ?>">Daily Report</a>
-            <a href="?type=weekly" class="w3-bar-item w3-button <?php echo ($reportType === 'weekly') ? 'w3-blue' : 'w3-light-grey'; ?>">Weekly Report</a>
+            <a href="?type=daily" class="w3-bar-item w3-button <?php echo ($reportType === 'daily') ? 'w3-blue' : 'dark-theme'; ?>">Daily Report</a>
+            <a href="?type=weekly" class="w3-bar-item w3-button <?php echo ($reportType === 'weekly') ? 'w3-blue' : 'dark-theme'; ?>">Weekly Report</a>
         </div>
 
-        <div class="w3-card w3-white w3-padding w3-round">
+        <div class="w3-card dark-theme w3-padding w3-round">
             <table class="w3-table w3-bordered w3-striped">
                 <thead class="w3-blue">
                     <tr>

@@ -6,22 +6,22 @@
         <link rel="stylesheet" href="../style.css">
         <script src="login.js"></script>
     </head>
-    <body class="w3-light-grey">
+    <body class="dark-theme">
         
-        <div class="container w3-display-middle w3-card w3-white w3-padding-32 w3-round-large" style="width: 400px;">
+        <div class="w3-container w3-display-middle w3-card dark-theme w3-padding-32 w3-round-large" style="width: 400px;">
             <h2 class="w3-center w3-text-blue">User Login</h2>
             <form action="login.php" method="post">
-                <label class="w3-text-black"><b>Username</b></label>
+                <label class="w3-text-white"><b>Username</b></label>
                 <input class="w3-input w3-border w3-round" type="text" name="username" required>
-                <label class="w3-text-black">Password</label>
+                <label class="w3-text-white">Password</label>
                 <div class="w3-row w3-margin-bottom">
                     <input class="w3-input w3-border w3-round" type="password" name="password" id="password" required>
                     <input class="w3-check w3-margin-top" type="checkbox" onclick="togglePassword()">
                     <label class="w3-small">Show Password</label>
                 </div>
 
-                <button class="w3-button w3-blue w3-margin-top w3-round w3-block">Login</button>
-                <p class="w3-center w3-small w3-margin-top">Don't Have an Account? <a href="../Register/register.html">Register Here</a></p>
+                <button class="w3-button w3-blue w3-margin-top w3-round w3-block" type="submit" name="login">Login</button>
+                <p class="w3-center w3-small w3-margin-top">Don't Have an Account? <a href="../Register/register.php">Register Here</a></p>
             </form>
         </div>
     </body>

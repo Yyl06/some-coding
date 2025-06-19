@@ -9,6 +9,11 @@ body,h1,h2,h3,h4,h5,h6 {
     background-size: cover;
 }
 
+.w3-dark-grey {
+    background-color: #1e1e1e !important;
+    color: #f0f0f0 !important;
+}
+
 .container {
     display: flex;
     align-items: flex-start;

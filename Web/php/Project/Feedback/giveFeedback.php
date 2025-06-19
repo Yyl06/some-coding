@@ -39,11 +39,11 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 
-<body class="w3-light-grey">
+<body class="dark-theme">
     <div class="w3-container w3-padding-32">
         <h2 class="w3-text-blue">Submit Feedback</h2>
         <?php if ($result->num_rows > 0): ?>
-            <form method="post" action="processFeedback.php" class="w3-card w3-white w3-round w3-padding">
+            <form method="post" action="processFeedback.php" class="w3-card dark-theme w3-round w3-padding">
                 <label><b>Choose Booking</b></label>
                 <select name="booking_id" class="w3-select w3-margin-bottom" required>
                     <option value="" disabled selected>Select a booking</option>

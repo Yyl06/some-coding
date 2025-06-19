@@ -1,61 +1,59 @@
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #d3dcdc;
-    padding: 20px;
-    margin: 0;
+/* Global Dark Theme */
+body{
+    background-color: #2C2C2C !important;
+    background-image: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);
+    color: #f0f0f0 !important;
 }
 
-h2 {
-    color: #333;
+.dark-theme {
+    background-color: #2C2C2C;
+    color: #f0f0f0;
 }
 
-.container {
-    background: white;
-    padding: 20px;
-    margin-bottom: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #ccc;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
+/* Inputs, selects, textareas */
+input, select, textarea {
+    background-color: #1a1a1a !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #444 !important;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Cards, forms, containers */
+.w3-card, .w3-white, .container {
+    background-color: #1a1a1a !important;
+    color: #f0f0f0 !important;
+    box-shadow: 0 0 10px #000 !important;
 }
 
-label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-input[type="text"],
-input[type="password"] {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-button,
-input[type="submit"] {
-    padding: 12px;
-    background: #007BFF;
-    color: white;
+/* Buttons */
+.w3-button, button, input[type="submit"] {
+    background-color: #222 !important;
+    color: #f0f0f0 !important;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
-button:hover,
-input[type="submit"]:hover {
-    background: #0056b3;
+.w3-button:hover, button:hover, input[type="submit"]:hover {
+    background-color: #333 !important;
 }
 
-p {
-    margin-top: 20px;
-    margin-bottom: 0;
-    font-family: Arial, Helvetica, sans-serif;
+/* Links */
+a {
+    color: #4da6ff;
+    text-decoration: none;
+}
+a:hover {
+    color: #80bfff;
+    text-decoration: underline;
+}
+
+/* Fix w3-table borders */
+.w3-table td, .w3-table th {
+    border-color: #444 !important;
+}
+
+/* Override annoying text colors */
+.w3-text-black {
+    color: #f0f0f0 !important;
+}
+.w3-text-blue {
+    color: #4da6ff !important;
 }

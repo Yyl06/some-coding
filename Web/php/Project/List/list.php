@@ -30,10 +30,10 @@
             <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
             <script src="list.js"></script>
     </head>
-    <body class="w3-light-grey">
-        <div class="container w3-padding-32">
+    <body class="dark-theme">
+        <div class="w3-container w3-padding-32">
             <h2 class="w3-center w3-text-blue">Facility Bookings</h2>
-            <div class="w3-card w3-white w3-round w3-padding">
+            <div class="w3-card dark-theme w3-round w3-padding">
                 <table class="w3-table w3-bordered w3-striped w3-hoverable">
                     <thead>
                         <tr class="w3-blue">

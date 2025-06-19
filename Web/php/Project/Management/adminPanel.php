@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['user_id']) || ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 2)){
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role_id'], [1, 2])) {
     echo "<script>alert('Access Denied. Admins only.'); window.location.href = '../Login/login.php';</script>";
     exit;
 }
@@ -14,11 +14,11 @@ if(!isset($_SESSION['user_id']) || ($_SESSION['role_id'] != 1 && $_SESSION['role
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="../style.css">
     </head>
-    <body class="w3-light-grey">
+    <body class="dark-theme">
         <div class="w3-container w3-padding-32">
-            <div class="w3-card w3-white w3-round-large w3-padding">
+            <div class="w3-card dark-theme w3-round-large w3-padding">
                 <h2 class="w3-center w3-text-blue ">Admin panel</h2>
-                <div class="w3-bar w3-margin-top w3-round w3-light-grey">
+                <div class="w3-bar w3-margin-top w3-round dark-theme">
                     <a href="bookingList.php" class="w3-bar-item w3-button w3-blue w3-margin-right">List of Booking</a>
                     <a href="feedback.php" class="w3-bar-item w3-button w3-green w3-margin-right">All Feedbacks</a>
                     <a href="generateReport.php" class="w3-bar-item w3-button w3-black">Generate Weekly Report</a>

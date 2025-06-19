@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!isset($_SESSION['user_id']) || ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 2)){
+if (!isset($_SESSION['user_id']) || ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 2)) {
     echo "<script>alert('Access Denied. Admins only.'); window.location.href = '../Login/login.php';</script>";
     exit;
 }
@@ -38,11 +38,11 @@ $result = $stmt->get_result();
         <title>Your Feedback</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     </head>
-    <body class="w3-light-grey">
+    <body class="dark-theme">
         <div class="w3-container w3-padding-32">
             <h2 class="w3-text-blue">Your Feedback History</h2>
 
-            <div class="w3-card w3-white w3-round w3-padding">
+            <div class="w3-card dark-theme w3-round w3-padding">
                 <?php if($result->num_rows > 0): ?>
                     <table class="w3-table w3-bordered w3-striped w3-small">
                         <thead class="w3-blue">

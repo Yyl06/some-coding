@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['user_id']) || ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 2)){
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role_id'], [1, 2])) {
     echo "<script>alert('Access Denied. Admins only.'); window.location.href = '../Login/login.php';</script>";
     exit;
 }
@@ -27,10 +27,10 @@ $result = mysqli_query($con, $sql);
         <title>All Bookings - Admin Panel</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     </head>
-    <body class="w3-light-grey">
+    <body class="dark-theme">
         <div class="w3-container w3-padding-32">
             <h2 class="w3-center w3-text-blue">All Bookings</h2>
-            <div class="w3-card w3-white w3-round w3-padding">
+            <div class="w3-card dark-theme w3-round w3-padding">
                 <table class="w3-table w3-bordered w3-striped w3-hoverable">
                     <thead class="w3-blue">
                         <tr>
