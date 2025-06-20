@@ -17,6 +17,7 @@ if (!isset($_SESSION['username'])) {
     <body class="w3-dark-grey">
         <div class="w3-bar w3-dark-grey w3-padding" style="position: fixed; top: 0; width: 100%; z-index: 999;">
             <span class="w3-bar-item">Welcome, <?php echo $_SESSION['username']; ?>!</span>
+            <a href="myBookings.php" class="w3-button w3-indigo w3-margin-top">View My Bookings</a>
             <a href="../logout.php" class="w3-bar-item w3-button w3-red w3-right">Logout</a>
         </div>
 

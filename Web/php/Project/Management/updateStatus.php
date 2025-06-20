@@ -10,12 +10,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $booking_id = $_POST['booking_id'] ?? null;
     $action = $_POST['action'] ?? '';
 
-    if (!$booking_id || ($action !== 'approve' && $action !== 'reject')) {
+    if (!$booking_id || ($action !== 'accept' && $action !== 'reject')) {
         echo "<script>alert('Invalid request.'); window.location.href='bookingList.php';</script>";
         exit;
     }
 
-    $status_id = ($action === 'approve') ? 2 : 3;
+    $status_id = ($action === 'accept') ? 2 : 3;
 
     $con = mysqli_connect('localhost', 'root', '', 'fbs');
     if (mysqli_connect_errno()) {

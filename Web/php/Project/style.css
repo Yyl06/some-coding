@@ -12,7 +12,7 @@ body{
 
 /* Inputs, selects, textareas */
 input, select, textarea {
-    background-color: #1a1a1a !important;
+    background-color: #615d5d !important;
     color: #f0f0f0 !important;
     border: 1px solid #444 !important;
 }
@@ -27,6 +27,18 @@ input, select, textarea {
 /* Buttons */
 .w3-button, button, input[type="submit"] {
     background-color: #222 !important;
+    color: #f0f0f0 !important;
+    border: none;
+}
+
+.redbutton{
+    background-color: #ff0000 !important;
+    color: #f0f0f0 !important;
+    border: none;
+}
+
+.greenbutton{
+    background-color: #00b40f !important;
     color: #f0f0f0 !important;
     border: none;
 }
@@ -56,4 +68,8 @@ a:hover {
 }
 .w3-text-blue {
     color: #4da6ff !important;
+}
+
+.specte{
+    background-color: #444;
 }
