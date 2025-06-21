@@ -32,6 +32,7 @@ $result = $stmt->get_result();
 <head>
     <title>My Bookings</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body class="dark-theme">
     <div class="w3-container w3-padding-32">

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role_id'], [1, 2])) {
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role_id'], [1, 2])){
     echo "<script>alert('Access Denied. Admins only.'); window.location.href = '../Login/login.php';</script>";
     exit;
 }
