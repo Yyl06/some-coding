@@ -39,7 +39,7 @@ $result = $stmt->get_result();
         <h2 class="w3-text-blue">My Booking History</h2>
         <div class="w3-card dark-theme w3-round w3-padding">
             <?php if ($result->num_rows > 0): ?>
-                <table class="w3-table w3-bordered w3-striped">
+                <table class="w3-table w3-bordered">
                     <thead class="w3-blue">
                         <tr>
                             <th>Facility</th>
