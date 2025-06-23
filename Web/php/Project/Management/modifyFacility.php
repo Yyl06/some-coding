@@ -42,7 +42,7 @@ if(isset($_GET['delete'])){
     header("Location: modifyFacility.php");
 }
 
-$facilities = mysqli_query($con, "SELECT f.*, ft.facility_types, fs.facility_status
+$facilities = mysqli_query($con, "SELECT f.*, ft.types, fs.status
                                 FROM facility f
                                 JOIN facilitytypes ft ON f.type_id = ft.type_id
                                 JOIN facilitystatus fs ON f.status_id = fs.status_id
@@ -121,7 +121,7 @@ $statuses = mysqli_query($con, "SELECT * FROM facilitystatus");
                                 while($t = mysqli_fetch_assoc($types)):
                                 ?>
                                     <option value="<?= $t['type_id'] ?>" <?= $t['type_id'] == $f['type_id'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($t['facility_types']) ?>
+                                        <?= htmlspecialchars($t['types']) ?>
                                     </option>
                                 <?php endwhile; ?>
                             </select>
@@ -133,7 +133,7 @@ $statuses = mysqli_query($con, "SELECT * FROM facilitystatus");
                                 while($s = mysqli_fetch_assoc($statuses)):
                                 ?>
                                     <option value="<?= $s['status_id'] ?>" <?= $s['status_id'] == $f['status_id'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($s['facility_status']) ?>
+                                        <?= htmlspecialchars($s['status']) ?>
                                     </option>
                                 <?php endwhile; ?>
                             </select>
@@ -150,15 +150,18 @@ $statuses = mysqli_query($con, "SELECT * FROM facilitystatus");
         </tbody>
     </table>
     <script>
-        function filterTable() {
-            const input = document.getElementById("searchInput").value.toLowerCase();
-            const rows = document.querySelectorAll("table tbody tr");
+function filterTable() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("table tbody tr");
 
-            rows.forEach(row => {
-            const name = row.cells[1]?.textContent.toLowerCase();
-            const type = row.cells[2]?.textContent.toLowerCase();
-            row.style.display = (name.includes(input) || type.includes(input)) ? "" : "none";
-            });
+    rows.forEach(row => {
+        const nameInput = row.querySelector('input[name="name"]');
+        const typeSelect = row.querySelector('select[name="type_id"]');
+        const name = nameInput ? nameInput.value.toLowerCase() : '';
+        const type = typeSelect ? typeSelect.options[typeSelect.selectedIndex].text.toLowerCase() : '';
+
+        row.style.display = (name.includes(input) || type.includes(input)) ? "" : "none";
+    });
         }
     </script>
 </body>

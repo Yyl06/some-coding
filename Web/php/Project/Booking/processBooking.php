@@ -14,10 +14,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $start_time = $_POST['start_time'];
     $end_time = $_POST['end_time'];
 
-    $startMinutes = strtotime($start_time);
-    $endMinutes = strtotime($end_time);
-    $diffMinutes = ($endMinutes - $startMinutes) / 60;
+    $booking_date = $_POST['booking_date'];
+    $start = strtotime("$booking_date $start_time");
+    $end = strtotime("$booking_date $end_time");
 
+    if ($end < $start) {
+        $end += 86400;
+    }
+    $diffMinutes = ($end - $start) / 60;
     if ($diffMinutes > 300) {
         echo "<script>alert('Booking cannot exceed 5 hours.'); window.history.back();</script>";
         exit;
