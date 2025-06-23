@@ -33,6 +33,7 @@ $result = mysqli_query($con, $sql);
 <head>
     <title>Usage Report</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body class="dark-theme">
     <div class="w3-container w3-padding-32">
@@ -44,7 +45,7 @@ $result = mysqli_query($con, $sql);
         </div>
 
         <div class="w3-card dark-theme w3-padding w3-round">
-            <table class="w3-table w3-bordered w3-striped">
+            <table class="w3-table w3-bordered ">
                 <thead class="w3-blue">
                     <tr>
                         <th><?php echo ($reportType === 'weekly') ? 'Year - Week' : 'Date'; ?></th>

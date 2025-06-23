@@ -57,6 +57,7 @@ $statuses = mysqli_query($con, "SELECT * FROM facilitystatus");
 <head>
     <title>Manage Facilities</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body class="w3-container dark-theme w3-padding">
     <h2 class="w3-text-blue">Facility Management</h2>
@@ -97,7 +98,7 @@ $statuses = mysqli_query($con, "SELECT * FROM facilitystatus");
     <input class="w3-input w3-border w3-round" type="text" id="searchInput" placeholder="Search by facility name or type..." onkeyup="filterTable()">
     </div>
 
-    <table class="w3-table w3-bordered w3-striped">
+    <table class="w3-table w3-bordered ">
         <thead class="w3-blue">
             <tr>
                 <th>ID</th>
@@ -140,8 +141,8 @@ $statuses = mysqli_query($con, "SELECT * FROM facilitystatus");
                         <td>
                             <input type="hidden" name="facility_id" value="<?= $f['facility_id'] ?>">
                             <input type="hidden" name="action" value="edit">
-                            <button class="w3-button w3-blue w3-small" type="submit">Update</button>
-                            <a class="w3-button w3-red w3-small" href="?delete=<?= $f['facility_id'] ?>" onclick="return confirm('Delete this facility?')">Delete</a>
+                            <button class="w3-button greenbutton w3-small" type="submit">Update</button>
+                            <a class="w3-button redbutton w3-small" href="?delete=<?= $f['facility_id'] ?>" onclick="return confirm('Delete this facility?')">Delete</a>
                         </td>
                     </form>
                 </tr>

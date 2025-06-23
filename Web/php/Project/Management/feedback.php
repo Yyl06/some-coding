@@ -30,6 +30,7 @@ $result = $stmt->get_result();
 <head>
     <title>All Feedbacks - Admin Panel</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body class="dark-theme">
     <div class="w3-container w3-padding-32">
@@ -37,7 +38,7 @@ $result = $stmt->get_result();
 
         <div class="w3-card dark-theme w3-round w3-padding">
             <?php if($result->num_rows > 0): ?>
-                <table class="w3-table w3-bordered w3-striped w3-small">
+                <table class="w3-table w3-bordered w3-small">
                     <thead class="w3-blue">
                         <tr>
                             <th>User</th>

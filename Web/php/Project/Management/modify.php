@@ -66,6 +66,7 @@ $result = mysqli_query($con, "SELECT * FROM users");
 <head>
     <title>Manage Users</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body class="w3-container dark-theme w3-padding">
 
@@ -89,7 +90,7 @@ $result = mysqli_query($con, "SELECT * FROM users");
     </form>
 </div>
 
-<table class="w3-table w3-bordered w3-striped">
+<table class="w3-table w3-bordered ">
     <tr>
         <th>ID</th><th>Username</th><th>Role</th><th>Actions</th>
     </tr>
@@ -108,8 +109,8 @@ $result = mysqli_query($con, "SELECT * FROM users");
                 <td>
                     <input type="hidden" name="user_id" value="<?= $row['user_id'] ?>">
                     <input type="hidden" name="action" value="edit">
-                    <button class="w3-button w3-blue w3-small" type="submit">Update</button>
-                    <a href="modify.php?delete=<?= $row['user_id'] ?>" onclick="return confirm('Delete this user?')" class="w3-button w3-red w3-small">Delete</a>
+                    <button class="w3-button greenbutton w3-small" type="submit">Update</button>
+                    <a href="modify.php?delete=<?= $row['user_id'] ?>" onclick="return confirm('Delete this user?')" class="w3-button redbutton w3-small">Delete</a>
                 </td>
             </form>
         </tr>
