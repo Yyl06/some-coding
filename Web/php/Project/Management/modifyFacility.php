@@ -75,7 +75,7 @@ $statuses = mysqli_query($con, "SELECT * FROM facilitystatus");
                 mysqli_data_seek($types, 0);
                 while($t = mysqli_fetch_assoc($types)):
                 ?>
-                    <option value="<?= $t['type_id'] ?>"><?= htmlspecialchars($t['facility_types']) ?></option>
+                    <option value="<?= $t['type_id'] ?>"><?= htmlspecialchars($t['types']) ?></option>
                 <?php endwhile; ?>
             </select>
 
@@ -86,7 +86,7 @@ $statuses = mysqli_query($con, "SELECT * FROM facilitystatus");
                 mysqli_data_seek($statuses, 0);
                 while($s = mysqli_fetch_assoc($statuses)):
                 ?>
-                    <option value="<?= $s['status_id'] ?>"><?= htmlspecialchars($s['facility_status']) ?></option>
+                    <option value="<?= $s['status_id'] ?>"><?= htmlspecialchars($s['status']) ?></option>
                 <?php endwhile; ?>
             </select>
 
