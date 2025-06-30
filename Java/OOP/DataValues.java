@@ -20,4 +20,3 @@ public class DataValues{
         System.out.println("String : " + d);
     }
 }
-

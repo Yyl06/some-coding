@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function calculateDiscount(){
+            const numOfChildren = parseInt(document.getElementById("children").value);
+            let total = numOfChildren * 1000;
+            let discounted;
+            let due;
+
+                if (numOfChildren <= 3){
+                    discounted = total * 0.05;
+                }else if(numOfChildren > 3 && numOfChildren < 5){
+                    discounted = total * 0.07;
+                }else{
+                    discounted = total * 0.1;
+                }
+                document.getElementById("total").innerHTML = total.toFixed(2);
+                document.getElementById("discounted").innerHTML = discounted.toFixed(2);
+                due = total - discounted;
+                document.getElementById("due").innerHTML = due.toFixed(2);
+            }
+        </script>
+    </head>
+    <body>
+        <label for="children">Number of Children</label>
+        <input type="number" id="children" name="children">
+        <button onclick="calculateDiscount()">Submit</button>
+        <p id="total">Total Fee: </p>
+        <p id="discounted">Discounted Fee: </p>
+        <p id="due">Amount Due: </p>
+    </body>
+</html>
