@@ -42,6 +42,8 @@ You are free to use this code as a reference or starting point for your own proj
 Clone this repo and run it in your preferred environment.
 
 ```bash
-git clone [https://github.com/your-username/your-repo-name.git](https://github.com/Yyl06/some-coding)
+git clone [https://github.com/Yyl06/some-coding](https://github.com/Yyl06/some-coding)
+
+```
 
 ---
