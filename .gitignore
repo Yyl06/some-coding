@@ -23,6 +23,7 @@
 *.exe
 *.out
 *.bin
+bin/
 
 # Ignore Assembly-related files
 *.sln
