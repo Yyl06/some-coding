@@ -11,7 +11,7 @@ if(mysqli_connect_errno()){
     die("Connection failed: . mysqli_connect_error()");
 }
 
-$sql = "SELECT b.booking_id , f.type_id, ft.facility_types, u.username, up.email, b.booking_date, b.start_time, b.end_time, b.booked_time, bs.current_status
+$sql = "SELECT b.booking_id , f.type_id, ft.types, u.username, up.email, b.booking_date, b.start_time, b.end_time, b.booked_time, bs.current_status
 FROM booking b
 JOIN facility f ON b.facility_id = f.facility_id
 JOIN facilitytypes ft ON f.type_id = ft.type_id
@@ -52,7 +52,7 @@ $result = mysqli_query($con, $sql);
                         if ($result && mysqli_num_rows($result) > 0){
                             while($row = mysqli_fetch_assoc($result)){
                                 echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['facility_types']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['types']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['username']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['booking_date']) . "</td>";

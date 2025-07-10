@@ -1,8 +1,8 @@
 import datetime
 
 # Make two dates
-date1 = datetime.datetime(2025, 5, 14)
-date2 = datetime.datetime(2025, 6, 25)
+date1 = datetime.datetime(2025, 7, 1)
+date2 = datetime.datetime(2025, 8, 8)
 
 # Subtract them
 difference = date2 - date1
