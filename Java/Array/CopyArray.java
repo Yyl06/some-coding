@@ -1,5 +1,4 @@
 public class CopyArray {
-    @SuppressWarnings("ManualArrayToCollectionCopy")
     public static void main(String[] args) {
         int[] originalArray = {1, 2, 3, 4, 5};
 
