@@ -1,7 +1,4 @@
-package Strings;
-
 public class HeapandLitteral {
-
     public static void main(String[] args) {
         // String Literal
         String literal = "Hello, World!";
