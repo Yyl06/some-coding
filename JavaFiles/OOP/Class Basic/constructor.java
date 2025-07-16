@@ -11,7 +11,7 @@ public class constructor{
         this.x = 0.0;
     }
 
-    //Accessor method (Useless if u use this pointer)
+    //Accessor method
     public double getX() {
         return x;
     }
