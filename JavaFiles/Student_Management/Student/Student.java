@@ -1,13 +1,14 @@
 package Student_Management.Student;
+import Student_Management.Course.Course;
 
 public class Student{
     private int id;
     private String name;
     private String Matric;
     private int age;
-    private String course;
+    private Course course;
 
-    public Student(int id, String name, String Matric, int age, String course){
+    public Student(int id, String name, String Matric, int age, Course course){
         this.id = id;
         this.name = name;
         this.Matric = Matric;
@@ -23,8 +24,8 @@ public class Student{
     public void setMatric(String Matric){ this.Matric = Matric; }
     public int getAge(){ return age; }
     public void setAge(int age){ this.age = age; }
-    public String getCourse(){ return course; }
-    public void setCourse(String course){ this.course = course; }
+    public Course getCourse(){ return course; }
+    public void setCourse(Course course){ this.course = course; }
 
     public void displayInfo(){
         System.out.println("Student Info: \n" + "id: " + id + "\nName: " + name + "\nMatric: " + Matric + "\nAge: " + age + "\nCourse: " + course);

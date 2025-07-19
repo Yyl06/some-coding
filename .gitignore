@@ -39,3 +39,8 @@ bin/
 
 #ignore temporary files
 *.pdf
+
+**/bin/
+**/obj/
+*.user
+*.suo
