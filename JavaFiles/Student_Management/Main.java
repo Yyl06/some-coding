@@ -1,41 +1,45 @@
+//Not Used, Outdated
 package Student_Management;
 import java.util.Scanner;
 
 import Student_Management.Course.Course;
 import Student_Management.Student.Student;
 import Student_Management.StudentManager.StudentManager;
+import static Syntaxes.println.print;
+import static Syntaxes.println.printline;
 public class Main {
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
         StudentManager manager = new StudentManager();
 
         while(true){
-            System.out.println("\n--- Student Management Menu ---");
-            System.out.println("1. Add Student");
-            System.out.println("2. Remove Student");
-            System.out.println("3. View All Students");
-            System.out.println("4. Find Student by ID");
-            System.out.println("5. Exit");
-            System.out.print("Choice: ");
+            printline("\n--- Student Management Menu ---");
+            printline("1. Add Student");
+            printline("2. Remove Student");
+            printline("3. View All Students");
+            printline("4. Find Student by ID");
+            printline("5. Exit");
+            print("Choice: ");
             int choice = sc.nextInt();
 
             switch(choice){
                 case 1->{
-                    System.out.print("Id: ");
+                    print("Id: ");
                     int id = sc.nextInt();
                     sc.nextLine();
-                    System.out.print("Name: ");
+                    print("Name: ");
                     String name = sc.nextLine();
-                    System.out.print("Age: ");
+                    print("Age: ");
                     int age = sc.nextInt();
                     sc.nextLine();
-                    System.out.print("Matric: ");
+                    print("Matric: ");
                     String Matric = sc.nextLine();
-                    System.out.print("Course ID: ");
+                    print("Course ID: ");
                     int courseID = sc.nextInt();
                     Course course = manager.findCourse(courseID);
                     if(course == null){
-                        System.out.println("Course not found.");
+                        printline("Course not found.");
                     }else{
                         Student s = new Student(id, name, Matric, age, course);
                         manager.addStudent(s);
@@ -44,7 +48,7 @@ public class Main {
                 }
 
                 case 2->{
-                    System.out.print("Enter Id to Remove: ");
+                    print("Enter Id to Remove: ");
                     int removeID = sc.nextInt();
                     sc.nextLine();
                     manager.removeStudent(removeID);
@@ -57,20 +61,20 @@ public class Main {
                 }
 
                 case 4->{
-                    System.out.print("Enter Id to search: ");
+                    print("Enter Id to search: ");
                     int id = sc.nextInt();
                     manager.findStudent(id);
                     break;
                 }
 
                 case 5->{
-                    System.out.println("Goodbye!");
+                    printline("Goodbye!");
                     sc.close();
                     return;
                 }
 
                 default->{
-                    System.out.println("Invalid choice. Try again.");
+                    printline("Invalid choice. Try again.");
                 }
             }
         }

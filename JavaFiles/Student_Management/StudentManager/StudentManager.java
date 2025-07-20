@@ -101,4 +101,12 @@ public class StudentManager{
         }
         return null;
     }
+
+    public void close(){
+        try {
+            if(conn != null) conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
