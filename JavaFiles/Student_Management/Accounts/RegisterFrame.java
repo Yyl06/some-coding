@@ -69,9 +69,8 @@ public class RegisterFrame extends JFrame {
             }
 
             try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
-                 PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-                     PreparedStatement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement stmt = conn.prepareStatement("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+                PreparedStatement.RETURN_GENERATED_KEYS)) {
 
                 stmt.setString(1, username);
                 stmt.setString(2, password);

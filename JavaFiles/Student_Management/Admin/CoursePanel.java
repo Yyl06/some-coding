@@ -42,17 +42,17 @@ public class CoursePanel extends JPanel {
         JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-        JTextField codeLabel = new JTextField();
-        JTextField nameLabel = new JTextField();
-        JTextField capLabel = new JTextField();
+        codeField = new JTextField();
+        nameField = new JTextField();
+        capacityField = new JTextField();
         JButton addButton = new JButton("Add Course");
 
         panel.add(new JLabel("Course Code: "));
-        panel.add(codeLabel);
+        panel.add(codeField);
         panel.add(new JLabel("Course Name: "));
-        panel.add(nameLabel);
+        panel.add(nameField);
         panel.add(new JLabel("Capacity: "));
-        panel.add(capLabel);
+        panel.add(capacityField);
         panel.add(new JLabel());
         panel.add(addButton);
 
@@ -68,7 +68,7 @@ public class CoursePanel extends JPanel {
                 return;
             }
 
-            String sql = "INSERT INTO course (course_name, course_code, capacity) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO course (course_code, course_name, capacity) VALUES (?, ?, ?)";
             try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", ""); 
             PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, code);

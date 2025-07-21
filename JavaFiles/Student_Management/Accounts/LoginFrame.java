@@ -18,8 +18,6 @@ import javax.swing.JTextField;
 
 import Student_Management.Dashboard.AdminDashboard;
 import Student_Management.Dashboard.StudentDashboard;
-import Student_Management.Accounts.LoginFrame;
-
 
 public class LoginFrame extends JFrame {
     private JTextField usernameField;
@@ -109,4 +107,3 @@ public class LoginFrame extends JFrame {
         return null;
     }
 }
-
