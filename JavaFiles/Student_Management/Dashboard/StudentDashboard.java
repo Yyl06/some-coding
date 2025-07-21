@@ -11,9 +11,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import Student_Management.Enrollment.EnrollCourse;
+import Student_Management.Enrollment.ViewEnrolled;
 
 public class StudentDashboard extends JFrame {
 
@@ -30,17 +32,31 @@ public class StudentDashboard extends JFrame {
         JLabel label = new JLabel("Welcome, " + username + "!", SwingConstants.CENTER);
 
         JButton enrollButton = new JButton("Enroll in Course");
+        JButton viewEnrollButton = new JButton("View Enrolled Courses");
+
         enrollButton.addActionListener(e -> {
             if (studentId != -1) {
-                new EnrollCourse(studentId);
+                new EnrollCourse(studentId).setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Student ID Not Found!");
             }
         });
+
+        viewEnrollButton.addActionListener(e -> {
+            if (studentId != -1) {
+                new ViewEnrolled(studentId).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Student ID Not Found!");
+            }
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(enrollButton);
+        buttonPanel.add(viewEnrollButton);
+
         setLayout(new BorderLayout());
         add(label, BorderLayout.CENTER);
-        add(enrollButton, BorderLayout.SOUTH);
-        setVisible(true);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private int fetchStudentId(String username) {

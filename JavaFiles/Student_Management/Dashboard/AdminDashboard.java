@@ -8,9 +8,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import Student_Management.Accounts.LoginFrame;
 import Student_Management.Admin.CoursePanel;
-import Student_Management.Admin.ViewStudentPanel;
 import Student_Management.Admin.ManageStudentPanel;
+import Student_Management.Admin.ViewStudentPanel;
 
 
 public class AdminDashboard extends JFrame{
@@ -68,6 +69,7 @@ public class AdminDashboard extends JFrame{
         logOut.addActionListener(e->{
             dispose();
             JOptionPane.showMessageDialog(null, "Logged Out.");
+            new LoginFrame().setVisible(true);
         });
         add(panel);
     }
