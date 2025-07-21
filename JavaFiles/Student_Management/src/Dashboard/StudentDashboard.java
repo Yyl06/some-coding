@@ -1,4 +1,4 @@
-package Student_Management.Dashboard;
+package Dashboard;
 
 import java.awt.BorderLayout;
 import java.sql.Connection;
@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import Student_Management.Enrollment.EnrollCourse;
-import Student_Management.Enrollment.ViewEnrolled;
+import Enrollment.EnrollCourse;
+import Enrollment.ViewEnrolled;
 
 public class StudentDashboard extends JFrame {
 

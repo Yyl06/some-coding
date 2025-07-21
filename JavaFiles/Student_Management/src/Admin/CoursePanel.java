@@ -1,4 +1,4 @@
-package Student_Management.Admin;
+package Admin;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;

@@ -1,5 +1,5 @@
-package Student_Management.Student;
-import Student_Management.Course.Course;
+package Student;
+import Course.Course;
 
 public class Student{
     private int id;

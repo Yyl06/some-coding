@@ -1,4 +1,4 @@
-package Student_Management.Course;
+package Course;
 
 public class Course {
     private int id;

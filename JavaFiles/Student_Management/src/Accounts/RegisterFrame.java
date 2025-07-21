@@ -1,4 +1,4 @@
-package Student_Management.Accounts;
+package Accounts;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

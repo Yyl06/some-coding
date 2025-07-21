@@ -1,4 +1,4 @@
-package Student_Management.StudentManager;
+package StudentManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import Student_Management.Course.Course;
-import Student_Management.Student.Student;
+import Course.Course;
+import Student.Student;
 
 public class StudentManager{
     private Connection conn;

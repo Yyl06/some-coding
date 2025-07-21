@@ -1,7 +1,5 @@
-package Student_Management;
+import Accounts.LoginFrame;
 import javax.swing.SwingUtilities;
-
-import Student_Management.Accounts.LoginFrame;
 
 public class UIMain {
     public static void main(String[] args) {

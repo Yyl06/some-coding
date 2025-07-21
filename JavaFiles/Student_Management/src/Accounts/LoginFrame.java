@@ -1,4 +1,4 @@
-package Student_Management.Accounts;
+package Accounts;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import Student_Management.Dashboard.AdminDashboard;
-import Student_Management.Dashboard.StudentDashboard;
+import Dashboard.AdminDashboard;
+import Dashboard.StudentDashboard;
 
 public class LoginFrame extends JFrame {
     private JTextField usernameField;

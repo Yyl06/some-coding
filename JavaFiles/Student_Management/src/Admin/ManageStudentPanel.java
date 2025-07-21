@@ -1,11 +1,10 @@
-package Student_Management.Admin;
+package Admin;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 import java.util.Vector;
-import java.util.jar.JarEntry;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class ManageStudentPanel extends JPanel{
     private JTable studentTable;

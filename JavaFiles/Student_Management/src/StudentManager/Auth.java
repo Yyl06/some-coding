@@ -1,4 +1,4 @@
-package Student_Management.StudentManager;
+package StudentManager;
 import static Syntaxes.println.*;
 
 import java.sql.*;

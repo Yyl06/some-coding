@@ -1,4 +1,4 @@
-package Student_Management.Admin;
+package Admin;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.sql.Connection;
@@ -6,7 +6,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;

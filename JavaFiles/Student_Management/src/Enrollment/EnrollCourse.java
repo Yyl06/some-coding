@@ -1,10 +1,9 @@
-package Student_Management.Enrollment;
-
-import javax.swing.*;
+package Enrollment;
 
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.*;
 
 public class EnrollCourse extends JFrame{
     private int studentId;
