@@ -1,65 +1,74 @@
 package Enrollment;
 
-import java.awt.BorderLayout;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.sql.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class ViewEnrolled extends JFrame{
+public class ViewEnrolled extends JFrame {
     private int studentId;
     private JTable table;
-    JTextField searchField = new JTextField(15);
-    JButton searchBtn = new JButton("Search");
-    JButton dropCourseBtn = new JButton("Drop Selected Course");
+    private JTextField searchField;
+    private JButton searchBtn, dropCourseBtn;
 
-    public ViewEnrolled(int studentId){
+    public ViewEnrolled(int studentId) {
         this.studentId = studentId;
-        setTitle("My Enrolled Courses");
-        setSize(500, 300);
+        setTitle("📘 My Enrolled Courses");
+        setSize(600, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        table = new JTable();
-        searchField = new JTextField(15);
-        searchBtn = new JButton("Search");
+        setLayout(new BorderLayout(10, 10));
+        JPanel contentPane = new JPanel(new BorderLayout(10, 10));
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        add(contentPane);
 
+        // Top Panel
         JPanel topPanel = new JPanel();
-        topPanel.add(new JLabel("Search:"));
+        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        topPanel.add(new JLabel("🔍 Search:"));
+
+        searchField = new JTextField(20);
+        searchBtn = new JButton("Search");
         topPanel.add(searchField);
         topPanel.add(searchBtn);
-        add(topPanel, BorderLayout.NORTH);
 
+        contentPane.add(topPanel, BorderLayout.NORTH);
+
+        // Table Setup
+        table = new JTable();
+        table.setRowHeight(25);
+        table.setFillsViewportHeight(true);
+        table.setSelectionBackground(new Color(173, 216, 230)); // light blue
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        contentPane.add(scrollPane, BorderLayout.CENTER);
+
+        // Bottom Panel
+        dropCourseBtn = new JButton("❌ Drop Selected Course");
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel.add(dropCourseBtn);
+
+        contentPane.add(bottomPanel, BorderLayout.SOUTH);
+
+        // Load Data
         loadEnrollCourses("");
 
+        // Button Actions
         searchBtn.addActionListener(e -> {
             String keyword = searchField.getText().trim();
             loadEnrollCourses(keyword);
         });
 
-        JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
-        setVisible(true);
-
         dropCourseBtn.addActionListener(e -> dropSelectedCourse());
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(dropCourseBtn);
-        add(bottomPanel, BorderLayout.SOUTH);
 
+        setVisible(true);
     }
 
-    private void loadEnrollCourses(String keyword){
-        String[] columns = {"Course ID", "Course Name"};
+    private void loadEnrollCourses(String keyword) {
+        String[] columns = { "Course ID", "Course Code", "Course Name" };
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
         String sql = """
@@ -70,8 +79,9 @@ public class ViewEnrolled extends JFrame{
             AND (c.course_name LIKE ? OR c.course_code LIKE ?)
         """;
 
-        try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
-        PreparedStatement stmt = conn.prepareStatement(sql)){
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, studentId);
             stmt.setString(2, "%" + keyword + "%");
             stmt.setString(3, "%" + keyword + "%");
@@ -81,43 +91,47 @@ public class ViewEnrolled extends JFrame{
                 int id = rs.getInt("course_id");
                 String code = rs.getString("course_code");
                 String name = rs.getString("course_name");
-                model.addRow(new Object[]{id, code, name});
+                model.addRow(new Object[]{ id, code, name });
             }
             table.setModel(model);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Failed to load Enrolled Courses.");
+            JOptionPane.showMessageDialog(this, "❌ Failed to load enrolled courses.");
         }
     }
 
-    private void dropSelectedCourse(){
+    private void dropSelectedCourse() {
         int selectedRow = table.getSelectedRow();
-        if(selectedRow == -1){
-            JOptionPane.showMessageDialog(this, "Please Select a course to Drop.");
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "⚠️ Please select a course to drop.");
             return;
         }
 
         int courseId = (int) table.getValueAt(selectedRow, 0);
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to drop Course ID: " + courseId + "?",
+                "Confirm Drop", JOptionPane.YES_NO_OPTION);
 
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to drop Course ID: " + courseId + "?",
-        "Confirm Drop", JOptionPane.YES_NO_OPTION);
-        if(confirm == JOptionPane.YES_OPTION){
+        if (confirm == JOptionPane.YES_OPTION) {
             String sql = "DELETE FROM enrollments WHERE student_id = ? AND course_id = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, studentId);
-            stmt.setInt(2, courseId);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                JOptionPane.showMessageDialog(this, "Course dropped successfully.");
-                loadEnrollCourses(searchField.getText().trim());
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to drop course.");
+
+            try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+                stmt.setInt(1, studentId);
+                stmt.setInt(2, courseId);
+                int rowsAffected = stmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(this, "✅ Course dropped successfully.");
+                    loadEnrollCourses(searchField.getText().trim());
+                } else {
+                    JOptionPane.showMessageDialog(this, "❌ Failed to drop course.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "⚠️ Database error occurred.");
             }
-        }catch(SQLException e){
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database error occurred.");
         }
     }
-}
 }

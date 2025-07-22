@@ -1,170 +1,180 @@
 package Admin;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
-import java.sql.ResultSet;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.sql.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class CoursePanel extends JPanel {
-    JTable courseTable;
-    DefaultTableModel tableModel;
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/student";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "";
+
+    private JTable courseTable;
+    private DefaultTableModel tableModel;
 
     private JTextField nameField, codeField, capacityField;
-    private JButton addButton;
 
     public CoursePanel() {
         setLayout(new BorderLayout());
 
+        // Setup Tabs
         JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Add Course", addCourse());
-        tabs.addTab("View Courses", viewCourse());
-        tabs.addTab("Remove Course", removeCourse());
+        tabs.addTab("➕ Add Course", createAddPanel());
+        tabs.addTab("📋 View Courses", createViewPanel());
+        tabs.addTab("❌ Remove Course", createDeletePanel());
+
         add(tabs, BorderLayout.CENTER);
     }
 
-    private JPanel addCourse(){
+    private JPanel createAddPanel() {
         JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        panel.setBorder(new EmptyBorder(20, 50, 20, 50));
 
-        codeField = new JTextField();
         nameField = new JTextField();
+        codeField = new JTextField();
         capacityField = new JTextField();
-        JButton addButton = new JButton("Add Course");
+        JButton addButton = new JButton("➕ Add Course");
 
-        panel.add(new JLabel("Course Code: "));
+        panel.add(new JLabel("Course Code:"));
         panel.add(codeField);
-        panel.add(new JLabel("Course Name: "));
+        panel.add(new JLabel("Course Name:"));
         panel.add(nameField);
-        panel.add(new JLabel("Capacity: "));
+        panel.add(new JLabel("Capacity:"));
         panel.add(capacityField);
-        panel.add(new JLabel());
+        panel.add(new JLabel()); // Empty label for spacing
         panel.add(addButton);
 
-        addButton.addActionListener(e -> {
-            String name = nameField.getText().trim();
-            String code = codeField.getText().trim();
-            int capacity;
+        addButton.addActionListener(e -> addCourse());
 
-            try {
-                capacity = Integer.parseInt(capacityField.getText().trim());
-            } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(this, "Invalid Capacity! ", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            String sql = "INSERT INTO course (course_code, course_name, capacity) VALUES (?, ?, ?)";
-            try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", ""); 
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, code);
-                stmt.setString(2, name);
-                stmt.setInt(3, capacity);
-                stmt.executeUpdate();
-
-                JOptionPane.showMessageDialog(this, "Course Addded Successfully!");
-                refreshTable();
-
-            } catch (SQLIntegrityConstraintViolationException dup) {
-                JOptionPane.showMessageDialog(this, "Course code already exists!", "Duplicate Entry", JOptionPane.WARNING_MESSAGE);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
         return panel;
     }
 
-    private JPanel viewCourse(){
+    private JPanel createViewPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-
-        tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[]{"Course ID", "Code", "Name", "Capacity"});
-
-        courseTable = new JTable(tableModel);
-        refreshTable();
-
+        setupTable();
         JScrollPane scrollPane = new JScrollPane(courseTable);
         panel.add(scrollPane, BorderLayout.CENTER);
-
         return panel;
     }
 
-    private JPanel removeCourse(){
+    private JPanel createDeletePanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        JButton deleteButton = new JButton("Delete Selected Course");
+        JButton deleteButton = new JButton("🗑 Delete Selected Course");
+        setupTable();
 
-        tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[]{"Course ID", "Code", "Name", "Capacity"});
+        deleteButton.addActionListener(e -> deleteCourse());
 
-        courseTable = new JTable(tableModel);
-        refreshTable();
-
-        deleteButton.addActionListener(e -> {
-            int selected = courseTable.getSelectedRow();
-            if(selected == -1){
-                JOptionPane.showMessageDialog(this, "Select a Course to Delete.");
-                return;
-            }
-            int courseId = (int) courseTable.getValueAt(selected, 0);
-            int confirm = JOptionPane.showConfirmDialog(this, "Delete this Course?", "Confirm", JOptionPane.YES_NO_OPTION);
-            if(confirm != JOptionPane.YES_OPTION){
-                return;
-            }
-
-            String sql = "DELETE FROM course WHERE course_id = ?";
-
-            try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
-            PreparedStatement stmt = conn.prepareStatement(sql)){
-                stmt.setInt(1, courseId);
-                stmt.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Course Deleted.");
-                refreshTable();
-            }catch(SQLException ex){
-                JOptionPane.showMessageDialog(this, "Error Deleting Course.");
-                ex.printStackTrace();
-            }
-        });
         panel.add(new JScrollPane(courseTable), BorderLayout.CENTER);
         panel.add(deleteButton, BorderLayout.SOUTH);
 
         return panel;
     }
 
-    private void refreshTable(){
-        if(tableModel == null) return;
+    private void setupTable() {
+        if (tableModel == null) {
+            tableModel = new DefaultTableModel(new String[]{"Course ID", "Code", "Name", "Capacity"}, 0);
+            courseTable = new JTable(tableModel);
+        }
+        refreshTable();
+    }
+
+    private void addCourse() {
+        String code = codeField.getText().trim();
+        String name = nameField.getText().trim();
+        String capacityStr = capacityField.getText().trim();
+
+        if (code.isEmpty() || name.isEmpty() || capacityStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "All fields are required.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int capacity;
+        try {
+            capacity = Integer.parseInt(capacityStr);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Capacity must be a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String sql = "INSERT INTO course (course_code, course_name, capacity) VALUES (?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, code);
+            stmt.setString(2, name);
+            stmt.setInt(3, capacity);
+            stmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "✅ Course added successfully.");
+            refreshTable();
+            clearFields();
+
+        } catch (SQLIntegrityConstraintViolationException dup) {
+            JOptionPane.showMessageDialog(this, "❗ Course code already exists!", "Duplicate Entry", JOptionPane.WARNING_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "❌ Database error:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteCourse() {
+        int selectedRow = courseTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a course to delete.");
+            return;
+        }
+
+        int courseId = (int) tableModel.getValueAt(selectedRow, 0);
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this course?", "Confirm", JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) return;
+
+        String sql = "DELETE FROM course WHERE course_id = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, courseId);
+            stmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "✅ Course deleted.");
+            refreshTable();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "❌ Error deleting course:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void refreshTable() {
+        if (tableModel == null) return;
+
         tableModel.setRowCount(0);
 
         String sql = "SELECT * FROM course";
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
-        try(Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "");
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql)){
-            while(rs.next()){
+            while (rs.next()) {
                 tableModel.addRow(new Object[]{
-                    rs.getInt("course_id"),
-                    rs.getString("course_code"),
-                    rs.getString("course_name"),
-                    rs.getInt("capacity")
+                        rs.getInt("course_id"),
+                        rs.getString("course_code"),
+                        rs.getString("course_name"),
+                        rs.getInt("capacity")
                 });
             }
-        }catch(SQLException e){
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void clearFields() {
+        nameField.setText("");
+        codeField.setText("");
+        capacityField.setText("");
     }
 }
