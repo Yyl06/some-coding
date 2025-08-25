@@ -1,0 +1,75 @@
+System Name - Brighton School Management System
+
+Actors -
+Admin
+Parent
+Teacher
+System
+
+Use cases - 
+Register Parent - Admin registers a new parent into the system
+Register Student - Admin registers a new student and associates them with a parent
+Assign Subjects to Students - Admin assigns subjects(Max 6) per semester for each student
+Assign Teachers to Subjects - Admin assigns teachers to each subject for teaching.
+Record fee payment - Admin records payment made by parents for each student/the system automatically records the payment made by parents
+Issue receipt - The system generates and issues receipt after payment
+Generate reports - The system generates report and shows admin the fee payment status
+View fee - Parents can check current fee payments for their childrens
+View timetable/Subjects - Teachers/Student can view subjects or class assignments
+
+Relationships - 
+Admin can:
+Register Parents and Students
+Assign Subjects and Teachers
+Record Payments
+Looks At Generated Reports
+
+Parent can:
+View fee status
+Make payment (through admin, if not online)
+Receive receipt
+
+Teacher can:
+View subject/class assigned
+
+Student can:
+View timetable/venue for classes
+
+
+Classes
+Parent - parentID(int), name(String), phone(String), email(String)
+register():Boolean, viewChildren():void, payFees():int
+
+Student - studentID(int), name(String), age(int), level(String), subjects[](String), parentID(int)
+enroll():void, assignSubjects():void, viewFeeStatus():Boolean
+
+Staff - staffID(int), name(String), position(String), phone(String), email(String)
+assignSubject():void
+
+Teacher(Inherited from Staff) - subjects[](String)
+assignSubject():void, viewTimetable():void
+
+SupportingStaff(Inherited from Staff) - role(String)
+
+Subject - subjectID(int), name(String), level(String)
+assignTeacher():void, assignToStudent():void
+
+Payment - paymentID(int), date(LocalDate), amount(String), studentID(int), receiptID(int)
+recordPayment():String
+
+Receipt - receiptID(int), paymentID(int), issueDate(LocalDate)
+generateReceipt:void
+
+Report - reportID(int), date(LocalDate), status(Boolean)
+generate():void
+
+
+Relationships
+Parent to Student: One-to-many
+Student to Subject: Many-to-many
+Teacher to Subject: Many-to-many
+Payment to Student: Many-to-one
+Receipt to Payment: One-to-one
+Admin interacts with all entities (can be a role with extended access)
+
+
