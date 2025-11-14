@@ -1,6 +1,18 @@
 import javax.swing.JOptionPane;
 
-public class Exercise5_YongYuanLin {
+public class Exercise5_YongYuanLin{
+    public static int findNumberOfDigits(String msg){
+        int count = 0;
+        char op;
+        for(int i = 0 ; i < msg.length() ; i++){
+            op = msg.charAt(i);
+            if(Character.isDigit(op)){
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static void main(String[] args) {
         String InputNum1, InputNum2;
         InputNum1 = JOptionPane.showInputDialog("Enter Number 1: ");

@@ -64,7 +64,7 @@ int main(){
     int key;
 
     std::cout << "Enter Plaintext: ";
-    std::cin >> text;
+    std::getline(std::cin, text);
 
     std::cout << "Enter Key: ";
     std::cin >> key;

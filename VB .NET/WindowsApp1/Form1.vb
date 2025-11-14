@@ -8,7 +8,7 @@ Public Class Form1
 
         Me.Controls.Add(btnClickMe)
     End Sub
-    Private Sub btnClickMe_Click(sender As Object, e As EventArgs) Handles btnClickMe.Click
+    Private Sub Calc(sender As Object, e As EventArgs) Handles btnClickMe.Click
 
         Dim members As String = " Hello" & vbCrLf & vbCrLf &
                 "Group Members: " & vbCrLf &

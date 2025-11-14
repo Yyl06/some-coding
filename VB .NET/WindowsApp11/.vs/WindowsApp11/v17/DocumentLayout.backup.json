@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\WindowsApp11\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{358972BB-6624-4015-985B-2C0D597E8733}|WindowsApp11.vbproj|C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\WindowsApp11\\form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{358972BB-6624-4015-985B-2C0D597E8733}|WindowsApp11.vbproj|solutionrelative:form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{358972BB-6624-4015-985B-2C0D597E8733}|WindowsApp11.vbproj|c:\\users\\pc\\documents\\visualstudio\\vb .net\\windowsapp11\\form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{358972BB-6624-4015-985B-2C0D597E8733}|WindowsApp11.vbproj|solutionrelative:form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.vb",
+              "DocumentMoniker": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\WindowsApp11\\Form1.vb",
+              "RelativeDocumentMoniker": "Form1.vb",
+              "ToolTip": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\WindowsApp11\\Form1.vb",
+              "RelativeToolTip": "Form1.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADoAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-28T05:48:36.784Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.vb [Design]",
+              "DocumentMoniker": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\WindowsApp11\\Form1.vb",
+              "RelativeDocumentMoniker": "Form1.vb",
+              "ToolTip": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\WindowsApp11\\Form1.vb [Design]",
+              "RelativeToolTip": "Form1.vb [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-28T05:48:28.015Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

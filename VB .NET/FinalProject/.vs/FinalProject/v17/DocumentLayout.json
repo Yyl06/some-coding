@@ -1,0 +1,120 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\formtransaction.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|solutionrelative:formtransaction.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\login.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|solutionrelative:login.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\mainui.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|solutionrelative:mainui.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|c:\\users\\pc\\documents\\visualstudio\\vb .net\\finalproject\\dbconnection.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|solutionrelative:dbconnection.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\formreport.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|solutionrelative:formreport.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\formcashier.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{18B57C42-F225-469C-A829-10984D4F1040}|FinalProject.vbproj|solutionrelative:formcashier.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DBConnection.vb",
+              "DocumentMoniker": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\DBConnection.vb",
+              "RelativeDocumentMoniker": "DBConnection.vb",
+              "ToolTip": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\DBConnection.vb",
+              "RelativeToolTip": "DBConnection.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-10-24T06:27:17.435Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainUI.vb",
+              "DocumentMoniker": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\MainUI.vb",
+              "RelativeDocumentMoniker": "MainUI.vb",
+              "ToolTip": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\MainUI.vb",
+              "RelativeToolTip": "MainUI.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-10-20T04:51:18.722Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Login.vb",
+              "DocumentMoniker": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\Login.vb",
+              "RelativeDocumentMoniker": "Login.vb",
+              "ToolTip": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\Login.vb",
+              "RelativeToolTip": "Login.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-10-24T06:01:47.165Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormTransaction.vb",
+              "DocumentMoniker": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\FormTransaction.vb",
+              "RelativeDocumentMoniker": "FormTransaction.vb",
+              "ToolTip": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\FormTransaction.vb",
+              "RelativeToolTip": "FormTransaction.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-10-20T04:51:37.05Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FormCashier.vb",
+              "DocumentMoniker": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\FormCashier.vb",
+              "RelativeDocumentMoniker": "FormCashier.vb",
+              "ToolTip": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\FormCashier.vb",
+              "RelativeToolTip": "FormCashier.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-10-20T04:51:30.81Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FormReport.vb",
+              "DocumentMoniker": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\FormReport.vb",
+              "RelativeDocumentMoniker": "FormReport.vb",
+              "ToolTip": "C:\\Users\\PC\\Documents\\VisualStudio\\VB .NET\\FinalProject\\FormReport.vb",
+              "RelativeToolTip": "FormReport.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-10-19T16:24:41.989Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
