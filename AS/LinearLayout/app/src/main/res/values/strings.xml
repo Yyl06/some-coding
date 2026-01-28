@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LinearLayout</string>
+    <string name="hello_students">Hello Students!</string>
+    <string name="click_me">Click Me</string>
+    <string name="utm_space">UTM SPACE</string>
+    <string name="ignore_me">Ignore Me</string>
+</resources>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">IntentButton</string>
+    <string name="welcome_student">Welcome Student</string>
+    <string name="student_information_system">Student Information System</string>
+    <string name="view_student_profile">View Student Profile</string>
+    <string name="student_profile">Student Profile</string>
+    <string name="name_yong_yuan_lin">Name: Yong Yuan Lin</string>
+    <string name="student_id_a24dw0325">Student ID: A24DW0325</string>
+    <string name="programme_diploma_in_computer_science">Programme: Diploma in Computer Science</string>
+    <string name="back">Back</string>
+</resources>
