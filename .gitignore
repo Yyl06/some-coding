@@ -36,9 +36,11 @@ bin/
 *.suo
 *.vcxproj*
 *.lastbuildstate
+*.env
 
 #ignore temporary files
 *.pdf
+*.gitignore
 
 **/bin/
 **/obj/
