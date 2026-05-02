@@ -1,4 +1,4 @@
-# Ignore VSCode settings (optional)
+# Ignore VSCode settings
 .vscode/
 
 # Ignore Visual Studio files
@@ -19,12 +19,6 @@
 *.cache
 *.sln.docstates
 
-# Ignore generated files
-*.exe
-*.out
-*.bin
-bin/
-
 # Ignore Assembly-related files
 *.sln
 *.asm
@@ -40,7 +34,6 @@ bin/
 
 #ignore temporary files
 *.pdf
-*.gitignore
 
 **/bin/
 **/obj/
