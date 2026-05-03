@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
+
 const isLoggedIn = require("../middleware/authMiddleware");
 
-router.get("/menu", isLoggedIn, (req, res) => {
-  res.send("Food Menu");
+// Homepage
+router.get("/", (req, res) => {
+  res.render("index");
 });
 
 module.exports = router;

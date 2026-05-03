@@ -26,7 +26,6 @@ app.use(
 
 const homeRoutes = require("./routes/homeRoutes");
 app.use("/", homeRoutes);
-
 const authRoutes = require("./routes/authRoutes");
 app.use("/auth", authRoutes);
 
