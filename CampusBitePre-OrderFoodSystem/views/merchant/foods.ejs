@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Foods</title>
+</head>
+<body>
+
+  <h1>Manage Foods</h1>
+
+  <p>Logged in as: <%= user.username %> (<%= user.role %>)</p>
+
+  <a href="/foods/add"><button type="button">Add Food</button></a>
+  <a href="/dashboard"><button type="button">Back to Dashboard</button></a>
+
+  <hr>
+
+  <% if (success) { %>
+    <p><strong><%= success %></strong></p>
+    <hr>
+  <% } %>
+
+  <% if (!foods || foods.length === 0) { %>
+    <p>No food items yet.</p>
+  <% } else { %>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Available</th>
+          <% if (user.role === 'admin') { %>
+            <th>Merchant</th>
+          <% } %>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% foods.forEach(food => { %>
+          <tr>
+            <td><%= food.name %></td>
+            <td><%= food.price %></td>
+            <td><%= food.category %></td>
+            <td><%= food.availability ? 'Yes' : 'No' %></td>
+            <% if (user.role === 'admin') { %>
+              <td><%= food.merchant && food.merchant.username ? food.merchant.username : '' %></td>
+            <% } %>
+            <td>
+              <a href="/foods/<%= food._id %>/edit">
+                <button type="button">Edit</button>
+              </a>
+
+              <form method="POST" action="/foods/<%= food._id %>/toggle" style="display:inline;">
+                <button type="submit"><%= food.availability ? 'Mark Unavailable' : 'Mark Available' %></button>
+              </form>
+
+              <form method="POST" action="/foods/<%= food._id %>/delete" style="display:inline;" onsubmit="return confirm('Delete this food item?');">
+                <button type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+  <% } %>
+
+</body>
+</html>

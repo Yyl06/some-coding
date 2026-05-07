@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= isEdit ? 'Edit Food' : 'Add Food' %></title>
+</head>
+<body>
+
+  <h1><%= isEdit ? 'Edit Food Item' : 'Add Food Item' %></h1>
+
+  <form method="POST" action="<%= isEdit ? '/foods/' + food._id + '/edit' : '/foods/add' %>">
+
+    <label>Name</label><br>
+    <input type="text" name="name" value="<%= food.name %>" placeholder="Food Name" required>
+    <br><br>
+
+    <label>Price</label><br>
+    <input type="number" name="price" value="<%= food.price %>" placeholder="Price" required>
+    <br><br>
+
+    <label>Category</label><br>
+    <input type="text" name="category" value="<%= food.category %>" placeholder="Category" required>
+    <br><br>
+
+    <label>Description</label><br>
+    <textarea name="description" placeholder="Description"><%= food.description || '' %></textarea>
+    <br><br>
+
+    <button type="submit"><%= isEdit ? 'Save Changes' : 'Add Food' %></button>
+    <a href="/foods" style="margin-left: 8px;">Cancel</a>
+
+  </form>
+
+</body>
+</html>

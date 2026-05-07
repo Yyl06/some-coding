@@ -1,26 +1,67 @@
 const express = require("express");
 const router = express.Router();
 const isLoggedIn = require("../middleware/authMiddleware");
-const checkRole = require("../middleware/roleMiddleware");
 const FoodItem = require("../models/FoodItem");
 
-// VIEW MENU
-router.get("/", async (req, res) => {
+// View Menu
+router.get("/", isLoggedIn, async (req, res) => {
   try {
     const search = req.query.search || "";
+    const category = req.query.category || "";
 
-    const foods = await FoodItem.find({
+    let query = {
+      availability: true,
       name: { $regex: search, $options: "i" }
-    });
+    };
 
-    res.render("menu", {
+    // apply category filter
+    if (category) {
+      query.category = category;
+    }
+
+    const foods = await FoodItem.find(query);
+
+    res.render("customer/menu", {
       foods,
-      search
+      search,
+      category,
+      merchantId: "",
     });
 
   } catch (err) {
     console.log(err);
     res.send("Error loading menu");
+  }
+});
+
+// View Menu for a Specific Merchant
+router.get("/:merchantId", isLoggedIn, async (req, res) => {
+  try {
+    const { merchantId } = req.params;
+    const search = req.query.search || "";
+    const category = req.query.category || "";
+
+    let query = {
+      availability: true,
+      merchant: merchantId,
+      name: { $regex: search, $options: "i" },
+    };
+
+    if (category) {
+      query.category = category;
+    }
+
+    const foods = await FoodItem.find(query);
+
+    return res.render("customer/menu", {
+      foods,
+      search,
+      category,
+      merchantId,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.send("Error loading menu");
   }
 });
 

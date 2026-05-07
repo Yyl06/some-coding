@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shops</title>
+</head>
+<body>
+
+<h1>Choose a Shop</h1>
+
+<form method="GET" action="/shops">
+  <input 
+    type="text"
+    name="search"
+    placeholder="Search shop..."
+    value="<%= search %>"
+  >
+
+  <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<% shops.forEach(shop => { %>
+
+  <div style="border:1px solid black; padding:10px; margin:10px;">
+
+    <h3><%= shop.username %></h3>
+
+    <a href="/menu/<%= shop._id %>">
+      <button>View Menu</button>
+    </a>
+
+  </div>
+
+<% }) %>
+
+</body>
+</html>

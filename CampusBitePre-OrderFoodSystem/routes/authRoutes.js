@@ -3,7 +3,6 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
-
 // Register Page
 router.get("/register", (req, res) => {
   res.render("auth/register");
@@ -15,10 +14,21 @@ router.post("/register", async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    if (!username || !email || !password) {
+      return res.status(400).send("Required fields missing");
+    }
+
+    // Prevent privilege escalation (e.g. sending role=admin)
+    const safeRole = role === "merchant" ? "merchant" : "student";
+
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }],
+    });
 
     if (existingUser) {
-      return res.send("Email already registered");
+      if (existingUser.email === email) return res.send("Email already registered");
+      if (existingUser.username === username) return res.send("Username already taken");
+      return res.send("User already exists");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -27,7 +37,7 @@ router.post("/register", async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      role,
+      role: safeRole,
     });
 
     await newUser.save();
@@ -50,9 +60,17 @@ router.get("/login", (req, res) => {
 // Login
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { identifier, email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const loginId = (identifier || email || "").trim();
+
+    if (!loginId || !password) {
+      return res.status(400).send("Required fields missing");
+    }
+
+    const user = await User.findOne({
+      $or: [{ email: loginId }, { username: loginId }],
+    });
 
     if (!user) {
       return res.send("User not found");
@@ -64,12 +82,20 @@ router.post("/login", async (req, res) => {
       return res.send("Invalid password");
     }
 
+    await new Promise((resolve, reject) => {
+      req.session.regenerate((err) => (err ? reject(err) : resolve()));
+    });
+
     req.session.user = {
-      id: user._id,
+      id: user._id.toString(),
       username: user.username,
       email: user.email,
       role: user.role,
     };
+
+    await new Promise((resolve, reject) => {
+      req.session.save((err) => (err ? reject(err) : resolve()));
+    });
 
     return res.redirect("/dashboard");
 
@@ -132,7 +158,6 @@ router.post("/profile", async (req, res) => {
     req.session.user.email = updatedUser.email;
 
     return res.redirect("/dashboard");
-
   } catch (err) {
     console.log(err);
     return res.send("Profile update failed");

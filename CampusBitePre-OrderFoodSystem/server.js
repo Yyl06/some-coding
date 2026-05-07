@@ -1,6 +1,5 @@
 const session = require("express-session");
 require("dotenv").config();
-
 const express = require("express");
 const path = require("path");
 const connectDB = require("./config/db");
@@ -18,9 +17,15 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
-    secret: "campusbite_secret",
+    name: "campusbite.sid",
+    secret: process.env.SESSION_SECRET || "dev_only_change_me",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
   })
 );
 
@@ -32,16 +37,13 @@ const foodRoutes = require("./routes/foodRoutes");
 app.use("/foods", foodRoutes);
 const menuRoute = require("./routes/menuRoute");
 app.use("/menu", menuRoute);
+const shopRoutes = require("./routes/shopRoutes");
+app.use("/shops", shopRoutes);
 
-app.get("/dashboard", (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
-
-  res.render("dashboard", { user: req.session.user });
-});
-
-// connect DBs
-connectDB();
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// connect DB then start server
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    const url = `http://localhost:${PORT}`;
+    console.log(`Server running on ${url}`);
+  });
 });

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+</head>
+<body>
+
+  <h1>Merchant Dashboard</h1>
+
+  <h3>Welcome, <%= user.username %> 👋</h3>
+
+  <p>Email: <%= user.email %></p>
+  <p>Role: <%= user.role %></p>
+
+  <br>
+
+  <a href="/menu/<%= user.id %>">
+    <button type="button">View Your Shop Menu</button>
+  </a>
+
+  <a href="/foods">
+    <button type="button">Manage Foods</button>
+  </a>
+
+  <a href="/auth/profile">
+    <button type="button">Update Profile</button>
+  </a>
+
+  <a href="/auth/logout">
+    <button>Logout</button>
+  </a>
+
+</body>
+</html>
