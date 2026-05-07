@@ -22,6 +22,16 @@ const userSchema = new mongoose.Schema({
     enum: ["student", "merchant", "admin"],
     default: "student",
   },
+
+  profileImage: {
+    type: String,
+    default: "",
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

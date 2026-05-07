@@ -1,21 +1,15 @@
 const express = require("express");
 const router = express.Router();
-
 const isLoggedIn = require("../middleware/authMiddleware");
+const checkRole = require("../middleware/roleMiddleware");
+const FoodItem = require("../models/FoodItem");
 
-// Homepage
-router.get("/", (req, res) => {
-  res.render("index");
-});
-
-router.get("/dashboard", (req, res) => {
+router.get("/profile", isLoggedIn, checkRole("student", "merchant"), (req, res) => {
   if (!req.session.user) {
     return res.redirect("/auth/login");
   }
 
-  res.render("dashboard", {
+  res.render("auth/profile", {
     user: req.session.user,
   });
 });
-
-module.exports = router;

@@ -28,6 +28,16 @@ const homeRoutes = require("./routes/homeRoutes");
 app.use("/", homeRoutes);
 const authRoutes = require("./routes/authRoutes");
 app.use("/auth", authRoutes);
+const foodRoutes = require("./routes/foodRoutes");
+app.use("/foods", foodRoutes);
+const menuRoute = require("./routes/menuRoute");
+app.use("/menu", menuRoute);
+
+app.get("/dashboard", (req, res) => {
+  if (!req.session.user) return res.redirect("/auth/login");
+
+  res.render("dashboard", { user: req.session.user });
+});
 
 // connect DBs
 connectDB();

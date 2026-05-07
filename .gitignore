@@ -19,6 +19,7 @@
 *.cache
 *.sln.docstates
 
+
 # Ignore Assembly-related files
 *.sln
 *.asm

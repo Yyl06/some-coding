@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+</head>
+<body>
+
+  <h1>Customer Dashboard</h1>
+
+  <h3>Welcome, <%= user.username %> 👋</h3>
+
+  <p>Email: <%= user.email %></p>
+  <p>Role: <%= user.role %></p>
+
+  <br>
+
+  <a href="/menu">
+    <button onclick="location.href='/menu'">View Menu</button>
+  </a>
+
+  <a href="/auth/profile">
+    <button onclick="location.href='/auth/profile'">Profile</button>
+  </a>
+
+  <a href="/auth/logout">
+    <button>Logout</button>
+  </a>
+
+</body>
+</html>
