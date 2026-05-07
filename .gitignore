@@ -32,6 +32,7 @@
 *.vcxproj*
 *.lastbuildstate
 *.env
+*.zip
 
 #ignore temporary files
 *.pdf
