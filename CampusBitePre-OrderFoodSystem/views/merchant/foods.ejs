@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Manage Foods</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -51,11 +52,11 @@
                 <button type="button">Edit</button>
               </a>
 
-              <form method="POST" action="/foods/<%= food._id %>/toggle" style="display:inline;">
+              <form class="inline-form" method="POST" action="/foods/<%= food._id %>/toggle">
                 <button type="submit"><%= food.availability ? 'Mark Unavailable' : 'Mark Available' %></button>
               </form>
 
-              <form method="POST" action="/foods/<%= food._id %>/delete" style="display:inline;" onsubmit="return confirm('Delete this food item?');">
+              <form class="inline-form" method="POST" action="/foods/<%= food._id %>/delete" onsubmit="return confirm('Delete this food item?');">
                 <button type="submit">Delete</button>
               </form>
             </td>

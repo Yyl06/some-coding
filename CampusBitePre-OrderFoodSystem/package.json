@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "cmd /c \"start \\\"\\\" http://localhost:3000 && nodemon server.js\""
+    "dev": "start \"\" \"http://localhost:3000\" && nodemon server.js"
   },
   "keywords": [],
   "author": "",

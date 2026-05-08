@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Shop Menu</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <h1>Your Shop Menu</h1>
+
+  <a href="/dashboard">
+    <button type="button" onclick="location.href='/dashboard'">Back to Dashboard</button>
+  </a>
+
+  <a href="/foods">
+    <button type="button" onclick="location.href='/foods'">Manage Foods</button>
+  </a>
+
+  <form method="GET" action="/menu/<%= merchantId %>">
+    <input type="text" name="search" placeholder="Search food..." value="<%= search %>">
+
+    <select name="category">
+      <option value="">All Categories</option>
+
+      <option value="Rice"
+        <%= category === "Rice" ? "selected" : "" %>>
+        Rice
+      </option>
+
+      <option value="Drink"
+        <%= category === "Drink" ? "selected" : "" %>>
+        Drink
+      </option>
+
+      <option value="Snack"
+        <%= category === "Snack" ? "selected" : "" %>>
+        Snack
+      </option>
+    </select>
+
+    <button type="submit">Search</button>
+  </form>
+
+  <% foods.forEach(food => { %>
+    <div class="card">
+      <h2><%= food.name %></h2>
+      <p>Price: RM <%= food.price %></p>
+      <p>Category: <%= food.category %></p>
+      <p><%= food.description %></p>
+      <p><strong>Status:</strong> <%= food.availability ? 'Available' : 'Unavailable' %></p>
+    </div>
+  <% }) %>
+
+</body>
+</html>

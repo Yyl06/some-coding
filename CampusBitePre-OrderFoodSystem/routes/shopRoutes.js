@@ -13,7 +13,7 @@ router.get("/", isLoggedIn, async (req, res) => {
       username: { $regex: search, $options: "i" }
     });
 
-    res.render("merchant/shops", {
+    res.render("customer/restaurants", {
       shops,
       search
     });

@@ -3,6 +3,7 @@ node_modules/
 
 # environment / secrets
 .env
+*.bat
 
 # logs
 npm-debug.log*

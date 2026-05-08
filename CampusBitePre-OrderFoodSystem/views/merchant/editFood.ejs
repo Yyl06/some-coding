@@ -2,6 +2,7 @@
 <html>
 <head>
   <title><%= isEdit ? 'Edit Food' : 'Add Food' %></title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -26,7 +27,7 @@
     <br><br>
 
     <button type="submit"><%= isEdit ? 'Save Changes' : 'Add Food' %></button>
-    <a href="/foods" style="margin-left: 8px;">Cancel</a>
+    <a class="ml-2" href="/foods">Cancel</a>
 
   </form>
 

@@ -6,27 +6,8 @@ const FoodItem = require("../models/FoodItem");
 // View Menu
 router.get("/", isLoggedIn, async (req, res) => {
   try {
-    const search = req.query.search || "";
-    const category = req.query.category || "";
-
-    let query = {
-      availability: true,
-      name: { $regex: search, $options: "i" }
-    };
-
-    // apply category filter
-    if (category) {
-      query.category = category;
-    }
-
-    const foods = await FoodItem.find(query);
-
-    res.render("customer/menu", {
-      foods,
-      search,
-      category,
-      merchantId: "",
-    });
+    // Force the intended flow: dashboard -> choose restaurant -> menu
+    return res.redirect("/shops");
 
   } catch (err) {
     console.log(err);
@@ -38,6 +19,7 @@ router.get("/", isLoggedIn, async (req, res) => {
 router.get("/:merchantId", isLoggedIn, async (req, res) => {
   try {
     const { merchantId } = req.params;
+    const user = req.session.user;
     const search = req.query.search || "";
     const category = req.query.category || "";
 
@@ -53,7 +35,11 @@ router.get("/:merchantId", isLoggedIn, async (req, res) => {
 
     const foods = await FoodItem.find(query);
 
-    return res.render("customer/menu", {
+    const isMerchantViewingOwnMenu =
+      user && user.role === "merchant" && String(user.id) === String(merchantId);
+    const viewName = isMerchantViewingOwnMenu ? "merchant/merchantMenu" : "customer/customerMenu";
+
+    return res.render(viewName, {
       foods,
       search,
       category,

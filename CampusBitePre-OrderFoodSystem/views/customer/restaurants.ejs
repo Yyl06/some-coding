@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Restaurants</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <h1>Choose a Restaurant</h1>
+
+  <a href="/dashboard">
+    <button type="button" onclick="location.href='/dashboard'">Back to Dashboard</button>
+  </a>
+
+  <form method="GET" action="/shops">
+    <input
+      type="text"
+      name="search"
+      placeholder="Search restaurant..."
+      value="<%= search %>"
+    >
+
+    <button type="submit">Search</button>
+  </form>
+
+  <hr>
+
+  <% shops.forEach(shop => { %>
+    <div class="card">
+      <h3><%= shop.username %></h3>
+
+      <a href="/menu/<%= shop._id %>">
+        <button type="button" onclick="location.href='/menu/<%= shop._id %>'">View Menu</button>
+      </a>
+    </div>
+  <% }) %>
+
+</body>
+</html>
