@@ -8,24 +8,61 @@
 
   <h1>Choose a Restaurant</h1>
 
+  <% 
+    const selectedType = (typeof type !== "undefined") ? type : "";
+    const searchValue = (typeof search !== "undefined") ? search : "";
+    const shopsList = (typeof shops !== "undefined" && Array.isArray(shops)) ? shops : [];
+  %>
+
   <a href="/dashboard">
     <button type="button" onclick="location.href='/dashboard'">Back to Dashboard</button>
   </a>
 
   <form method="GET" action="/shops">
+    
+
     <input
       type="text"
       name="search"
       placeholder="Search restaurant..."
-      value="<%= search %>"
+      value="<%= searchValue %>"
     >
 
     <button type="submit">Search</button>
+    
+    <select name="type">
+      <option value="">All Types</option>
+
+      <option value="Hawker Centre"
+        <%= selectedType === "Hawker Centre" ? "selected" : "" %>>
+        Hawker Centre
+      </option>
+
+      <option value="Cafe"
+        <%= selectedType === "Cafe" ? "selected" : "" %>>
+        Cafe
+      </option>
+
+      <option value="Desserts"
+        <%= selectedType === "Desserts" ? "selected" : "" %>>
+        Desserts
+      </option>
+
+      <option value="Beverages"
+        <%= selectedType === "Beverages" ? "selected" : "" %>>
+        Beverages
+      </option>
+
+      <option value="Other"
+        <%= selectedType === "Other" ? "selected" : "" %>>
+        Other
+      </option>
+    </select>
   </form>
 
   <hr>
 
-  <% shops.forEach(shop => { %>
+  <% shopsList.forEach(shop => { %>
     <div class="card">
       <h3><%= shop.username %></h3>
 

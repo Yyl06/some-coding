@@ -12,7 +12,7 @@ router.get("/register", (req, res) => {
 // Register
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role, merchantType } = req.body;
 
     if (!username || !email || !password) {
       return res.status(400).send("Required fields missing");
@@ -20,6 +20,7 @@ router.post("/register", async (req, res) => {
 
     // Prevent privilege escalation (e.g. sending role=admin)
     const safeRole = role === "merchant" ? "merchant" : "student";
+    const safeMerchantType = safeRole === "merchant" ? (merchantType || "") : "";
 
     const existingUser = await User.findOne({
       $or: [{ email }, { username }],
@@ -38,6 +39,7 @@ router.post("/register", async (req, res) => {
       email,
       password: hashedPassword,
       role: safeRole,
+      merchantType: safeMerchantType,
     });
 
     await newUser.save();

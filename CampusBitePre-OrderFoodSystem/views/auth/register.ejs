@@ -18,16 +18,48 @@
     <input type="password" name="password" placeholder="Password" required />
     <br><br>
 
-    <select name="role">
+    <select name="role" id="roleSelect">
       <option value="student">Student</option>
       <option value="merchant">Merchant</option>
     </select>
 
     <br><br>
 
+    <div id="merchantTypeWrap" style="display: none;">
+      <select name="merchantType" id="merchantTypeSelect" disabled>
+        <option value="">Merchant Type (optional)</option>
+        <option value="Hawker Centre">Hawker Centre</option>
+        <option value="Cafe">Cafe</option>
+        <option value="Desserts">Desserts</option>
+        <option value="Beverages">Beverages</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <br><br>
+    </div>
+
     <button type="submit">Register</button>
     <button type="button" onclick="window.location.href='/auth/login'">Go to Login</button>
   </form>
+
+  <script>
+    const roleSelect = document.getElementById("roleSelect");
+    const merchantTypeWrap = document.getElementById("merchantTypeWrap");
+    const merchantTypeSelect = document.getElementById("merchantTypeSelect");
+
+    function syncMerchantTypeVisibility() {
+      const isMerchant = roleSelect.value === "merchant";
+      merchantTypeWrap.style.display = isMerchant ? "block" : "none";
+      merchantTypeSelect.disabled = !isMerchant;
+
+      if (!isMerchant) {
+        merchantTypeSelect.value = "";
+      }
+    }
+
+    roleSelect.addEventListener("change", syncMerchantTypeVisibility);
+    syncMerchantTypeVisibility();
+  </script>
 
 </body>
 </html>

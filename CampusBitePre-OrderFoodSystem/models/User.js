@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
     default: "student",
   },
 
+  merchantType: {
+    type: String,
+    default: "",
+    trim: true,
+  },
+
   profileImage: {
     type: String,
     default: "",
