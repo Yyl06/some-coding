@@ -18,3 +18,8 @@ Thumbs.db
 # build outputs / caches
 coverage/
 *.log
+
+# user uploads
+public/uploads/
+public/images/profile/
+public/images/foods/

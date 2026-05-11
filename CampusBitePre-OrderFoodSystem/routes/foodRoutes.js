@@ -3,6 +3,7 @@ const router = express.Router();
 const isLoggedIn = require("../middleware/authMiddleware");
 const checkRole = require("../middleware/roleMiddleware");
 const FoodItem = require("../models/FoodItem");
+const { uploadFoodImage } = require("../middleware/uploadMiddleware");
 
 function canManageFood(req, food) {
   const user = req.session.user;
@@ -42,7 +43,20 @@ router.get("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res) => {
 });
 
 // Add Food Function
-router.post("/add", isLoggedIn, checkRole("merchant", "admin"), async (req, res) => {
+router.post(
+  "/add",
+  isLoggedIn,
+  checkRole("merchant", "admin"),
+  (req, res, next) => {
+    uploadFoodImage.single("image")(req, res, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(400).send(err.message || "Image upload failed");
+      }
+      return next();
+    });
+  },
+  async (req, res) => {
   try {
     const { name, price, category, description } = req.body;
 
@@ -55,6 +69,7 @@ router.post("/add", isLoggedIn, checkRole("merchant", "admin"), async (req, res)
       price: Number(price),
         category,
         description,
+        image: req.file ? `/images/foods/${req.file.filename}` : "",
         merchant: req.session.user.id,
     });
 
@@ -84,7 +99,20 @@ router.get("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), async (r
 });
 
 // Edit Food Submit
-router.post("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), async (req, res) => {
+router.post(
+  "/:foodId/edit",
+  isLoggedIn,
+  checkRole("merchant", "admin"),
+  (req, res, next) => {
+    uploadFoodImage.single("image")(req, res, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(400).send(err.message || "Image upload failed");
+      }
+      return next();
+    });
+  },
+  async (req, res) => {
   try {
     const { foodId } = req.params;
     const { name, price, category, description } = req.body;
@@ -101,6 +129,9 @@ router.post("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), async (
     food.price = Number(price);
     food.category = category;
     food.description = description;
+    if (req.file) {
+      food.image = `/images/foods/${req.file.filename}`;
+    }
     await food.save();
 
     return res.redirect(`/foods?success=${encodeURIComponent("Food updated")}`);

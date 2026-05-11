@@ -1,3 +1,4 @@
+const { Decimal128 } = require("mongodb");
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
@@ -10,7 +11,7 @@ const orderSchema = new mongoose.Schema({
     },
   ],
 
-  totalPrice: Number,
+  totalPrice: Decimal128,
 
   status: {
     type: String,

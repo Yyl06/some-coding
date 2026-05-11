@@ -8,6 +8,22 @@
 
   <h1>My Profile</h1>
 
+  <% if (user.profileImage) { %>
+    <div>
+      <img src="<%= user.profileImage %>" alt="Profile picture" style="max-width: 160px; height: auto;" />
+    </div>
+    <br>
+  <% } %>
+
+  <form method="POST" action="/auth/profile/image" enctype="multipart/form-data">
+    <label>Upload Profile Picture</label><br>
+    <input type="file" name="profileImage" accept="image/*" required>
+    <br><br>
+    <button type="submit">Upload Picture</button>
+  </form>
+
+  <hr>
+
   <form method="POST" action="/auth/profile">
 
     <label>Username</label><br>

@@ -44,6 +44,9 @@
   <% foods.forEach(food => { %>
     <div class="card">
       <h2><%= food.name %></h2>
+      <% if (food.image) { %>
+        <img src="<%= food.image %>" alt="<%= food.name %>" style="max-width: 240px; height: auto;" />
+      <% } %>
       <p>Price: RM <%= food.price %></p>
       <p>Category: <%= food.category %></p>
       <p><%= food.description %></p>

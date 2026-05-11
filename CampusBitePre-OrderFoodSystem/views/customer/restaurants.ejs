@@ -66,6 +66,10 @@
     <div class="card">
       <h3><%= shop.username %></h3>
 
+      <% if (shop.profileImage) { %>
+        <img src="<%= shop.profileImage %>" alt="<%= shop.username %>" style="max-width: 160px; height: auto;" />
+      <% } %>
+
       <a href="/menu/<%= shop._id %>">
         <button type="button" onclick="location.href='/menu/<%= shop._id %>'">View Menu</button>
       </a>

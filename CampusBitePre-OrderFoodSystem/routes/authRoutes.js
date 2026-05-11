@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const isLoggedIn = require("../middleware/authMiddleware");
+const { uploadProfileImage } = require("../middleware/uploadMiddleware");
 
 // Register Page
 router.get("/register", (req, res) => {
@@ -93,6 +95,7 @@ router.post("/login", async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
+      profileImage: user.profileImage || "",
     };
 
     await new Promise((resolve, reject) => {
@@ -120,13 +123,28 @@ router.get("/logout", (req, res) => {
 });
 
 //Get profile
-router.get("/profile", (req, res) => {
+router.get("/profile", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/auth/login");
   }
 
-  res.render("auth/profile", {
-    user: req.session.user
+  try {
+    const dbUser = await User.findById(req.session.user.id).select(
+      "username email role profileImage"
+    );
+
+    if (dbUser) {
+      req.session.user.username = dbUser.username;
+      req.session.user.email = dbUser.email;
+      req.session.user.role = dbUser.role;
+      req.session.user.profileImage = dbUser.profileImage || "";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  return res.render("auth/profile", {
+    user: req.session.user,
   });
 });
 
@@ -163,6 +181,43 @@ router.post("/profile", async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.send("Profile update failed");
+  }
+});
+
+// Upload / Update Profile Image
+router.post("/profile/image", isLoggedIn, (req, res, next) => {
+  uploadProfileImage.single("profileImage")(req, res, (err) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).send(err.message || "Image upload failed");
+    }
+    return next();
+  });
+}, async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send("No image uploaded");
+    }
+
+    const userId = req.session.user.id;
+    const profileImagePath = `/images/profile/${req.file.filename}`;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profileImage: profileImagePath },
+      { new: true }
+    ).select("profileImage");
+
+    if (!updatedUser) {
+      return res.status(404).send("User not found");
+    }
+
+    req.session.user.profileImage = updatedUser.profileImage || "";
+
+    return res.redirect("/auth/profile");
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("Profile image update failed");
   }
 });
 

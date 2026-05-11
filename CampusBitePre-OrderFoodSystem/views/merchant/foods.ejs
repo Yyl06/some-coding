@@ -27,6 +27,7 @@
     <table border="1" cellpadding="8" cellspacing="0">
       <thead>
         <tr>
+          <th>Image</th>
           <th>Name</th>
           <th>Price</th>
           <th>Category</th>
@@ -40,6 +41,11 @@
       <tbody>
         <% foods.forEach(food => { %>
           <tr>
+            <td>
+              <% if (food.image) { %>
+                <img src="<%= food.image %>" alt="Food image" style="max-width: 80px; height: auto;" />
+              <% } %>
+            </td>
             <td><%= food.name %></td>
             <td><%= food.price %></td>
             <td><%= food.category %></td>

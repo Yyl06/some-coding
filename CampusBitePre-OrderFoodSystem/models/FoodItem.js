@@ -1,3 +1,4 @@
+const { Decimal128 } = require("mongodb");
 const mongoose = require("mongoose");
 
 const foodItemSchema = new mongoose.Schema({
@@ -7,7 +8,7 @@ const foodItemSchema = new mongoose.Schema({
   },
 
   price: {
-    type: Number,
+    type: Decimal128,
     required: true,
   },
 
