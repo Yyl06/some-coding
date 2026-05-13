@@ -6,26 +6,63 @@
 </head>
 <body>
 
-  <h1>Customer Dashboard</h1>
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/shops">Restaurants</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
 
-  <h3>Welcome, <%= user.username %> 👋</h3>
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1>Customer Dashboard</h1>
+        <p class="cb-subtitle">Welcome, <%= user.username %></p>
+      </div>
+    </div>
 
-  <p>Email: <%= user.email %></p>
-  <p>Role: <%= user.role %></p>
+    <div class="cb-tile-grid">
+      <div class="cb-tile">
+        <h3>Choose restaurant</h3>
+        <p>Browse merchants and view menus.</p>
+        <div class="cb-actions">
+          <a href="/shops"><button type="button">Browse</button></a>
+        </div>
+      </div>
 
-  <br>
+      <div class="cb-tile">
+        <h3>Your orders</h3>
+        <p>Pickup orders with pay-on-pickup checkout.</p>
+        <div class="cb-actions">
+          <a href="/orders"><button type="button">View Orders</button></a>
+          <a href="/orders/checkout"><button type="button">Checkout</button></a>
+        </div>
+      </div>
 
-  <a href="/shops">
-    <button onclick="location.href='/shops'">Choose Restaurant</button>
-  </a>
+      <div class="cb-tile">
+        <h3>Your account</h3>
+        <p class="cb-muted">Email: <%= user.email %></p>
+        <p class="cb-muted">Role: <%= user.role %></p>
+        <div class="cb-actions">
+          <a href="/auth/profile"><button type="button">Edit Profile</button></a>
+        </div>
+      </div>
 
-  <a href="/auth/profile">
-    <button onclick="location.href='/auth/profile'">Profile</button>
-  </a>
+      <div class="cb-tile">
+        <h3>Sign out</h3>
+        <p>End your current session safely.</p>
+        <div class="cb-actions">
+          <a href="/auth/logout"><button type="button">Logout</button></a>
+        </div>
+      </div>
+    </div>
+  </main>
 
-  <a href="/auth/logout">
-    <button>Logout</button>
-  </a>
+  <script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>

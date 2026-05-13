@@ -4,6 +4,7 @@ const isLoggedIn = require("../middleware/authMiddleware");
 const checkRole = require("../middleware/roleMiddleware");
 const FoodItem = require("../models/FoodItem");
 const { uploadFoodImage } = require("../middleware/uploadMiddleware");
+const { Decimal128 } = require("mongodb");
 
 function canManageFood(req, food) {
   const user = req.session.user;
@@ -43,11 +44,7 @@ router.get("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res) => {
 });
 
 // Add Food Function
-router.post(
-  "/add",
-  isLoggedIn,
-  checkRole("merchant", "admin"),
-  (req, res, next) => {
+router.post("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res, next) => {
     uploadFoodImage.single("image")(req, res, (err) => {
       if (err) {
         console.log(err);
@@ -66,7 +63,7 @@ router.post(
 
     const newFood = new FoodItem({
         name,
-      price: Number(price),
+        price: Decimal128(price),
         category,
         description,
         image: req.file ? `/images/foods/${req.file.filename}` : "",
@@ -99,11 +96,7 @@ router.get("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), async (r
 });
 
 // Edit Food Submit
-router.post(
-  "/:foodId/edit",
-  isLoggedIn,
-  checkRole("merchant", "admin"),
-  (req, res, next) => {
+router.post("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), (req, res, next) => {
     uploadFoodImage.single("image")(req, res, (err) => {
       if (err) {
         console.log(err);
@@ -126,7 +119,7 @@ router.post(
     if (!canManageFood(req, food)) return res.status(403).send("Access denied");
 
     food.name = name;
-    food.price = Number(price);
+    food.price = new Decimal128(price);
     food.category = category;
     food.description = description;
     if (req.file) {
@@ -153,7 +146,11 @@ router.post("/:foodId/toggle", isLoggedIn, checkRole("merchant", "admin"), async
     food.availability = !food.availability;
     await food.save();
 
-    return res.redirect("/foods");
+    return res.redirect(
+      `/foods?info=${encodeURIComponent(
+        food.availability ? "Marked as available" : "Marked as unavailable"
+      )}`
+    );
   } catch (err) {
     console.log(err);
     return res.send("Error toggling availability");
@@ -170,7 +167,7 @@ router.post("/:foodId/delete", isLoggedIn, checkRole("merchant", "admin"), async
     if (!canManageFood(req, food)) return res.status(403).send("Access denied");
 
     await FoodItem.deleteOne({ _id: foodId });
-    return res.redirect("/foods");
+    return res.redirect(`/foods?success=${encodeURIComponent("Food deleted")}`);
   } catch (err) {
     console.log(err);
     return res.send("Error deleting food");

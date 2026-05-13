@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>User List</title>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+
+    <body>
+                <header class="cb-topbar">
+                    <div class="cb-topbar-inner">
+                        <a class="cb-brand" href="/dashboard">CampusBite</a>
+                        <nav class="cb-nav">
+                            <a class="cb-nav-link" href="/dashboard">Dashboard</a>
+                            <a class="cb-nav-link" href="/auth/manageUser">Users</a>
+                            <a class="cb-nav-link" href="/orders">Orders</a>
+                            <a class="cb-nav-link" href="/auth/profile">Profile</a>
+                            <a class="cb-nav-link" href="/auth/logout">Logout</a>
+                        </nav>
+                    </div>
+                </header>
+
+                <main class="page">
+                    <div class="cb-hero">
+                        <div>
+                            <h1>Users List</h1>
+                            <p class="cb-subtitle">Manage users in the database.</p>
+                        </div>
+                        <div class="cb-actions">
+                            <a href="/dashboard"><button type="button">Back</button></a>
+                        </div>
+                    </div>
+
+                    <% if(!users || users.length === 0){ %>
+                        <div class="card cb-empty">
+                            <h3>No users found</h3>
+                            <p class="cb-muted">Create an account first, then refresh.</p>
+                        </div>
+                    <% } else { %>
+                        <div class="card">
+                            <table border="1" cellpadding="8" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Merchant Type</th>
+                                        <th>Created At</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(line => { %>
+                                        <tr>
+                                            <td><strong><%= line.username %></strong></td>
+                                            <td><%= line.email %></td>
+                                            <td><%= line.role %></td>
+                                            <td><%= line.merchantType || '' %></td>
+                                            <td><%= line.createdAt ? new Date(line.createdAt).toLocaleString() : '' %></td>
+                                            <td>
+                                                <a href="/auth/users/<%= line._id %>/edit"><button type="button">Edit</button></a>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } %>
+                </main>
+
+                <script src="/js/cb-ui.js" defer></script>
+    </body>
+</html>

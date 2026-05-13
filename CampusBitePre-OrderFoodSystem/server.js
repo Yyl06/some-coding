@@ -40,6 +40,9 @@ app.use("/menu", menuRoute);
 const shopRoutes = require("./routes/shopRoutes");
 app.use("/shops", shopRoutes);
 
+const orderRoutes = require("./routes/orderRoutes");
+app.use("/orders", orderRoutes);
+
 // connect DB then start server
 connectDB().then(() => {
   app.listen(PORT, () => {

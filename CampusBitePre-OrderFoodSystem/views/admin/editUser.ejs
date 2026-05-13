@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit User</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/dashboard">Dashboard</a>
+        <a class="cb-nav-link" href="/auth/manageUser">Users</a>
+        <a class="cb-nav-link" href="/orders">Orders</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1>Edit User</h1>
+        <p class="cb-subtitle">Update account info, role, and (optional) password.</p>
+      </div>
+      <div class="cb-actions">
+        <a href="/auth/manageUser"><button type="button">Back to list</button></a>
+      </div>
+    </div>
+
+    <form method="POST" action="/auth/users/<%= editUser._id %>/edit">
+      <label>Username</label><br>
+      <input type="text" name="username" value="<%= editUser.username %>" required>
+
+      <br><br>
+
+      <label>Email</label><br>
+      <input type="email" name="email" value="<%= editUser.email %>" required>
+
+      <br><br>
+
+      <label>Role</label><br>
+      <select name="role" required>
+        <option value="student" <%= editUser.role === 'student' ? 'selected' : '' %>>student</option>
+        <option value="merchant" <%= editUser.role === 'merchant' ? 'selected' : '' %>>merchant</option>
+        <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>admin</option>
+      </select>
+
+      <br><br>
+
+      <label>Merchant Type (only if role = merchant)</label><br>
+      <input type="text" name="merchantType" value="<%= editUser.merchantType || '' %>" placeholder="e.g. Cafe">
+
+      <br><br>
+
+      <label>New Password (leave blank to keep current)</label><br>
+      <input type="password" name="password" value="" placeholder="••••••••">
+
+      <br><br>
+
+      <div class="cb-actions">
+        <button type="submit">Save changes</button>
+        <a href="/auth/manageUser"><button type="button">Cancel</button></a>
+      </div>
+    </form>
+
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
+
+</body>
+</html>

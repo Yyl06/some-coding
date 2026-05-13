@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Orders</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <% if (user.role === 'student') { %>
+          <a class="cb-nav-link" href="/shops">Restaurants</a>
+          <a class="cb-nav-link" href="/orders">My Orders</a>
+        <% } else if (user.role === 'merchant') { %>
+          <a class="cb-nav-link" href="/menu/<%= user.id %>">Menu</a>
+          <a class="cb-nav-link" href="/foods">Manage Foods</a>
+          <a class="cb-nav-link" href="/orders">Orders</a>
+        <% } else { %>
+          <a class="cb-nav-link" href="/orders">Orders</a>
+        <% } %>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1>Orders</h1>
+        <% if (user.role === 'student') { %>
+          <p class="cb-subtitle">Your pickup orders (pay on pickup).</p>
+        <% } else if (user.role === 'merchant') { %>
+          <p class="cb-subtitle">Pickup orders placed for your shop.</p>
+        <% } else { %>
+          <p class="cb-subtitle">All order history will be displayed here.</p>
+        <% } %>
+      </div>
+      <% if (user.role === 'student') { %>
+        <div class="cb-actions">
+          <a href="/orders/checkout"><button type="button">Go to checkout</button></a>
+        </div>
+      <% } %>
+    </div>
+
+    <% if (!orders || orders.length === 0) { %>
+      <div class="card cb-empty">
+        <h3>No orders yet</h3>
+        <p class="cb-muted">Once you placed an order, it will show up here.</p>
+      </div>
+    <% } else { %>
+      <div class="card">
+        <table border="1" cellpadding="8" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <% if (user.role === 'student' || user.role === 'admin') { %>
+                <th>Merchant</th>
+              <% } %>
+              <% if (user.role === 'merchant' || user.role === 'admin') { %>
+                <th>Customer</th>
+              <% } %>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <% if (user.role === 'student') { %>
+                <th>Complete</th>
+              <% } %>
+              <% if (user.role === 'merchant' || user.role === 'admin') { %>
+                <th>Update</th>
+              <% } %>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td><%= order.createdAt ? new Date(order.createdAt).toLocaleString() : '' %></td>
+
+                <% if (user.role === 'student' || user.role === 'admin') { %>
+                  <td>
+                    <%= order.merchant && order.merchant.username ? order.merchant.username : '' %>
+                  </td>
+                <% } %>
+
+                <% if (user.role === 'merchant' || user.role === 'admin') { %>
+                  <td>
+                    <%= order.student && order.student.username ? order.student.username : (order.studentName || '') %>
+                  </td>
+                <% } %>
+
+                <td>
+                  <% if (order.items && order.items.length) { %>
+                    <div>
+                      <% order.items.forEach((it, idx) => { %>
+                        <div class="cb-muted">
+                          <%= it.foodName %> × <%= it.quantity %><%= idx < order.items.length - 1 ? ',' : '' %>
+                        </div>
+                      <% }) %>
+                    </div>
+                  <% } %>
+                </td>
+
+                <td>
+                  RM <%= order.totalPrice ? order.totalPrice.toString() : '' %>
+                </td>
+
+                <td>
+                  <span class="cb-badge <%= (order.status || '').toLowerCase() === 'pending' ? 'cb-badge--muted' : 'cb-badge--primary' %>">
+                    <%= order.status || 'Pending' %>
+                  </span>
+                </td>
+
+                <% if (user.role === 'student') { %>
+                  <td>
+                    <% if ((order.status || '') === 'Ready') { %>
+                      <form class="inline-form" method="POST" action="/orders/<%= order._id %>/complete" onsubmit="return confirm('Mark this order as completed?');">
+                        <button type="submit">Complete</button>
+                      </form>
+                    <% } else { %>
+                      <button type="button" disabled>Complete</button>
+                    <% } %>
+                  </td>
+                <% } %>
+
+                <% if (user.role === 'merchant' || user.role === 'admin') { %>
+                  <td>
+                    <form class="inline-form" method="POST" action="/orders/<%= order._id %>/status">
+                      <select name="status" style="width: 170px;">
+                        <option value="Pending" <%= (order.status || 'Pending') === 'Pending' ? 'selected' : '' %>>Pending</option>
+                        <option value="Ready" <%= (order.status || '') === 'Ready' ? 'selected' : '' %>>Ready</option>
+                        <option value="Completed" <%= (order.status || '') === 'Completed' ? 'selected' : '' %>>Completed</option>
+                      </select>
+                      <button type="submit">Save</button>
+                    </form>
+                  </td>
+                <% } %>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
+
+</body>
+</html>

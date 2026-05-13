@@ -6,7 +6,25 @@
 </head>
 <body>
 
-  <h1>Choose a Restaurant</h1>
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/dashboard">Dashboard</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+
+  <div class="cb-hero">
+    <div>
+      <h1>Choose a Restaurant</h1>
+      <p class="cb-subtitle">Search by name and filter by merchant type.</p>
+    </div>
+  </div>
 
   <% 
     const selectedType = (typeof type !== "undefined") ? type : "";
@@ -14,67 +32,87 @@
     const shopsList = (typeof shops !== "undefined" && Array.isArray(shops)) ? shops : [];
   %>
 
-  <a href="/dashboard">
-    <button type="button" onclick="location.href='/dashboard'">Back to Dashboard</button>
-  </a>
+  <div class="cb-layout">
+    <aside class="cb-sidebar">
+      <form method="GET" action="/shops">
+        <label>Search</label><br>
+        <input
+          type="text"
+          name="search"
+          placeholder="Search restaurant..."
+          value="<%= searchValue %>"
+        >
 
-  <form method="GET" action="/shops">
-    
+        <br><br>
 
-    <input
-      type="text"
-      name="search"
-      placeholder="Search restaurant..."
-      value="<%= searchValue %>"
-    >
+        <label>Type</label><br>
+        <select name="type">
+          <option value="">All Types</option>
 
-    <button type="submit">Search</button>
-    
-    <select name="type">
-      <option value="">All Types</option>
+          <option value="Hawker Centre"
+            <%= selectedType === "Hawker Centre" ? "selected" : "" %>>
+            Hawker Centre
+          </option>
 
-      <option value="Hawker Centre"
-        <%= selectedType === "Hawker Centre" ? "selected" : "" %>>
-        Hawker Centre
-      </option>
+          <option value="Cafe"
+            <%= selectedType === "Cafe" ? "selected" : "" %>>
+            Cafe
+          </option>
 
-      <option value="Cafe"
-        <%= selectedType === "Cafe" ? "selected" : "" %>>
-        Cafe
-      </option>
+          <option value="Desserts"
+            <%= selectedType === "Desserts" ? "selected" : "" %>>
+            Desserts
+          </option>
 
-      <option value="Desserts"
-        <%= selectedType === "Desserts" ? "selected" : "" %>>
-        Desserts
-      </option>
+          <option value="Beverages"
+            <%= selectedType === "Beverages" ? "selected" : "" %>>
+            Beverages
+          </option>
 
-      <option value="Beverages"
-        <%= selectedType === "Beverages" ? "selected" : "" %>>
-        Beverages
-      </option>
+          <option value="Other"
+            <%= selectedType === "Other" ? "selected" : "" %>>
+            Other
+          </option>
+        </select>
 
-      <option value="Other"
-        <%= selectedType === "Other" ? "selected" : "" %>>
-        Other
-      </option>
-    </select>
-  </form>
+        <br><br>
+        <button type="submit">Apply filters</button>
+      </form>
+    </aside>
 
-  <hr>
+    <section class="cb-main">
+      <% if (!shopsList || shopsList.length === 0) { %>
+        <div class="card cb-empty">
+          <h3>No restaurants found</h3>
+          <p class="cb-muted">Try changing your search or filters.</p>
+        </div>
+      <% } else { %>
+        <div class="cb-grid">
+          <% shopsList.forEach(shop => { %>
+            <div class="cb-card">
+              <% if (shop.profileImage) { %>
+                <img class="cb-card-media" src="<%= shop.profileImage %>" alt="<%= shop.username %>">
+              <% } else { %>
+                <div class="cb-card-media"></div>
+              <% } %>
 
-  <% shopsList.forEach(shop => { %>
-    <div class="card">
-      <h3><%= shop.username %></h3>
-
-      <% if (shop.profileImage) { %>
-        <img src="<%= shop.profileImage %>" alt="<%= shop.username %>" style="max-width: 160px; height: auto;" />
+              <div class="cb-card-body">
+                <p class="cb-card-title"><%= shop.username %></p>
+                <p class="cb-card-meta"><%= shop.merchantType || 'Restaurant' %></p>
+                <div class="cb-actions">
+                  <a href="/menu/<%= shop._id %>"><button type="button">View Menu</button></a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
       <% } %>
+    </section>
+  </div>
 
-      <a href="/menu/<%= shop._id %>">
-        <button type="button" onclick="location.href='/menu/<%= shop._id %>'">View Menu</button>
-      </a>
-    </div>
-  <% }) %>
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>

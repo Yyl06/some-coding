@@ -6,57 +6,66 @@
 </head>
 <body>
 
-  <h1>Manage Foods</h1>
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/menu/<%= user.id %>">Menu</a>
+        <a class="cb-nav-link" href="/foods">Manage Foods</a>
+        <a class="cb-nav-link" href="/orders">Orders</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
 
-  <p>Logged in as: <%= user.username %> (<%= user.role %>)</p>
-
-  <a href="/foods/add"><button type="button">Add Food</button></a>
-  <a href="/dashboard"><button type="button">Back to Dashboard</button></a>
-
-  <hr>
-
-  <% if (success) { %>
-    <p><strong><%= success %></strong></p>
-    <hr>
-  <% } %>
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1>Manage Foods</h1>
+        <p class="cb-subtitle">Logged in as <%= user.username %> (<%= user.role %>)</p>
+      </div>
+      <div class="cb-actions">
+        <a href="/foods/add"><button type="button">Add Food</button></a>
+        <a href="/dashboard"><button type="button">Back</button></a>
+      </div>
+    </div>
 
   <% if (!foods || foods.length === 0) { %>
-    <p>No food items yet.</p>
+    <div class="card cb-empty">
+      <h3>No food items yet</h3>
+      <p class="cb-muted">Add your first item to start selling.</p>
+    </div>
   <% } else { %>
 
-    <table border="1" cellpadding="8" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Category</th>
-          <th>Available</th>
-          <% if (user.role === 'admin') { %>
-            <th>Merchant</th>
+    <div class="cb-grid">
+      <% foods.forEach(food => { %>
+        <div class="cb-card">
+          <% if (food.image) { %>
+            <img class="cb-card-media" src="<%= food.image %>" alt="<%= food.name %>">
+          <% } else { %>
+            <div class="cb-card-media"></div>
           <% } %>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% foods.forEach(food => { %>
-          <tr>
-            <td>
-              <% if (food.image) { %>
-                <img src="<%= food.image %>" alt="Food image" style="max-width: 80px; height: auto;" />
+
+          <div class="cb-card-body">
+            <p class="cb-card-title"><%= food.name %></p>
+
+            <p class="cb-card-meta">
+              <span class="cb-badge cb-badge--primary">RM <%= food.price %></span>
+              <span class="cb-badge cb-badge--muted"><%= food.category %></span>
+              <% if (food.availability) { %>
+                <span class="cb-badge cb-badge--primary">Available</span>
+              <% } else { %>
+                <span class="cb-badge">Unavailable</span>
               <% } %>
-            </td>
-            <td><%= food.name %></td>
-            <td><%= food.price %></td>
-            <td><%= food.category %></td>
-            <td><%= food.availability ? 'Yes' : 'No' %></td>
+            </p>
+
             <% if (user.role === 'admin') { %>
-              <td><%= food.merchant && food.merchant.username ? food.merchant.username : '' %></td>
+              <p class="cb-muted"><strong>Merchant:</strong> <%= food.merchant && food.merchant.username ? food.merchant.username : '' %></p>
             <% } %>
-            <td>
-              <a href="/foods/<%= food._id %>/edit">
-                <button type="button">Edit</button>
-              </a>
+
+            <div class="cb-actions">
+              <a href="/foods/<%= food._id %>/edit"><button type="button">Edit</button></a>
 
               <form class="inline-form" method="POST" action="/foods/<%= food._id %>/toggle">
                 <button type="submit"><%= food.availability ? 'Mark Unavailable' : 'Mark Available' %></button>
@@ -65,13 +74,17 @@
               <form class="inline-form" method="POST" action="/foods/<%= food._id %>/delete" onsubmit="return confirm('Delete this food item?');">
                 <button type="submit">Delete</button>
               </form>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
 
   <% } %>
+
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>

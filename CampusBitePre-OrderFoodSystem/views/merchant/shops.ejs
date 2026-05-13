@@ -6,34 +6,71 @@
 </head>
 <body>
 
-<h1>Choose a Shop</h1>
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/dashboard">Dashboard</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
 
-<form method="GET" action="/shops">
-  <input 
-    type="text"
-    name="search"
-    placeholder="Search shop..."
-    value="<%= search %>"
-  >
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1>Choose a Shop</h1>
+        <p class="cb-subtitle">Search by name then view the menu.</p>
+      </div>
+    </div>
 
-  <button type="submit">Search</button>
-</form>
+    <div class="cb-layout">
+      <aside class="cb-sidebar">
+        <form method="GET" action="/shops">
+          <label>Search</label><br>
+          <input
+            type="text"
+            name="search"
+            placeholder="Search shop..."
+            value="<%= search %>"
+          >
 
-<hr>
+          <br><br>
+          <button type="submit">Apply</button>
+        </form>
+      </aside>
 
-<% shops.forEach(shop => { %>
+      <section class="cb-main">
+        <% if (!shops || shops.length === 0) { %>
+          <div class="card cb-empty">
+            <h3>No shops found</h3>
+            <p class="cb-muted">Try a different search.</p>
+          </div>
+        <% } else { %>
+          <div class="cb-grid">
+            <% shops.forEach(shop => { %>
+              <div class="cb-card">
+                <% if (shop.profileImage) { %>
+                  <img class="cb-card-media" src="<%= shop.profileImage %>" alt="<%= shop.username %>">
+                <% } else { %>
+                  <div class="cb-card-media"></div>
+                <% } %>
+                <div class="cb-card-body">
+                  <p class="cb-card-title"><%= shop.username %></p>
+                  <div class="cb-actions">
+                    <a href="/menu/<%= shop._id %>"><button type="button">View Menu</button></a>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </section>
+    </div>
+  </main>
 
-  <div class="card">
-
-    <h3><%= shop.username %></h3>
-
-    <a href="/menu/<%= shop._id %>">
-      <button>View Menu</button>
-    </a>
-
-  </div>
-
-<% }) %>
+  <script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>

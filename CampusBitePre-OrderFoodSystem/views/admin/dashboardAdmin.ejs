@@ -6,22 +6,53 @@
 </head>
 <body>
 
-	<h1>Admin Dashboard</h1>
+	<header class="cb-topbar">
+		<div class="cb-topbar-inner">
+			<a class="cb-brand" href="/dashboard">CampusBite</a>
+			<nav class="cb-nav">
+				<a class="cb-nav-link" href="/auth/profile">Profile</a>
+				<a class="cb-nav-link" href="/auth/logout">Logout</a>
+			</nav>
+		</div>
+	</header>
 
-	<h3>Welcome, <%= user.username %></h3>
+	<main class="page">
+		<div class="cb-hero">
+			<div>
+				<h1>Admin Dashboard</h1>
+				<p class="cb-subtitle">Welcome, <%= user.username %></p>
+			</div>
+		</div>
 
-	<p>Email: <%= user.email %></p>
-	<p>Role: <%= user.role %></p>
+		<div class="cb-tile-grid">
+			<div class="cb-tile">
+				<h3>Account</h3>
+				<p class="cb-muted">Email: <%= user.email %></p>
+				<p class="cb-muted">Role: <%= user.role %></p>
+				<div class="cb-actions">	
+					<a href="/auth/profile"><button type="button">Profile</button></a>
+				</div>
+			</div>
 
-	<br>
+			<div class="cb-tile">
+				<h3>Users List</h3>
+				<p>Lists and Manages users that exists on the Database.</p>
+				<div class="cb-actions">
+					<a href="/auth/manageUser"><button type="button">Show</button></a>
+				</div>
+			</div>
 
-	<a href="/auth/profile">
-		<button type="button">Profile</button>
-	</a>
+			<div class="cb-tile">
+				<h3>Session</h3>
+				<p>Sign out of the admin dashboard.</p>
+				<div class="cb-actions">
+					<a href="/auth/logout"><button type="button">Logout</button></a>
+				</div>
+			</div>
+		</div>
+	</main>
 
-	<a href="/auth/logout">
-		<button type="button">Logout</button>
-	</a>
+	<script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>

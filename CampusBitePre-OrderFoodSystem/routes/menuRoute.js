@@ -23,6 +23,13 @@ router.get("/:merchantId", isLoggedIn, async (req, res) => {
     const search = req.query.search || "";
     const category = req.query.category || "";
 
+    const cartCount = req.session?.cart?.items
+      ? Object.values(req.session.cart.items).reduce(
+          (sum, qty) => sum + (Number(qty) || 0),
+          0
+        )
+      : 0;
+
     let query = {
       availability: true,
       merchant: merchantId,
@@ -44,6 +51,7 @@ router.get("/:merchantId", isLoggedIn, async (req, res) => {
       search,
       category,
       merchantId,
+      cartCount,
     });
   } catch (err) {
     console.log(err);

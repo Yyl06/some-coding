@@ -6,48 +6,111 @@
 </head>
 <body>
 
-  <h1>Restaurant Menu</h1>
-
-  <a href="/shops">
-    <button type="button" onclick="location.href='/shops'">Back to Restaurants</button>
-  </a>
-
-  <form method="GET" action="<%= merchantId ? '/menu/' + merchantId : '/menu' %>">
-    <input type="text" name="search" placeholder="Search food..." value="<%= search %>">
-
-    <select name="category">
-      <option value="">All Categories</option>
-
-      <option value="Rice"
-        <%= category === "Rice" ? "selected" : "" %>>
-        Rice
-      </option>
-
-      <option value="Drink"
-        <%= category === "Drink" ? "selected" : "" %>>
-        Drink
-      </option>
-
-      <option value="Snack"
-        <%= category === "Snack" ? "selected" : "" %>>
-        Snack
-      </option>
-    </select>
-
-    <button type="submit">Search</button>
-  </form>
-
-  <% foods.forEach(food => { %>
-    <div class="card">
-      <h2><%= food.name %></h2>
-      <% if (food.image) { %>
-        <img src="<%= food.image %>" alt="<%= food.name %>" style="max-width: 240px; height: auto;" />
-      <% } %>
-      <p>Price: RM <%= food.price %></p>
-      <p>Category: <%= food.category %></p>
-      <p><%= food.description %></p>
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/shops">Restaurants</a>
+        <a class="cb-nav-link" href="/orders/checkout">Checkout (<%= typeof cartCount === 'number' ? cartCount : 0 %>)</a>
+        <a class="cb-nav-link" href="/orders">My Orders</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
     </div>
-  <% }) %>
+  </header>
+
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1>Restaurant Menu</h1>
+        <p class="cb-subtitle">Search foods and filter by category.</p>
+      </div>
+    </div>
+
+    <div class="cb-layout">
+      <aside class="cb-sidebar">
+        <form method="GET" action="<%= merchantId ? '/menu/' + merchantId : '/menu' %>">
+          <label>Search</label><br>
+          <input type="text" name="search" placeholder="Search food..." value="<%= search %>">
+
+          <br><br>
+
+          <label>Category</label><br>
+          <select name="category">
+            <option value="">All Categories</option>
+
+            <option value="Rice"
+              <%= category === "Rice" ? "selected" : "" %>>
+              Rice
+            </option>
+
+            <option value="Drink"
+              <%= category === "Drink" ? "selected" : "" %>>
+              Drink
+            </option>
+
+            <option value="Snack"
+              <%= category === "Snack" ? "selected" : "" %>>
+              Snack
+            </option>
+          </select>
+
+          <br><br>
+          <button type="submit">Apply filters</button>
+          <a class="ml-2" href="/shops">Back</a>
+        </form>
+      </aside>
+
+      <section class="cb-main">
+        <% if (!foods || foods.length === 0) { %>
+          <div class="card cb-empty">
+            <h3>No foods found</h3>
+            <p class="cb-muted">Try changing your search or category.</p>
+          </div>
+        <% } else { %>
+          <div class="cb-grid">
+            <% foods.forEach(food => { %>
+              <div class="cb-card">
+                <% if (food.image) { %>
+                  <img class="cb-card-media" src="<%= food.image %>" alt="<%= food.name %>">
+                <% } else { %>
+                  <div class="cb-card-media"></div>
+                <% } %>
+                <div class="cb-card-body">
+                  <p class="cb-card-title"><%= food.name %></p>
+                  <p class="cb-card-meta">
+                    <span class="cb-badge cb-badge--primary">RM <%= food.price %></span>
+                    <span class="cb-badge cb-badge--muted"><%= food.category %></span>
+                  </p>
+                  <p class="cb-muted"><%= food.description %></p>
+                  <p class="cb-muted">
+                    <strong>Status:</strong>
+                    <% if (food.availability) { %>
+                      <span class="cb-badge cb-badge--primary">Available</span>
+                    <% } else { %>
+                      <span class="cb-badge">Unavailable</span>
+                    <% } %>
+                  </p>
+
+                  <% if (food.availability) { %>
+                    <form class="inline-form" method="POST" action="/orders/cart/add">
+                      <input type="hidden" name="foodId" value="<%= food._id %>">
+                      <input type="hidden" name="merchantId" value="<%= merchantId %>">
+                      <button type="submit">Add to cart</button>
+                    </form>
+                  <% } else { %>
+                    <button type="button" disabled>Add to cart</button>
+                  <% } %>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </section>
+    </div>
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>

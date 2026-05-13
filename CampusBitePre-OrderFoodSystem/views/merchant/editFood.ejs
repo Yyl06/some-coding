@@ -6,7 +6,25 @@
 </head>
 <body>
 
-  <h1><%= isEdit ? 'Edit Food Item' : 'Add Food Item' %></h1>
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/foods">Manage Foods</a>
+        <a class="cb-nav-link" href="/menu/<%= (food && food.merchant) ? food.merchant : '' %>">Menu</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1><%= isEdit ? 'Edit Food Item' : 'Add Food Item' %></h1>
+        <p class="cb-subtitle"><%= isEdit ? 'Update details and upload a new image if needed.' : 'Create a new food listing.' %></p>
+      </div>
+    </div>
 
   <form method="POST" action="<%= isEdit ? '/foods/' + food._id + '/edit' : '/foods/add' %>" enctype="multipart/form-data">
 
@@ -26,7 +44,7 @@
     <br><br>
 
     <label>Price</label><br>
-    <input type="number" name="price" value="<%= food.price %>" placeholder="Price" required>
+    <input type="number" name="price" value="<%= food.price %>" placeholder="Price" step="any" required>
     <br><br>
 
     <label>Category</label><br>
@@ -41,6 +59,10 @@
     <a class="ml-2" href="/foods">Cancel</a>
 
   </form>
+
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>

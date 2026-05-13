@@ -12,6 +12,8 @@ function ensureDirSync(dirPath) {
 
 const mimeToExt = {
   "image/jpeg": ".jpg",
+  "image/jpg": ".jpg",
+  "image/pjpeg": ".jpg",
   "image/png": ".png",
   "image/webp": ".webp",
   "image/gif": ".gif",
@@ -32,7 +34,11 @@ function makeImageUploader(relativeUploadsDir) {
     },
     filename: (req, file, cb) => {
       const originalExt = path.extname(file.originalname || "").toLowerCase();
-      const ext = mimeToExt[file.mimetype] || originalExt || "";
+      const extFromMime = mimeToExt[file.mimetype];
+      const ext =
+        file.mimetype === "image/jpeg" && originalExt === ".jpeg"
+          ? ".jpeg"
+          : extFromMime || originalExt || "";
       const userId = req.session?.user?.id || "anon";
       cb(null, `${userId}-${Date.now()}${ext || ""}`);
     },
@@ -42,7 +48,9 @@ function makeImageUploader(relativeUploadsDir) {
 
   function imageFileFilter(req, file, cb) {
     if (allowedMimeTypes.has(file.mimetype)) return cb(null, true);
-    return cb(new Error("Only image files are allowed (jpeg, png, webp, gif)."));
+    return cb(
+      new Error("Only image files are allowed (jpg, jpeg, png, webp, gif).")
+    );
   }
 
   return multer({

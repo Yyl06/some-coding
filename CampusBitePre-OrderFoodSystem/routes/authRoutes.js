@@ -1,9 +1,44 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
+const path = require("path");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const isLoggedIn = require("../middleware/authMiddleware");
 const { uploadProfileImage } = require("../middleware/uploadMiddleware");
+const checkRole = require("../middleware/roleMiddleware");
+const session = require("express-session");
+
+const PUBLIC_DIR = path.join(__dirname, "..", "public");
+
+async function safeUnlinkIfExists(absolutePath) {
+  try {
+    await fs.promises.unlink(absolutePath);
+  } catch (err) {
+    // ignore missing file and other unlink errors
+  }
+}
+
+async function deleteOldProfileImage({ userId, oldProfileImagePath, newProfileImagePath }) {
+  if (!oldProfileImagePath) return;
+  if (oldProfileImagePath === newProfileImagePath) return;
+
+  // Only delete files that live under /images/profile and match our filename convention.
+  const oldPath = String(oldProfileImagePath);
+  if (!oldPath.startsWith("/images/profile/")) return;
+
+  const oldBaseName = path.posix.basename(oldPath);
+  if (!oldBaseName || !String(oldBaseName).startsWith(`${userId}-`)) return;
+
+  const rel = oldPath.replace(/^\/+/, "");
+  const absolute = path.resolve(PUBLIC_DIR, rel);
+
+  // Ensure we only delete inside the public dir
+  const publicResolved = path.resolve(PUBLIC_DIR) + path.sep;
+  if (!absolute.startsWith(publicResolved)) return;
+
+  await safeUnlinkIfExists(absolute);
+}
 
 // Register Page
 router.get("/register", (req, res) => {
@@ -46,7 +81,7 @@ router.post("/register", async (req, res) => {
 
     await newUser.save();
 
-    return res.redirect("/auth/login");
+    return res.redirect(`/auth/login?success=${encodeURIComponent("Account created. Please log in")}`);
 
   } catch (err) {
     console.log(err);
@@ -118,7 +153,7 @@ router.get("/logout", (req, res) => {
       console.log(err);
       return res.send("Logout error");
     }
-    return res.redirect("/auth/login");
+    return res.redirect(`/auth/login?info=${encodeURIComponent("Logged out")}`);
   });
 });
 
@@ -177,7 +212,7 @@ router.post("/profile", async (req, res) => {
     req.session.user.username = updatedUser.username;
     req.session.user.email = updatedUser.email;
 
-    return res.redirect("/dashboard");
+    return res.redirect(`/dashboard?success=${encodeURIComponent("Profile updated")}`);
   } catch (err) {
     console.log(err);
     return res.send("Profile update failed");
@@ -202,6 +237,9 @@ router.post("/profile/image", isLoggedIn, (req, res, next) => {
     const userId = req.session.user.id;
     const profileImagePath = `/images/profile/${req.file.filename}`;
 
+    const existingUser = await User.findById(userId).select("profileImage");
+    const oldProfileImagePath = existingUser?.profileImage || "";
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { profileImage: profileImagePath },
@@ -209,15 +247,135 @@ router.post("/profile/image", isLoggedIn, (req, res, next) => {
     ).select("profileImage");
 
     if (!updatedUser) {
+      // DB update failed; remove newly uploaded file to avoid orphaned files.
+      const uploadedAbsolute =
+        req.file.path || path.resolve(PUBLIC_DIR, "images", "profile", req.file.filename);
+      await safeUnlinkIfExists(uploadedAbsolute);
       return res.status(404).send("User not found");
     }
 
     req.session.user.profileImage = updatedUser.profileImage || "";
 
-    return res.redirect("/auth/profile");
+    await deleteOldProfileImage({
+      userId,
+      oldProfileImagePath,
+      newProfileImagePath: profileImagePath,
+    });
+
+    return res.redirect(`/auth/profile?success=${encodeURIComponent("Profile picture updated")}`);
   } catch (err) {
     console.log(err);
+
+    // If something fails after multer wrote the file, try to clean it up.
+    if (req.file) {
+      const uploadedAbsolute =
+        req.file.path || path.resolve(PUBLIC_DIR, "images", "profile", req.file.filename);
+      await safeUnlinkIfExists(uploadedAbsolute);
+    }
+
     return res.status(500).send("Profile image update failed");
+  }
+});
+
+router.get("/manageUser", isLoggedIn, checkRole("admin"), async(req, res) => {
+  if(!req.session.user){
+    return res.redirect("/auth/login");
+  }
+
+  try {
+    const users = await User.find({})
+      .select("username email role merchantType createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return res.render("admin/manageUser", {
+      admin: req.session.user,
+      users,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.send("Error loading users");
+  }
+});
+
+// Admin: edit user page
+router.get("/users/:userId/edit", isLoggedIn, checkRole("admin"), async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const editUser = await User.findById(userId)
+      .select("username email role merchantType createdAt")
+      .lean();
+
+    if (!editUser) {
+      return res.redirect(`/auth/manageUser?error=${encodeURIComponent("User not found")}`);
+    }
+
+    return res.render("admin/editUser", {
+      admin: req.session.user,
+      editUser,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.redirect(`/auth/manageUser?error=${encodeURIComponent("Failed to load user")}`);
+  }
+});
+
+// Admin: edit user submit
+router.post("/users/:userId/edit", isLoggedIn, checkRole("admin"), async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { username, email, role, merchantType, password } = req.body;
+
+    if (!username || !email || !role) {
+      return res.redirect(
+        `/auth/users/${encodeURIComponent(userId)}/edit?error=${encodeURIComponent("Required fields missing")}`
+      );
+    }
+
+    const allowedRoles = new Set(["student", "merchant", "admin"]);
+    if (!allowedRoles.has(role)) {
+      return res.redirect(
+        `/auth/users/${encodeURIComponent(userId)}/edit?error=${encodeURIComponent("Invalid role")}`
+      );
+    }
+
+    // Prevent locking yourself out
+    if (String(req.session.user.id) === String(userId) && role !== "admin") {
+      return res.redirect(
+        `/auth/users/${encodeURIComponent(userId)}/edit?error=${encodeURIComponent("You cannot remove your own admin role")}`
+      );
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.redirect(`/auth/manageUser?error=${encodeURIComponent("User not found")}`);
+    }
+
+    user.username = String(username).trim();
+    user.email = String(email).trim();
+    user.role = role;
+    user.merchantType = role === "merchant" ? String(merchantType || "").trim() : "";
+
+    const newPassword = String(password || "");
+    if (newPassword.trim().length > 0) {
+      user.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    await user.save();
+
+    return res.redirect(`/auth/manageUser?success=${encodeURIComponent("User updated")}`);
+  } catch (err) {
+    console.log(err);
+
+    if (err && (err.code === 11000 || err.code === 11001)) {
+      return res.redirect(
+        `/auth/users/${encodeURIComponent(req.params.userId)}/edit?error=${encodeURIComponent("Email already exists")}`
+      );
+    }
+
+    return res.redirect(
+      `/auth/users/${encodeURIComponent(req.params.userId)}/edit?error=${encodeURIComponent("Update failed")}`
+    );
   }
 });
 

@@ -6,14 +6,41 @@
 </head>
 <body>
 
-    <h1>CampusBite System</h1>
+    <header class="cb-topbar">
+        <div class="cb-topbar-inner">
+            <a class="cb-brand" href="/">CampusBite</a>
+            <nav class="cb-nav">
+                <a class="cb-nav-link" href="/auth/login">Login</a>
+                <a class="cb-nav-link cb-nav-link--primary" href="/auth/register">Register</a>
+            </nav>
+        </div>
+    </header>
 
-    <a href="/auth/login">Login</a>
-    <br><br>
+    <main class="page">
+        <div class="cb-hero">
+            <div>
+                <h1>CampusBite</h1>
+                <p class="cb-subtitle">Pre-order campus food from your favorite spots.</p>
+            </div>
+        </div>
 
-    <a href="/auth/register">Register</a>
+        <div class="cb-tile-grid">
+            <div class="cb-tile">
+                <h3>Browse restaurants</h3>
+                <p>Find merchants by type and search.</p>
+            </div>
+            <div class="cb-tile">
+                <h3>View menus</h3>
+                <p>Search foods and filter by category.</p>
+            </div>
+            <div class="cb-tile">
+                <h3>Upload images</h3>
+                <p>Profile pictures and food images supported.</p>
+            </div>
+        </div>
+    </main>
 
-    <p>Placeholder Page (for now)</p>
+    <script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>

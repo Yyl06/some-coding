@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/shops">Restaurants</a>
+        <a class="cb-nav-link" href="/orders">My Orders</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1>Checkout</h1>
+        <p class="cb-subtitle">
+          Pickup only • Payment: Pay on pickup
+          <% if (merchant && merchant.username) { %>
+            • Merchant: <strong><%= merchant.username %></strong>
+          <% } %>
+        </p>
+      </div>
+      <div class="cb-actions">
+        <a href="/shops"><button type="button">Continue browsing</button></a>
+        <form class="inline-form" method="POST" action="/orders/cart/clear" onsubmit="return confirm('Clear your cart?');">
+          <button type="submit">Clear cart</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Order summary</h3>
+      <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Unit</th>
+            <th>Qty</th>
+            <th>Total</th>
+            <th>Update</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(line => { %>
+            <tr>
+              <td>
+                <strong><%= line.name %></strong>
+                <div class="cb-muted"><%= line.category %></div>
+              </td>
+              <td>RM <%= line.unitPrice.toFixed(2) %></td>
+              <td>
+                <form class="inline-form" method="POST" action="/orders/cart/update">
+                  <input type="hidden" name="foodId" value="<%= line.foodId %>">
+                  <input type="number" name="quantity" min="0" max="99" value="<%= line.quantity %>" style="width: 90px;">
+              </td>
+              <td>RM <%= line.lineTotal.toFixed(2) %></td>
+              <td>
+                  <button type="submit">Save</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <hr>
+
+      <div class="cb-actions" style="justify-content: space-between;">
+        <div>
+          <p class="cb-muted">Customer: <strong><%= user.username %></strong></p>
+          <p class="cb-muted">Payment method: <strong>Pay on pickup</strong></p>
+          <p class="cb-muted">Fulfillment: <strong>Pickup</strong></p>
+        </div>
+        <div style="text-align: right;">
+          <p><strong>Grand total:</strong> RM <%= total.toFixed(2) %></p>
+          <form class="inline-form" method="POST" action="/orders/checkout" onsubmit="return confirm('Place this order?');">
+            <button type="submit">Place order</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
+
+</body>
+</html>

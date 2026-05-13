@@ -6,30 +6,64 @@
 </head>
 <body>
 
-  <h1>Merchant Dashboard</h1>
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/menu/<%= user.id %>">Menu</a>
+        <a class="cb-nav-link" href="/foods">Manage Foods</a>
+        <a class="cb-nav-link" href="/orders">Orders</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
 
-  <h3>Welcome, <%= user.username %> 👋</h3>
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <h1>Merchant Dashboard</h1>
+        <p class="cb-subtitle">Welcome, <%= user.username %></p>
+      </div>
+    </div>
 
-  <p>Email: <%= user.email %></p>
-  <p>Role: <%= user.role %></p>
+    <div class="cb-tile-grid">
+      <div class="cb-tile">
+        <h3>Your shop menu</h3>
+        <p>Preview what customers see.</p>
+        <div class="cb-actions">
+          <a href="/menu/<%= user.id %>"><button type="button">View Menu</button></a>
+        </div>
+      </div>
 
-  <br>
+      <div class="cb-tile">
+        <h3>Manage foods</h3>
+        <p>Add, edit, and upload food images.</p>
+        <div class="cb-actions">
+          <a href="/foods"><button type="button">Open</button></a>
+        </div>
+      </div>
 
-  <a href="/menu/<%= user.id %>">
-    <button type="button">View Your Shop Menu</button>
-  </a>
+      <div class="cb-tile">
+        <h3>Orders</h3>
+        <p>View pickup orders placed by customers.</p>
+        <div class="cb-actions">
+          <a href="/orders"><button type="button">View Orders</button></a>
+        </div>
+      </div>
 
-  <a href="/foods">
-    <button type="button">Manage Foods</button>
-  </a>
+      <div class="cb-tile">
+        <h3>Your account</h3>
+        <p class="cb-muted">Email: <%= user.email %></p>
+        <p class="cb-muted">Role: <%= user.role %></p>
+        <div class="cb-actions">
+          <a href="/auth/profile"><button type="button">Update Profile</button></a>
+        </div>
+      </div>
+    </div>
+  </main>
 
-  <a href="/auth/profile">
-    <button type="button">Update Profile</button>
-  </a>
-
-  <a href="/auth/logout">
-    <button>Logout</button>
-  </a>
+  <script src="/js/cb-ui.js" defer></script>
 
 </body>
 </html>
