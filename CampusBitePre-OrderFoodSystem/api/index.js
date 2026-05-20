@@ -24,8 +24,22 @@ function isStaticAssetRequest(req) {
 }
 
 module.exports = async (req, res) => {
-  if (!isStaticAssetRequest(req)) {
-    await connectDB();
+  try {
+    if (!isStaticAssetRequest(req)) {
+      await connectDB();
+    }
+    return app(req, res);
+  } catch (err) {
+    console.error("Request failed:", err);
+    if (res.headersSent) return;
+
+    const accepts = req?.headers?.accept || "";
+    if (accepts.includes("application/json")) {
+      return res.status(503).json({ message: "Service unavailable" });
+    }
+
+    return res
+      .status(503)
+      .send("Service unavailable (database connection failed). Try again later.");
   }
-  return app(req, res);
 };

@@ -3,9 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
-const mongoose = require("mongoose");
-
-const connectDB = require("./config/db");
 
 const homeRoutes = require("./routes/homeRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -50,14 +47,17 @@ function createApp() {
   const mongoUrl = process.env.MONGO_URI?.trim();
   if (mongoUrl) {
     try {
+      // connect-mongo v6 CommonJS export shape: { default: MongoStore, MongoStore, ... }
       // eslint-disable-next-line global-require
-      const MongoStore = require("connect-mongo");
+      const connectMongo = require("connect-mongo");
+      const MongoStore = connectMongo?.default || connectMongo?.MongoStore || connectMongo;
 
-      // Share the already-cached Mongoose connection (important on serverless).
-      const clientPromise = connectDB().then(() => mongoose.connection.getClient());
+      if (typeof MongoStore?.create !== "function") {
+        throw new TypeError("connect-mongo does not expose MongoStore.create");
+      }
 
       store = MongoStore.create({
-        clientPromise,
+        mongoUrl,
         collectionName: "sessions",
         ttl: 60 * 60 * 24 * 14, // 14 days
       });
@@ -95,12 +95,6 @@ function createApp() {
   app.use("/menu", menuRoute);
   app.use("/shops", shopRoutes);
   app.use("/orders", orderRoutes);
-
-  // Warm DB connection for environments that keep the process warm
-  // (serverless may call this per request instead; that's fine with caching).
-  connectDB().catch(() => {
-    // Defer errors to request time or server start handlers.
-  });
 
   return app;
 }
