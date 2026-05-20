@@ -263,6 +263,10 @@ router.post(
         return res.status(403).send("Access denied");
       }
 
+      if (String(order.status || "") === "Cancelled") {
+        return res.redirect(`/orders?error=${encodeURIComponent("Cancelled orders cannot be completed")}`);
+      }
+
       // Simplest rule: only allow completion once merchant marks it Ready.
       if (String(order.status || "") !== "Ready") {
         return res.redirect(
@@ -277,6 +281,42 @@ router.post(
     } catch (err) {
       console.log(err);
       return res.redirect(`/orders?error=${encodeURIComponent("Failed to complete order")}`);
+    }
+  }
+);
+
+// Student cancels order (only while Pending)
+router.post(
+  "/:orderId/cancel",
+  isLoggedIn,
+  checkRole("student"),
+  async (req, res) => {
+    try {
+      const user = req.session.user;
+      const { orderId } = req.params;
+
+      const order = await Order.findById(orderId).select("student status");
+      if (!order) {
+        return res.redirect(`/orders?error=${encodeURIComponent("Order not found")}`);
+      }
+
+      if (String(order.student) !== String(user.id)) {
+        return res.status(403).send("Access denied");
+      }
+
+      if (String(order.status || "") !== "Pending") {
+        return res.redirect(
+          `/orders?error=${encodeURIComponent("Only Pending orders can be cancelled")}`
+        );
+      }
+
+      order.status = "Cancelled";
+      await order.save();
+
+      return res.redirect(`/orders?success=${encodeURIComponent("Order cancelled")}`);
+    } catch (err) {
+      console.log(err);
+      return res.redirect(`/orders?error=${encodeURIComponent("Failed to cancel order")}`);
     }
   }
 );
@@ -300,6 +340,10 @@ router.post(
       const order = await Order.findById(orderId).select("merchant status");
       if (!order) {
         return res.redirect(`/orders?error=${encodeURIComponent("Order not found")}`);
+      }
+
+      if (String(order.status || "") === "Cancelled") {
+        return res.redirect(`/orders?error=${encodeURIComponent("Cancelled orders cannot be updated")}`);
       }
 
       if (user.role === "merchant" && String(order.merchant) !== String(user.id)) {

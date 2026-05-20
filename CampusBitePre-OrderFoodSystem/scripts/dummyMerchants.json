@@ -1,0 +1,167 @@
+[
+  {
+    "username": "merchant01",
+    "email": "merchant01@campusbite.test",
+    "password": "$2b$10$bKoJGnnofLTCRcs1rRyz4eYLyO7uFzdHlwh2YGF4WqvSC.Iw26rgu",
+    "role": "merchant",
+    "merchantType": "Hawker Centre",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant02",
+    "email": "merchant02@campusbite.test",
+    "password": "$2b$10$K06SmSq6XI9bEChSCi.hWug94tMrnwpnA2ravxC1HtKOlCM3D3JTO",
+    "role": "merchant",
+    "merchantType": "Cafe",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant03",
+    "email": "merchant03@campusbite.test",
+    "password": "$2b$10$BSCsK/VEKF6u8XsHMzHwFOtuGgI4Ct1SV/bRbtTY.YS289EdIyJLW",
+    "role": "merchant",
+    "merchantType": "Desserts",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant04",
+    "email": "merchant04@campusbite.test",
+    "password": "$2b$10$52gXLIUPlkvYTrloUz0ueeLbVPq3gSO85ysQ6iwmqYsst8ui.kKh.",
+    "role": "merchant",
+    "merchantType": "Beverages",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant05",
+    "email": "merchant05@campusbite.test",
+    "password": "$2b$10$KymKFf53ZF4b45yBhxSbvO6XzjQ67sFwfMigdV83K3ZHlC4361r8K",
+    "role": "merchant",
+    "merchantType": "Other",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant06",
+    "email": "merchant06@campusbite.test",
+    "password": "$2b$10$jFP03gc/zUjyw3QgTXxA0uZfcsmnGXzxIXmTzEZqgp.kKstlfMkxi",
+    "role": "merchant",
+    "merchantType": "Hawker Centre",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant07",
+    "email": "merchant07@campusbite.test",
+    "password": "$2b$10$1FKLqHvnMJsezAmTNlFvKekQfupEiut11rEfNTGT26p9116js8c1W",
+    "role": "merchant",
+    "merchantType": "Cafe",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant08",
+    "email": "merchant08@campusbite.test",
+    "password": "$2b$10$O6ha7UX2FABZ/acZr0Pxr.s8/0XqX5wZfe.GBGn3QB15lp4iuY2a6",
+    "role": "merchant",
+    "merchantType": "Desserts",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant09",
+    "email": "merchant09@campusbite.test",
+    "password": "$2b$10$8NN5djqjqssNIsmTpePE1../F2YaOL3F/osdZEbsbsXExHXnpdoxW",
+    "role": "merchant",
+    "merchantType": "Beverages",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant10",
+    "email": "merchant10@campusbite.test",
+    "password": "$2b$10$xHDIPmHFNiOr8q6QBDfLV.KIJIFF30WjdO8z/lt9193rga3u/vG5m",
+    "role": "merchant",
+    "merchantType": "Other",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant11",
+    "email": "merchant11@campusbite.test",
+    "password": "$2b$10$SgDFET7Ys6oYwZhXVNdN7uxG7ef89BI3B2mI9vRjpWMVJzadlrFUG",
+    "role": "merchant",
+    "merchantType": "Hawker Centre",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant12",
+    "email": "merchant12@campusbite.test",
+    "password": "$2b$10$5PWKL.aE7AT829YGlvs5LOWcTyw9k7raxQWiOI6Sgwz7.93knJdzm",
+    "role": "merchant",
+    "merchantType": "Cafe",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant13",
+    "email": "merchant13@campusbite.test",
+    "password": "$2b$10$OKDp2hMOABZ.MXAhPM/Lye/RQsje7AfCqmsAL7CMatAJ4cksN5zyW",
+    "role": "merchant",
+    "merchantType": "Desserts",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant14",
+    "email": "merchant14@campusbite.test",
+    "password": "$2b$10$hDWi5tO8BY5Z0lQRCLy2yO4AAG0OQWumbEvVmSLxRBQ9DazX.mx36",
+    "role": "merchant",
+    "merchantType": "Beverages",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  },
+  {
+    "username": "merchant15",
+    "email": "merchant15@campusbite.test",
+    "password": "$2b$10$SFrMfDI24fgOUHYBsij86.H3QwwG4zK0Qp3LXigAMSxpqg34enp1e",
+    "role": "merchant",
+    "merchantType": "Other",
+    "profileImage": "",
+    "createdAt": {
+      "$date": "2026-05-17T14:21:43.756Z"
+    }
+  }
+]

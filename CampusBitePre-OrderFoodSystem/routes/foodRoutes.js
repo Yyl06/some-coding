@@ -63,7 +63,7 @@ router.post("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res, next)
 
     const newFood = new FoodItem({
         name,
-        price: Decimal128(price),
+        price: new Decimal128(price),
         category,
         description,
         image: req.file ? `/images/foods/${req.file.filename}` : "",

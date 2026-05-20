@@ -67,6 +67,7 @@
               <th>Status</th>
               <% if (user.role === 'student') { %>
                 <th>Complete</th>
+                <th>Cancel</th>
               <% } %>
               <% if (user.role === 'merchant' || user.role === 'admin') { %>
                 <th>Update</th>
@@ -107,7 +108,7 @@
                 </td>
 
                 <td>
-                  <span class="cb-badge <%= (order.status || '').toLowerCase() === 'pending' ? 'cb-badge--muted' : 'cb-badge--primary' %>">
+                  <span class="cb-badge <%= (order.status || '').toLowerCase() === 'pending' || (order.status || '').toLowerCase() === 'cancelled' ? 'cb-badge--muted' : 'cb-badge--primary' %>">
                     <%= order.status || 'Pending' %>
                   </span>
                 </td>
@@ -122,17 +123,28 @@
                       <button type="button" disabled>Complete</button>
                     <% } %>
                   </td>
+
+                  <td>
+                    <% if ((order.status || '') === 'Pending') { %>
+                      <form class="inline-form" method="POST" action="/orders/<%= order._id %>/cancel" onsubmit="return confirm('Cancel this order?');">
+                        <button type="submit">Cancel</button>
+                      </form>
+                    <% } else { %>
+                      <button type="button" disabled>Cancel</button>
+                    <% } %>
+                  </td>
                 <% } %>
 
                 <% if (user.role === 'merchant' || user.role === 'admin') { %>
                   <td>
                     <form class="inline-form" method="POST" action="/orders/<%= order._id %>/status">
-                      <select name="status" style="width: 170px;">
+                      <select name="status" style="width: 170px;" <%= (order.status || '') === 'Cancelled' ? 'disabled' : '' %>>
                         <option value="Pending" <%= (order.status || 'Pending') === 'Pending' ? 'selected' : '' %>>Pending</option>
                         <option value="Ready" <%= (order.status || '') === 'Ready' ? 'selected' : '' %>>Ready</option>
                         <option value="Completed" <%= (order.status || '') === 'Completed' ? 'selected' : '' %>>Completed</option>
+                        <option value="Cancelled" <%= (order.status || '') === 'Cancelled' ? 'selected' : '' %> disabled>Cancelled</option>
                       </select>
-                      <button type="submit">Save</button>
+                      <button type="submit" <%= (order.status || '') === 'Cancelled' ? 'disabled' : '' %>>Save</button>
                     </form>
                   </td>
                 <% } %>

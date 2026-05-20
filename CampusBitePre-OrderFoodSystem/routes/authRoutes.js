@@ -40,6 +40,10 @@ async function deleteOldProfileImage({ userId, oldProfileImagePath, newProfileIm
   await safeUnlinkIfExists(absolute);
 }
 
+function escapeRegExp(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 // Register Page
 router.get("/register", (req, res) => {
   res.render("auth/register");
@@ -64,9 +68,9 @@ router.post("/register", async (req, res) => {
     });
 
     if (existingUser) {
-      if (existingUser.email === email) return res.send("Email already registered");
-      if (existingUser.username === username) return res.send("Username already taken");
-      return res.send("User already exists");
+      if (existingUser.email === email) return res.redirect(`/auth/register?error=${encodeURIComponent("Email already registered")}`);
+      if (existingUser.username === username) return res.redirect(`/auth/register?error=${encodeURIComponent("Username already Exists")}`)
+      return res.redirect(`/auth/register?error=${encodeURIComponent("Username/Email already Exists")}`);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -95,6 +99,55 @@ router.get("/login", (req, res) => {
   res.render("auth/login");
 });
 
+// Forgot Password Page
+router.get("/forgotPassword", (req, res) => {
+  return res.render("auth/forgotPassword");
+});
+
+// Forgot Password Submit
+router.post("/forgotPassword", async (req, res) => {
+  try {
+    const username = String(req.body.username || "").trim();
+    const email = String(req.body.email || "").trim();
+    const password = String(req.body.password || "");
+    const confirmPassword = String(req.body.confirmPassword || "");
+
+    if (!username || !email || !password || !confirmPassword) {
+      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("All fields are required")}`);
+    }
+
+    if (password.length < 6) {
+      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Password must be at least 6 characters")}`);
+    }
+
+    if (password !== confirmPassword) {
+      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Passwords do not match")}`);
+    }
+
+    const u = escapeRegExp(username);
+    const e = escapeRegExp(email);
+
+    const user = await User.findOne({
+      username: { $regex: `^${u}$`, $options: "i" },
+      email: { $regex: `^${e}$`, $options: "i" },
+    });
+
+    if (!user) {
+      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Username and email do not match")}`);
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.resetPasswordTokenHash = "";
+    user.resetPasswordExpiresAt = null;
+    await user.save();
+
+    return res.redirect(`/auth/login?success=${encodeURIComponent("Password updated. Please log in")}`);
+  } catch (err) {
+    console.log(err);
+    return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Failed to reset password")}`);
+  }
+});
+
 
 // Login
 router.post("/login", async (req, res) => {
@@ -112,13 +165,13 @@ router.post("/login", async (req, res) => {
     });
 
     if (!user) {
-      return res.send("User not found");
+      return res.redirect(`/auth/login?error=${encodeURIComponent("User Not Found")}`);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.send("Invalid password");
+      return res.redirect(`/auth/login?success=${encodeURIComponent("Incorrect Password")}`);
     }
 
     await new Promise((resolve, reject) => {
