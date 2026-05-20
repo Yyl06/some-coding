@@ -20,29 +20,40 @@ const mimeToExt = {
 };
 
 function makeImageUploader(relativeUploadsDir) {
-  const absoluteUploadsDir = path.join(
-    __dirname,
-    "..",
-    "public",
-    ...relativeUploadsDir
-  );
-  ensureDirSync(absoluteUploadsDir);
+  const runningOnVercel =
+    process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL);
 
-  const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, absoluteUploadsDir);
-    },
-    filename: (req, file, cb) => {
-      const originalExt = path.extname(file.originalname || "").toLowerCase();
-      const extFromMime = mimeToExt[file.mimetype];
-      const ext =
-        file.mimetype === "image/jpeg" && originalExt === ".jpeg"
-          ? ".jpeg"
-          : extFromMime || originalExt || "";
-      const userId = req.session?.user?.id || "anon";
-      cb(null, `${userId}-${Date.now()}${ext || ""}`);
-    },
-  });
+  let storage;
+
+  if (runningOnVercel) {
+    // Vercel serverless file system is not writable in the deployed bundle.
+    // Use memory storage and persist the file elsewhere (e.g., GridFS).
+    storage = multer.memoryStorage();
+  } else {
+    const absoluteUploadsDir = path.join(
+      __dirname,
+      "..",
+      "public",
+      ...relativeUploadsDir
+    );
+    ensureDirSync(absoluteUploadsDir);
+
+    storage = multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, absoluteUploadsDir);
+      },
+      filename: (req, file, cb) => {
+        const originalExt = path.extname(file.originalname || "").toLowerCase();
+        const extFromMime = mimeToExt[file.mimetype];
+        const ext =
+          file.mimetype === "image/jpeg" && originalExt === ".jpeg"
+            ? ".jpeg"
+            : extFromMime || originalExt || "";
+        const userId = req.session?.user?.id || "anon";
+        cb(null, `${userId}-${Date.now()}${ext || ""}`);
+      },
+    });
+  }
 
   const allowedMimeTypes = new Set(Object.keys(mimeToExt));
 

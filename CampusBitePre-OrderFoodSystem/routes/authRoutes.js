@@ -8,6 +8,11 @@ const isLoggedIn = require("../middleware/authMiddleware");
 const { uploadProfileImage } = require("../middleware/uploadMiddleware");
 const checkRole = require("../middleware/roleMiddleware");
 const session = require("express-session");
+const {
+  parseMediaIdFromPath,
+  uploadBufferToGridFS,
+  deleteGridFSFileById,
+} = require("../config/mediaStore");
 
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
 
@@ -22,6 +27,13 @@ async function safeUnlinkIfExists(absolutePath) {
 async function deleteOldProfileImage({ userId, oldProfileImagePath, newProfileImagePath }) {
   if (!oldProfileImagePath) return;
   if (oldProfileImagePath === newProfileImagePath) return;
+
+  // GridFS-backed images: /media/<id>
+  const oldMediaId = parseMediaIdFromPath(oldProfileImagePath);
+  if (oldMediaId) {
+    await deleteGridFSFileById(oldMediaId);
+    return;
+  }
 
   // Only delete files that live under /images/profile and match our filename convention.
   const oldPath = String(oldProfileImagePath);
@@ -290,7 +302,18 @@ router.post("/profile/image", isLoggedIn, (req, res, next) => {
     }
 
     const userId = req.session.user.id;
-    const profileImagePath = `/images/profile/${req.file.filename}`;
+
+    let profileImagePath = "";
+    if (req.file.buffer) {
+      const id = await uploadBufferToGridFS({
+        buffer: req.file.buffer,
+        filename: req.file.originalname || "profile-image",
+        contentType: req.file.mimetype,
+      });
+      profileImagePath = `/media/${id.toString()}`;
+    } else {
+      profileImagePath = `/images/profile/${req.file.filename}`;
+    }
 
     const existingUser = await User.findById(userId).select("profileImage");
     const oldProfileImagePath = existingUser?.profileImage || "";
@@ -303,9 +326,14 @@ router.post("/profile/image", isLoggedIn, (req, res, next) => {
 
     if (!updatedUser) {
       // DB update failed; remove newly uploaded file to avoid orphaned files.
-      const uploadedAbsolute =
-        req.file.path || path.resolve(PUBLIC_DIR, "images", "profile", req.file.filename);
-      await safeUnlinkIfExists(uploadedAbsolute);
+      const newMediaId = parseMediaIdFromPath(profileImagePath);
+      await deleteGridFSFileById(newMediaId);
+
+      if (req.file.path) {
+        const uploadedAbsolute =
+          req.file.path || path.resolve(PUBLIC_DIR, "images", "profile", req.file.filename);
+        await safeUnlinkIfExists(uploadedAbsolute);
+      }
       return res.status(404).send("User not found");
     }
 
@@ -317,15 +345,17 @@ router.post("/profile/image", isLoggedIn, (req, res, next) => {
       newProfileImagePath: profileImagePath,
     });
 
-    return res.redirect(`/auth/profile?success=${encodeURIComponent("Profile picture updated")}`);
+    return res.redirect(303, `/auth/profile?success=${encodeURIComponent("Profile picture updated")}`);
   } catch (err) {
     console.log(err);
 
     // If something fails after multer wrote the file, try to clean it up.
     if (req.file) {
-      const uploadedAbsolute =
-        req.file.path || path.resolve(PUBLIC_DIR, "images", "profile", req.file.filename);
-      await safeUnlinkIfExists(uploadedAbsolute);
+      if (req.file.path) {
+        const uploadedAbsolute =
+          req.file.path || path.resolve(PUBLIC_DIR, "images", "profile", req.file.filename);
+        await safeUnlinkIfExists(uploadedAbsolute);
+      }
     }
 
     return res.status(500).send("Profile image update failed");

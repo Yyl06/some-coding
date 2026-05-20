@@ -12,6 +12,7 @@ const foodRoutes = require("./routes/foodRoutes");
 const menuRoute = require("./routes/menuRoute");
 const shopRoutes = require("./routes/shopRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const mediaRoutes = require("./routes/mediaRoutes");
 
 function createApp() {
   const app = express();
@@ -23,6 +24,19 @@ function createApp() {
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Ensure browser follows POST redirects with a GET.
+  // This prevents method-preserving redirects (307/308) from breaking form flows.
+  app.use((req, res, next) => {
+    const originalRedirect = res.redirect.bind(res);
+    res.redirect = (statusOrUrl, url) => {
+      if (req.method === "POST" && typeof statusOrUrl === "string") {
+        return originalRedirect(303, statusOrUrl);
+      }
+      return originalRedirect(statusOrUrl, url);
+    };
+    next();
+  });
 
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "views"));
@@ -61,6 +75,7 @@ function createApp() {
     })
   );
 
+  app.use("/media", mediaRoutes);
   app.use("/", homeRoutes);
   app.use("/auth", authRoutes);
   app.use("/foods", foodRoutes);
