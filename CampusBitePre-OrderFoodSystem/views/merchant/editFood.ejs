@@ -48,7 +48,17 @@
     <br><br>
 
     <label>Category</label><br>
-    <input type="text" name="category" value="<%= food.category %>" placeholder="Category" pattern="[A-Za-z ]+" title="Letters and spaces only" required>
+    <select id="categorySelect" name="category" required data-current="<%= food.category || '' %>">
+      <option value="" disabled <%= !food.category ? "selected" : "" %>>Select category</option>
+      <% (categories || []).forEach(function (cat) { %>
+        <option value="<%= cat %>" <%= food.category === cat ? "selected" : "" %>><%= cat %></option>
+      <% }) %>
+      <option value="__custom__">Other (new category)</option>
+    </select>
+    <br><br>
+
+    <label>New category (letters and spaces only)</label><br>
+    <input id="categoryCustom" type="text" name="categoryCustom" value="" placeholder="New category" pattern="[A-Za-z ]+" title="Letters and spaces only">
     <br><br>
 
     <label>Description</label><br>
@@ -63,6 +73,34 @@
   </main>
 
   <script src="/js/cb-ui.js" defer></script>
+  <script>
+    (function () {
+      var select = document.getElementById("categorySelect");
+      var custom = document.getElementById("categoryCustom");
+      if (!select || !custom) return;
+
+      function syncCustomRequirement() {
+        var isCustom = select.value === "__custom__";
+        if (isCustom) {
+          custom.required = true;
+          custom.disabled = false;
+        } else {
+          custom.required = false;
+          custom.disabled = true;
+          custom.value = "";
+        }
+      }
+
+      var current = select.getAttribute("data-current") || "";
+      if (current && select.value === "") {
+        select.value = "__custom__";
+        custom.value = current;
+      }
+
+      syncCustomRequirement();
+      select.addEventListener("change", syncCustomRequirement);
+    })();
+  </script>
 
 </body>
 </html>

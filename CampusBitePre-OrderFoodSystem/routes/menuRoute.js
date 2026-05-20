@@ -58,6 +58,12 @@ router.get("/:merchantId", isLoggedIn, async (req, res) => {
       priceText: priceTextFromFood(f),
     }));
 
+    const categories = await FoodItem.distinct("category", {
+      merchant: merchantId,
+      availability: true,
+    });
+    const categoryList = (categories || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
+
     const isMerchantViewingOwnMenu =
       user && user.role === "merchant" && String(user.id) === String(merchantId);
     const viewName = isMerchantViewingOwnMenu ? "merchant/merchantMenu" : "customer/customerMenu";
@@ -66,6 +72,7 @@ router.get("/:merchantId", isLoggedIn, async (req, res) => {
       foods,
       search,
       category,
+      categories: categoryList,
       merchantId,
       cartCount,
     });

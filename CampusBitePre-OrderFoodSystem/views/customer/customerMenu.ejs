@@ -38,21 +38,11 @@
           <label>Category</label><br>
           <select name="category">
             <option value="">All Categories</option>
-
-            <option value="Rice"
-              <%= category === "Rice" ? "selected" : "" %>>
-              Rice
-            </option>
-
-            <option value="Drink"
-              <%= category === "Drink" ? "selected" : "" %>>
-              Drink
-            </option>
-
-            <option value="Snack"
-              <%= category === "Snack" ? "selected" : "" %>>
-              Snack
-            </option>
+            <% (categories || []).forEach(function (cat) { %>
+              <option value="<%= cat %>" <%= category === cat ? "selected" : "" %>>
+                <%= cat %>
+              </option>
+            <% }) %>
           </select>
 
           <br><br>

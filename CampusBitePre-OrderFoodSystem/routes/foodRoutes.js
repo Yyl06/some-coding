@@ -28,6 +28,14 @@ function normalizeCategory(input) {
   return { ok: true, value: category };
 }
 
+function resolveCategoryInput(body) {
+  if (!body) return "";
+  if (body.category === "__custom__") {
+    return body.categoryCustom;
+  }
+  return body.category;
+}
+
 function normalizePrice(input) {
   const raw = String(input ?? "").trim();
   if (!raw) return { ok: false, error: "Price is required" };
@@ -84,16 +92,28 @@ router.get("/", isLoggedIn, checkRole("merchant", "admin"), async (req, res) => 
 
 // Add Food Page
 router.get("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res) => {
-  return res.render("merchant/editFood", {
-    isEdit: false,
-    food: {
-      name: "",
-      price: "",
-      priceText: "",
-      category: "",
-      description: "",
-    },
-  });
+  const user = req.session.user;
+  const categoryQuery = user?.role === "admin" ? {} : { merchant: user.id };
+
+  return FoodItem.distinct("category", categoryQuery)
+    .then((categories) => {
+      const sorted = (categories || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
+      return res.render("merchant/editFood", {
+        isEdit: false,
+        categories: sorted,
+        food: {
+          name: "",
+          price: "",
+          priceText: "",
+          category: "",
+          description: "",
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.send("Error loading add food page");
+    });
 });
 
 // Add Food Function
@@ -108,7 +128,8 @@ router.post("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res, next)
   },
   async (req, res) => {
   try {
-    const { name, price, category, description } = req.body;
+    const { name, price, description } = req.body;
+    const category = resolveCategoryInput(req.body);
 
     if (!name || !price || !category) {
       return res.status(400).send("Required fields missing");
@@ -167,7 +188,12 @@ router.get("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), async (r
       priceText: addPriceText(foodRaw).priceText,
     };
 
-    return res.render("merchant/editFood", { food, isEdit: true });
+    const user = req.session.user;
+    const categoryQuery = user?.role === "admin" ? {} : { merchant: user.id };
+    const categories = await FoodItem.distinct("category", categoryQuery);
+    const sorted = (categories || []).filter(Boolean).sort((a, b) => a.localeCompare(b));
+
+    return res.render("merchant/editFood", { food, isEdit: true, categories: sorted });
   } catch (err) {
     console.log(err);
     return res.send("Error loading food");
@@ -187,7 +213,8 @@ router.post("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), (req, r
   async (req, res) => {
   try {
     const { foodId } = req.params;
-    const { name, price, category, description } = req.body;
+    const { name, price, description } = req.body;
+    const category = resolveCategoryInput(req.body);
 
     if (!name || !price || !category) {
       return res.status(400).send("Required fields missing");
