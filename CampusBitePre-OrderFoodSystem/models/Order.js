@@ -1,4 +1,3 @@
-const { Decimal128 } = require("mongodb");
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
@@ -28,7 +27,7 @@ const orderSchema = new mongoose.Schema({
         default: "",
       },
       unitPrice: {
-        type: Decimal128,
+        type: mongoose.Schema.Types.Decimal128,
       },
       quantity: {
         type: Number,
@@ -38,7 +37,7 @@ const orderSchema = new mongoose.Schema({
   ],
 
   totalPrice: {
-    type: Decimal128,
+    type: mongoose.Schema.Types.Decimal128,
     required: true,
   },
 

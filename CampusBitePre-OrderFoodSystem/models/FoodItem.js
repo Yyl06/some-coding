@@ -1,4 +1,3 @@
-const { Decimal128 } = require("mongodb");
 const mongoose = require("mongoose");
 
 const foodItemSchema = new mongoose.Schema({
@@ -8,13 +7,24 @@ const foodItemSchema = new mongoose.Schema({
   },
 
   price: {
-    type: Decimal128,
+    type: mongoose.Schema.Types.Decimal128,
     required: true,
+    validate: {
+      validator: (value) => {
+        if (value == null) return false;
+        const n = Number(typeof value?.toString === "function" ? value.toString() : value);
+        return Number.isFinite(n) && n > 0;
+      },
+      message: "Price must be greater than 0",
+    },
   },
 
   category: {
     type: String,
     required: true,
+    trim: true,
+    maxlength: 40,
+    match: [/^[A-Za-z][A-Za-z\s]*$/, "Category must contain only letters and spaces"],
   },
 
   description: {

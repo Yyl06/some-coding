@@ -44,11 +44,11 @@
     <br><br>
 
     <label>Price</label><br>
-    <input type="number" name="price" value="<%= food.price %>" placeholder="Price" step="any" required>
+    <input type="number" name="price" value="<%= food.priceText || food.price %>" placeholder="Price" step="0.01" min="0.01" required>
     <br><br>
 
     <label>Category</label><br>
-    <input type="text" name="category" value="<%= food.category %>" placeholder="Category" required>
+    <input type="text" name="category" value="<%= food.category %>" placeholder="Category" pattern="[A-Za-z ]+" title="Letters and spaces only" required>
     <br><br>
 
     <label>Description</label><br>

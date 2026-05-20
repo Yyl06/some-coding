@@ -5,17 +5,43 @@ const checkRole = require("../middleware/roleMiddleware");
 const FoodItem = require("../models/FoodItem");
 const Order = require("../models/Order");
 const User = require("../models/User");
-const { Decimal128 } = require("mongodb");
+
+function decimalToNumber(value) {
+  if (value == null) return 0;
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  if (typeof value === "string") {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+  }
+  if (typeof value === "object" && value.$numberDecimal) {
+    const n = Number(value.$numberDecimal);
+    return Number.isFinite(n) ? n : 0;
+  }
+  if (typeof value?.toString === "function") {
+    const n = Number(value.toString());
+    return Number.isFinite(n) ? n : 0;
+  }
+  return 0;
+}
+
+function moneyText(value) {
+  const n = Math.max(0, decimalToNumber(value));
+  return n.toFixed(2);
+}
 
 function getCart(req) {
   if (!req.session.cart) {
     req.session.cart = {
       merchantId: "",
       items: {}, // { [foodId]: quantity }
+      lastAdd: { key: "", at: 0 },
     };
   }
   if (!req.session.cart.items || typeof req.session.cart.items !== "object") {
     req.session.cart.items = {};
+  }
+  if (!req.session.cart.lastAdd || typeof req.session.cart.lastAdd !== "object") {
+    req.session.cart.lastAdd = { key: "", at: 0 };
   }
   return req.session.cart;
 }
@@ -49,7 +75,7 @@ async function buildCheckoutSummary(cart) {
     const quantity = Math.max(0, parseInt(cart.items[foodId], 10) || 0);
     if (quantity <= 0) continue;
 
-    const unit = food.price ? parseFloat(food.price.toString()) : 0;
+    const unit = Math.max(0, decimalToNumber(food.price));
     const lineTotal = unit * quantity;
 
     lines.push({
@@ -97,15 +123,27 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
 
     const cart = getCart(req);
 
+    // Basic double-click / duplicate POST guard (same item within a short window)
+    const addKey = `${String(merchantId)}:${String(foodId)}`;
+    const now = Date.now();
+    const last = cart.lastAdd || { key: "", at: 0 };
+    if (last.key === addKey && now - (Number(last.at) || 0) < 800) {
+      return res.redirect(
+        `/menu/${merchantId}?info=${encodeURIComponent("Item already added")}`
+      );
+    }
+
     // Enforce a single-merchant cart (simplest/cleanest checkout)
     if (cart.merchantId && String(cart.merchantId) !== String(merchantId)) {
       cart.merchantId = String(merchantId);
       cart.items = {};
+      cart.lastAdd = { key: "", at: 0 };
     }
 
     cart.merchantId = String(merchantId);
     const prev = parseInt(cart.items[String(foodId)], 10) || 0;
     cart.items[String(foodId)] = prev + 1;
+    cart.lastAdd = { key: addKey, at: now };
 
     return res.redirect(
       `/menu/${merchantId}?success=${encodeURIComponent("Added to cart")}`
@@ -189,10 +227,10 @@ router.post("/checkout", isLoggedIn, checkRole("student"), async (req, res) => {
       items: summary.items.map((line) => ({
         food: line.foodId,
         foodName: line.name,
-        unitPrice: Decimal128.fromString(line.unitPrice.toFixed(2)),
+        unitPrice: line.unitPrice.toFixed(2),
         quantity: line.quantity,
       })),
-      totalPrice: Decimal128.fromString(summary.total.toFixed(2)),
+      totalPrice: summary.total.toFixed(2),
       fulfillmentType: "pickup",
       paymentMethod: "pay_on_pickup",
       status: "Pending",
@@ -237,7 +275,12 @@ router.get("/", isLoggedIn, async (req, res) => {
       return res.status(403).send("Access denied");
     }
 
-    return res.render("orders/index", { user, orders });
+    const ordersForView = (orders || []).map((o) => ({
+      ...o,
+      totalPriceText: moneyText(o.totalPrice),
+    }));
+
+    return res.render("orders/index", { user, orders: ordersForView });
   } catch (err) {
     console.log(err);
     return res.send("Error loading orders");

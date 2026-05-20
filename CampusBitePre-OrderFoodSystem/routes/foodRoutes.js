@@ -4,12 +4,57 @@ const isLoggedIn = require("../middleware/authMiddleware");
 const checkRole = require("../middleware/roleMiddleware");
 const FoodItem = require("../models/FoodItem");
 const { uploadFoodImage } = require("../middleware/uploadMiddleware");
-const { Decimal128 } = require("mongodb");
 const {
   parseMediaIdFromPath,
   uploadBufferToGridFS,
   deleteGridFSFileById,
 } = require("../config/mediaStore");
+
+function decimalToString(value) {
+  if (value == null) return "";
+  if (typeof value === "object" && value.$numberDecimal) return String(value.$numberDecimal);
+  return String(value);
+}
+
+function normalizeCategory(input) {
+  const category = String(input || "").trim();
+  if (!category) return { ok: false, error: "Category is required" };
+  if (!/^[A-Za-z][A-Za-z\s]*$/.test(category)) {
+    return { ok: false, error: "Category must contain only letters and spaces" };
+  }
+  if (category.length > 40) {
+    return { ok: false, error: "Category is too long" };
+  }
+  return { ok: true, value: category };
+}
+
+function normalizePrice(input) {
+  const raw = String(input ?? "").trim();
+  if (!raw) return { ok: false, error: "Price is required" };
+
+  // Up to 2 decimal places, no sign.
+  if (!/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test(raw)) {
+    return { ok: false, error: "Price must be a positive number (max 2 decimals)" };
+  }
+
+  const numeric = Number(raw);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    return { ok: false, error: "Price must be greater than 0" };
+  }
+  if (numeric > 99999) {
+    return { ok: false, error: "Price is too large" };
+  }
+
+  // Store with 2 decimals for consistent display/math.
+  return { ok: true, value: numeric.toFixed(2) };
+}
+
+function addPriceText(food) {
+  const p = decimalToString(food?.price);
+  const n = Number(p);
+  const safe = Number.isFinite(n) ? Math.max(0, n) : 0;
+  return { ...food, priceText: safe.toFixed(2) };
+}
 
 function canManageFood(req, food) {
   const user = req.session.user;
@@ -22,10 +67,12 @@ function canManageFood(req, food) {
 router.get("/", isLoggedIn, checkRole("merchant", "admin"), async (req, res) => {
   try {
     const user = req.session.user;
-    const foods =
+    const foodsRaw =
       user.role === "admin"
-        ? await FoodItem.find({}).populate("merchant", "username")
-        : await FoodItem.find({ merchant: user.id });
+        ? await FoodItem.find({}).populate("merchant", "username").lean()
+        : await FoodItem.find({ merchant: user.id }).lean();
+
+    const foods = (foodsRaw || []).map(addPriceText);
 
     const success = typeof req.query.success === "string" ? req.query.success : null;
     return res.render("merchant/foods", { foods, user, success });
@@ -42,6 +89,7 @@ router.get("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res) => {
     food: {
       name: "",
       price: "",
+      priceText: "",
       category: "",
       description: "",
     },
@@ -66,6 +114,12 @@ router.post("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res, next)
       return res.status(400).send("Required fields missing");
     }
 
+    const priceNorm = normalizePrice(price);
+    if (!priceNorm.ok) return res.status(400).send(priceNorm.error);
+
+    const categoryNorm = normalizeCategory(category);
+    if (!categoryNorm.ok) return res.status(400).send(categoryNorm.error);
+
     let imageUrl = "";
     if (req.file) {
       if (req.file.buffer) {
@@ -82,8 +136,8 @@ router.post("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res, next)
 
     const newFood = new FoodItem({
       name,
-      price: new Decimal128(price),
-      category,
+      price: priceNorm.value,
+      category: categoryNorm.value,
       description,
       image: imageUrl,
       merchant: req.session.user.id,
@@ -102,10 +156,16 @@ router.post("/add", isLoggedIn, checkRole("merchant", "admin"), (req, res, next)
 router.get("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), async (req, res) => {
   try {
     const { foodId } = req.params;
-    const food = await FoodItem.findById(foodId);
+    const foodRaw = await FoodItem.findById(foodId).lean();
 
-    if (!food) return res.status(404).send("Food not found");
-    if (!canManageFood(req, food)) return res.status(403).send("Access denied");
+    if (!foodRaw) return res.status(404).send("Food not found");
+    if (!canManageFood(req, foodRaw)) return res.status(403).send("Access denied");
+
+    const food = {
+      ...foodRaw,
+      price: decimalToString(foodRaw.price),
+      priceText: addPriceText(foodRaw).priceText,
+    };
 
     return res.render("merchant/editFood", { food, isEdit: true });
   } catch (err) {
@@ -133,13 +193,19 @@ router.post("/:foodId/edit", isLoggedIn, checkRole("merchant", "admin"), (req, r
       return res.status(400).send("Required fields missing");
     }
 
+    const priceNorm = normalizePrice(price);
+    if (!priceNorm.ok) return res.status(400).send(priceNorm.error);
+
+    const categoryNorm = normalizeCategory(category);
+    if (!categoryNorm.ok) return res.status(400).send(categoryNorm.error);
+
     const food = await FoodItem.findById(foodId);
     if (!food) return res.status(404).send("Food not found");
     if (!canManageFood(req, food)) return res.status(403).send("Access denied");
 
     food.name = name;
-    food.price = new Decimal128(price);
-    food.category = category;
+    food.price = priceNorm.value;
+    food.category = categoryNorm.value;
     food.description = description;
 
     if (req.file) {

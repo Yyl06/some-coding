@@ -105,8 +105,40 @@
     }
   }
 
+  function preventDoubleSubmits() {
+    document.addEventListener(
+      "submit",
+      function (event) {
+        var form = event.target;
+        if (!form || form.nodeName !== "FORM") return;
+
+        // Only guard POST forms (adds/checkout/status updates)
+        var method = (form.getAttribute("method") || "GET").toUpperCase();
+        if (method !== "POST") return;
+
+        if (form.dataset && form.dataset.cbSubmitted === "true") {
+          event.preventDefault();
+          return;
+        }
+
+        if (form.dataset) form.dataset.cbSubmitted = "true";
+
+        var buttons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+        buttons.forEach(function (btn) {
+          try {
+            btn.disabled = true;
+          } catch (_e) {
+            // ignore
+          }
+        });
+      },
+      true
+    );
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     activateNavLinks();
     handleQueryToasts();
+    preventDoubleSubmits();
   });
 })();

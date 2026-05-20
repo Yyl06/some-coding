@@ -3,6 +3,18 @@ const router = express.Router();
 const isLoggedIn = require("../middleware/authMiddleware");
 const FoodItem = require("../models/FoodItem");
 
+function decimalToString(value) {
+  if (value == null) return "";
+  if (typeof value === "object" && value.$numberDecimal) return String(value.$numberDecimal);
+  return String(value);
+}
+
+function priceTextFromFood(food) {
+  const n = Number(decimalToString(food?.price));
+  const safe = Number.isFinite(n) ? Math.max(0, n) : 0;
+  return safe.toFixed(2);
+}
+
 // View Menu
 router.get("/", isLoggedIn, async (req, res) => {
   try {
@@ -40,7 +52,11 @@ router.get("/:merchantId", isLoggedIn, async (req, res) => {
       query.category = category;
     }
 
-    const foods = await FoodItem.find(query);
+    const foodsRaw = await FoodItem.find(query).lean();
+    const foods = (foodsRaw || []).map((f) => ({
+      ...f,
+      priceText: priceTextFromFood(f),
+    }));
 
     const isMerchantViewingOwnMenu =
       user && user.role === "merchant" && String(user.id) === String(merchantId);
