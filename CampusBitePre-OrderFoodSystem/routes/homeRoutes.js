@@ -11,6 +11,12 @@ router.get("/", (req, res) => {
   return res.render("index");
 });
 
+// Defensive: if a client/proxy preserves POST during redirects,
+// force a GET request to the dashboard.
+router.post("/dashboard", (req, res) => {
+  return res.redirect(303, "/dashboard");
+});
+
 router.get("/dashboard", isLoggedIn, (req, res) => {
   const user = req.session.user;
 

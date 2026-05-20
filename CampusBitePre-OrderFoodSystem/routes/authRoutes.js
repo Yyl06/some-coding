@@ -190,7 +190,8 @@ router.post("/login", async (req, res) => {
       req.session.save((err) => (err ? reject(err) : resolve()));
     });
 
-    return res.redirect("/dashboard");
+    // After a POST, use 303 so the follow-up request is a GET.
+    return res.redirect(303, "/dashboard");
 
   } catch (err) {
     console.log(err);
@@ -265,7 +266,8 @@ router.post("/profile", async (req, res) => {
     req.session.user.username = updatedUser.username;
     req.session.user.email = updatedUser.email;
 
-    return res.redirect(`/dashboard?success=${encodeURIComponent("Profile updated")}`);
+    // After a POST, use 303 so the follow-up request is a GET.
+    return res.redirect(303, `/dashboard?success=${encodeURIComponent("Profile updated")}`);
   } catch (err) {
     console.log(err);
     return res.send("Profile update failed");
