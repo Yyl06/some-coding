@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
+const mongoose = require("mongoose");
 
 const connectDB = require("./config/db");
 
@@ -45,18 +46,23 @@ function createApp() {
   // Session store: MemoryStore is not suitable for serverless.
   // If connect-mongo is available, use MongoDB-backed sessions.
   let store;
-  try {
-    // eslint-disable-next-line global-require
-    const MongoStore = require("connect-mongo");
-    if (process.env.MONGO_URI) {
+  const mongoUrl = process.env.MONGO_URI?.trim();
+  if (mongoUrl) {
+    try {
+      // eslint-disable-next-line global-require
+      const MongoStore = require("connect-mongo");
+
+      // Share the already-cached Mongoose connection (important on serverless).
+      const clientPromise = connectDB().then(() => mongoose.connection.getClient());
+
       store = MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
+        clientPromise,
         collectionName: "sessions",
         ttl: 60 * 60 * 24 * 14, // 14 days
       });
+    } catch (err) {
+      console.error("Failed to configure Mongo session store:", err);
     }
-  } catch (err) {
-    // connect-mongo not installed; fall back to MemoryStore (ok for local dev).
   }
 
   app.use(
