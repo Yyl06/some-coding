@@ -20,7 +20,8 @@ function createApp() {
 
   // Needed for secure cookies behind Vercel/other proxies
   if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
-    app.set("trust proxy", 1);
+    // Vercel can sit behind multiple proxies; trust them so req.secure works.
+    app.set("trust proxy", true);
   }
 
   app.use(express.json());
@@ -75,7 +76,13 @@ function createApp() {
       store,
       cookie: {
         httpOnly: true,
-        sameSite: "lax",
+        // Persist across navigations; helps avoid "random" logouts.
+        maxAge: 1000 * 60 * 60 * 24 * 14, // 14 days
+        // Some browsers are picky with cross-subdomain POSTs on preview URLs.
+        sameSite:
+          process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL)
+            ? "none"
+            : "lax",
         secure: process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL),
       },
     })
