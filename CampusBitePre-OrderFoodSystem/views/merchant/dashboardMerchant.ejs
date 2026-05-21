@@ -14,7 +14,9 @@
         <a class="cb-nav-link" href="/foods">Manage Foods</a>
         <a class="cb-nav-link" href="/orders">Orders</a>
         <a class="cb-nav-link" href="/auth/profile">Profile</a>
-        <form action="/auth/logout" method="POST" class="inline-form" onsubmit="return confirm('Logging out from this session?');">Logout</form>
+        <form action="/auth/logout" class="inline-form" onsubmit="return confirm('Logging out from this session?');">
+          <button type="submit">Logout</button>
+        </form>
       </nav>
     </div>
   </header>
