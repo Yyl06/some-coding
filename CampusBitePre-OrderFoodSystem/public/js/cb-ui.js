@@ -156,10 +156,41 @@
     });
   }
 
+  function setupQuantityControls() {
+    document.addEventListener("click", function (event) {
+      var btn = event.target.closest(".cb-qty-btn");
+      if (!btn) return;
+
+      var wrap = btn.closest(".cb-qty");
+      if (!wrap) return;
+
+      var input = wrap.querySelector("input[type=number]");
+      if (!input) return;
+
+      var min = parseInt(input.getAttribute("min"), 10);
+      var max = parseInt(input.getAttribute("max"), 10);
+      var step = parseInt(input.getAttribute("step"), 10);
+      if (!Number.isFinite(step) || step <= 0) step = 1;
+
+      var current = parseInt(input.value, 10);
+      if (!Number.isFinite(current)) current = Number.isFinite(min) ? min : 1;
+
+      var action = btn.getAttribute("data-qty-action");
+      var next = action === "down" ? current - step : current + step;
+
+      if (Number.isFinite(min)) next = Math.max(min, next);
+      if (Number.isFinite(max)) next = Math.min(max, next);
+
+      input.value = next;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     activateNavLinks();
     handleQueryToasts();
     preventDoubleSubmits();
     confirmLogout();
+    setupQuantityControls();
   });
 })();

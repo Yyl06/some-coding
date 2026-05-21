@@ -104,10 +104,19 @@ async function buildCheckoutSummary(cart) {
 router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
   try {
     const { foodId, merchantId } = req.body;
+    const rawQty = req.body.quantity;
 
     if (!foodId || !merchantId) {
       return res.redirect(`/shops?error=${encodeURIComponent("Invalid item")}`);
     }
+
+    const qtyParsed = parseInt(rawQty, 10);
+    if (!Number.isFinite(qtyParsed) || qtyParsed <= 0) {
+      return res.redirect(
+        `/menu/${merchantId}?error=${encodeURIComponent("Invalid quantity")}`
+      );
+    }
+    const quantity = Math.min(99, qtyParsed);
 
     const food = await FoodItem.findById(foodId).select("merchant availability");
     if (!food) return res.redirect(`/shops?error=${encodeURIComponent("Food not found")}`);
@@ -142,7 +151,7 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
 
     cart.merchantId = String(merchantId);
     const prev = parseInt(cart.items[String(foodId)], 10) || 0;
-    cart.items[String(foodId)] = prev + 1;
+    cart.items[String(foodId)] = Math.min(99, prev + quantity);
     cart.lastAdd = { key: addKey, at: now };
 
     return res.redirect(

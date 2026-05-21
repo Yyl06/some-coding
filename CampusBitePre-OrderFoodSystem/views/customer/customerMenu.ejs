@@ -111,19 +111,24 @@
                     <span class="cb-badge cb-badge--muted"><%= food.category %></span>
                   </p>
                   <p class="cb-muted"><%= food.description %></p>
-                  <p class="cb-muted">
+                  <div class="cb-muted">
                     <strong>Status:</strong>
                     <% if (food.availability) { %>
                       <span class="cb-badge">Available</span>
                     <% } else { %>
                       <span class="cb-badge cb-badge--muted">Unavailable</span>
                     <% } %>
-                  </p>
+                  </div>
 
                   <% if (food.availability) { %>
-                    <form class="inline-form" method="POST" action="/orders/cart/add">
+                    <form class="inline-form cb-qty-form" method="POST" action="/orders/cart/add">
                       <input type="hidden" name="foodId" value="<%= food._id %>">
                       <input type="hidden" name="merchantId" value="<%= merchantId %>">
+                      <div class="cb-qty">
+                        <button type="button" class="cb-qty-btn" data-qty-action="down" aria-label="Decrease quantity">-</button>
+                        <input type="number" name="quantity" class="cb-qty-input" min="1" max="99" value="1">
+                        <button type="button" class="cb-qty-btn" data-qty-action="up" aria-label="Increase quantity">+</button>
+                      </div>
                       <button type="submit">Add to cart</button>
                     </form>
                   <% } else { %>

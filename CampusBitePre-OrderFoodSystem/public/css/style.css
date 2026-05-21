@@ -509,6 +509,42 @@ input[type="reset"]:focus-visible,
   box-shadow: 0 0 0 4px var(--cb-focus), var(--cb-shadow-soft);
 }
 
+.cb-qty-form.inline-form {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.cb-qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--cb-border);
+  background: #fff1dc;
+}
+
+.cb-qty-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--cb-border);
+  background: #ffffff;
+  color: var(--cb-ink);
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.cb-qty-input {
+  width: 68px;
+  min-width: 0;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 999px;
+}
+
 label {
   color: var(--cb-muted);
   font-weight: 700;
