@@ -136,9 +136,30 @@
     );
   }
 
+  function confirmLogout() {
+    var links = document.querySelectorAll('a[href="/auth/logout"]');
+    links.forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        if (!window.confirm("Logging out from this session?")) {
+          event.preventDefault();
+        }
+      });
+    });
+
+    var forms = document.querySelectorAll('form[action="/auth/logout"]');
+    forms.forEach(function (form) {
+      form.addEventListener("submit", function (event) {
+        if (!window.confirm("Logging out from this session?")) {
+          event.preventDefault();
+        }
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     activateNavLinks();
     handleQueryToasts();
     preventDoubleSubmits();
+    confirmLogout();
   });
 })();
