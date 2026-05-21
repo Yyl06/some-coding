@@ -605,13 +605,14 @@ form.inline-form {
 .cb-table-wrap {
   width: 100%;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding: 4px 16px 8px;
 }
 
 .cb-table th:last-child,
 .cb-table td:last-child {
   text-align: right;
   padding-right: 18px;
+  min-width: 120px;
 }
 
 .cb-table td:last-child button,
@@ -639,6 +640,7 @@ form.inline-form {
 
 .cb-table td {
   padding: 12px;
+  overflow: visible;
 }
 
 .cb-table tbody tr td:first-child {
