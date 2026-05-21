@@ -49,6 +49,7 @@
             <th>Qty</th>
             <th>Total</th>
             <th>Update</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -60,13 +61,27 @@
               </td>
               <td>RM <%= line.unitPrice.toFixed(2) %></td>
               <td>
-                <form class="inline-form" method="POST" action="/orders/cart/update">
-                  <input type="hidden" name="foodId" value="<%= line.foodId %>">
-                  <input type="number" name="quantity" min="0" max="99" value="<%= line.quantity %>" style="width: 90px;">
+                <input
+                  type="number"
+                  name="quantity"
+                  min="0"
+                  max="99"
+                  value="<%= line.quantity %>"
+                  style="width: 90px;"
+                  form="update-<%= line.foodId %>"
+                >
               </td>
               <td>RM <%= line.lineTotal.toFixed(2) %></td>
               <td>
+                <form class="inline-form" method="POST" action="/orders/cart/update" id="update-<%= line.foodId %>">
+                  <input type="hidden" name="foodId" value="<%= line.foodId %>">
                   <button type="submit">Save</button>
+                </form>
+              </td>
+              <td>
+                <form class="inline-form" method="POST" action="/orders/cart/delete" onsubmit="return confirm('Remove this item?');">
+                  <input type="hidden" name="foodId" value="<%= line.foodId %>">
+                  <button type="submit">Delete</button>
                 </form>
               </td>
             </tr>

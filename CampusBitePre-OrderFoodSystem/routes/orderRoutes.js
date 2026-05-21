@@ -191,6 +191,24 @@ router.post("/cart/update", isLoggedIn, checkRole("student"), async (req, res) =
   }
 });
 
+router.post("/cart/delete", isLoggedIn, checkRole("student"), (req, res) => {
+  const { foodId } = req.body;
+  const cart = getCart(req);
+
+  if (!foodId) {
+    return res.redirect(`/orders/checkout?error=${encodeURIComponent("Invalid item")}`);
+  }
+
+  delete cart.items[String(foodId)];
+
+  if (cartItemCount(cart) === 0) {
+    cart.merchantId = "";
+    cart.items = {};
+  }
+
+  return res.redirect(`/orders/checkout?success=${encodeURIComponent("Item removed")}`);
+});
+
 router.post("/cart/clear", isLoggedIn, checkRole("student"), (req, res) => {
   const cart = getCart(req);
   cart.merchantId = "";
@@ -246,6 +264,8 @@ router.post("/checkout", isLoggedIn, checkRole("student"), async (req, res) => {
     });
 
     await order.save();
+
+    
 
     // clear cart
     cart.merchantId = "";
