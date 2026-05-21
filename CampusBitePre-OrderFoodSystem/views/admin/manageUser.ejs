@@ -22,6 +22,7 @@
                 <main class="page">
                     <div class="cb-hero">
                         <div>
+                            <span class="cb-kicker">Users</span>
                             <h1>Users List</h1>
                             <p class="cb-subtitle">Manage users in the database.</p>
                         </div>
@@ -30,41 +31,62 @@
                         </div>
                     </div>
 
-                    <% if(!users || users.length === 0){ %>
-                        <div class="card cb-empty">
-                            <h3>No users found</h3>
-                            <p class="cb-muted">Create an account first, then refresh.</p>
-                        </div>
-                    <% } else { %>
-                        <div class="card">
-                            <table border="1" cellpadding="8" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Merchant Type</th>
-                                        <th>Created At</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% users.forEach(line => { %>
-                                        <tr>
-                                            <td><strong><%= line.username %></strong></td>
-                                            <td><%= line.email %></td>
-                                            <td><%= line.role %></td>
-                                            <td><%= line.merchantType || '' %></td>
-                                            <td><%= line.createdAt ? new Date(line.createdAt).toLocaleString() : '' %></td>
-                                            <td>
-                                                <a href="/auth/users/<%= line._id %>/edit"><button type="button">Edit</button></a>
-                                            </td>
-                                        </tr>
-                                    <% }) %>
-                                </tbody>
-                            </table>
-                        </div>
-                    <% } %>
+                    <div class="cb-shell">
+                        <aside class="cb-sidebar">
+                            <div class="cb-sidecard">
+                                <h3 class="cb-side-title">Summary</h3>
+                                <p class="cb-muted">Total users: <strong><%= users ? users.length : 0 %></strong></p>
+                            </div>
+
+                            <div class="cb-sidecard">
+                                <h3 class="cb-side-title">Shortcuts</h3>
+                                <div class="cb-pill-list">
+                                    <a class="cb-pill" href="/dashboard">Dashboard</a>
+                                    <a class="cb-pill cb-pill--active" href="/auth/manageUser">Users</a>
+                                    <a class="cb-pill" href="/orders">Orders</a>
+                                    <a class="cb-pill" href="/auth/profile">Profile</a>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <section class="cb-main">
+                            <% if(!users || users.length === 0){ %>
+                                <div class="card cb-empty">
+                                    <h3>No users found</h3>
+                                    <p class="cb-muted">Create an account first, then refresh.</p>
+                                </div>
+                            <% } else { %>
+                                <div class="card">
+                                    <table class="cb-table" border="1" cellpadding="8" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Merchant Type</th>
+                                                <th>Created At</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% users.forEach(line => { %>
+                                                <tr>
+                                                    <td><strong><%= line.username %></strong></td>
+                                                    <td><%= line.email %></td>
+                                                    <td><%= line.role %></td>
+                                                    <td><%= line.merchantType || '' %></td>
+                                                    <td><%= line.createdAt ? new Date(line.createdAt).toLocaleString() : '' %></td>
+                                                    <td>
+                                                        <a href="/auth/users/<%= line._id %>/edit"><button type="button">Edit</button></a>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <% } %>
+                        </section>
+                    </div>
                 </main>
 
                 <script src="/js/cb-ui.js" defer></script>

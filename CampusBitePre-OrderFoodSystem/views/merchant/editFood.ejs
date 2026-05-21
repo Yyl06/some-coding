@@ -21,6 +21,7 @@
   <main class="page">
     <div class="cb-hero">
       <div>
+        <span class="cb-kicker">Food editor</span>
         <h1><%= isEdit ? 'Edit Food Item' : 'Add Food Item' %></h1>
         <p class="cb-subtitle"><%= isEdit ? 'Update details and upload a new image if needed.' : 'Create a new food listing.' %></p>
       </div>
@@ -66,7 +67,7 @@
     <br><br>
 
     <button type="submit"><%= isEdit ? 'Save Changes' : 'Add Food' %></button>
-    <a class="ml-2" href="/foods">Cancel</a>
+    <a class="ml-2 cb-btn cb-btn--ghost" href="/foods">Cancel</a>
 
   </form>
 

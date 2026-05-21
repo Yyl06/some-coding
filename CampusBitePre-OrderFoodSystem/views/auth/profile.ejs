@@ -26,40 +26,47 @@
   <main class="page">
     <div class="cb-hero">
       <div>
+        <span class="cb-kicker">Account</span>
         <h1>My Profile</h1>
         <p class="cb-subtitle">Update your details and profile picture.</p>
       </div>
     </div>
 
-  <% if (user.profileImage) { %>
-    <div>
-      <img src="<%= user.profileImage %>" alt="Profile picture" style="max-width: 160px; height: auto;" />
+  <div class="cb-grid cb-grid--2">
+    <div class="cb-card">
+      <div class="cb-card-body">
+        <h3>Profile picture</h3>
+        <% if (user.profileImage) { %>
+          <img src="<%= user.profileImage %>" alt="Profile picture" style="max-width: 180px; height: auto; border-radius: 16px;" />
+          <br>
+        <% } %>
+
+        <form class="cb-form" method="POST" action="/auth/profile/image" enctype="multipart/form-data">
+          <label>Upload Profile Picture</label><br>
+          <input type="file" name="profileImage" accept="image/*" required>
+          <br><br>
+          <button type="submit">Upload Picture</button>
+        </form>
+      </div>
     </div>
-    <br>
-  <% } %>
 
-  <form method="POST" action="/auth/profile/image" enctype="multipart/form-data">
-    <label>Upload Profile Picture</label><br>
-    <input type="file" name="profileImage" accept="image/*" required>
-    <br><br>
-    <button type="submit">Upload Picture</button>
-  </form>
+    <div class="cb-card">
+      <div class="cb-card-body">
+        <h3>Account details</h3>
+        <form class="cb-form" method="POST" action="/auth/profile">
+          <label>Username</label><br>
+          <input type="text" name="username" value="<%= user.username %>" required>
+          <br><br>
 
-  <hr>
+          <label>Email</label><br>
+          <input type="email" name="email" value="<%= user.email %>" required>
+          <br><br>
 
-  <form method="POST" action="/auth/profile">
-
-    <label>Username</label><br>
-    <input type="text" name="username" value="<%= user.username %>" required>
-    <br><br>
-
-    <label>Email</label><br>
-    <input type="email" name="email" value="<%= user.email %>" required>
-    <br><br>
-
-    <button type="submit">Update Profile</button>
-
-  </form>
+          <button type="submit">Update Profile</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
   </main>
 

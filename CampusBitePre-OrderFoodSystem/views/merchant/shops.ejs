@@ -18,27 +18,44 @@
   </header>
 
   <main class="page">
-    <div class="cb-hero">
+    <section class="cb-hero cb-hero--split">
       <div>
+        <span class="cb-kicker">Shops</span>
         <h1>Choose a Shop</h1>
         <p class="cb-subtitle">Search by name then view the menu.</p>
       </div>
-    </div>
+      <div class="cb-hero-card">
+        <div class="cb-hero-image">
+          <span class="cb-hero-chip">Fresh today</span>
+        </div>
+        <div class="cb-hero-card-body">
+          <p class="cb-card-title">Local favorites</p>
+          <p class="cb-muted">Find shops with pickup-ready menus.</p>
+          <div class="cb-card-meta">
+            <span class="cb-badge">Pickup</span>
+            <span class="cb-badge cb-badge--muted">New</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <div class="cb-layout">
+    <div class="cb-shell">
       <aside class="cb-sidebar">
-        <form method="GET" action="/shops">
-          <label>Search</label><br>
-          <input
-            type="text"
-            name="search"
-            placeholder="Search shop..."
-            value="<%= search %>"
-          >
+        <div class="cb-sidecard">
+          <h3 class="cb-side-title">Search</h3>
+          <form class="cb-form" method="GET" action="/shops">
+            <label>Search</label><br>
+            <input
+              type="text"
+              name="search"
+              placeholder="Search shop..."
+              value="<%= search %>"
+            >
 
-          <br><br>
-          <button type="submit">Apply</button>
-        </form>
+            <br><br>
+            <button type="submit">Apply</button>
+          </form>
+        </div>
       </aside>
 
       <section class="cb-main">

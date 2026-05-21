@@ -29,6 +29,7 @@
   <main class="page">
     <div class="cb-hero">
       <div>
+        <span class="cb-kicker">Orders</span>
         <h1>Orders</h1>
         <% if (user.role === 'student') { %>
           <p class="cb-subtitle">Your pickup orders (pay on pickup).</p>
@@ -52,7 +53,7 @@
       </div>
     <% } else { %>
       <div class="card">
-        <table border="1" cellpadding="8" cellspacing="0">
+        <table class="cb-table" border="1" cellpadding="8" cellspacing="0">
           <thead>
             <tr>
               <th>Date</th>

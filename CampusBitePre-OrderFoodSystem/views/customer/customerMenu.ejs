@@ -20,35 +20,73 @@
   </header>
 
   <main class="page">
-    <div class="cb-hero">
+    <%
+      const menuBase = merchantId ? '/menu/' + merchantId : '/menu';
+      const searchValue = search || '';
+      const searchQuery = searchValue ? '&search=' + encodeURIComponent(searchValue) : '';
+      const allLink = menuBase + (searchValue ? '?search=' + encodeURIComponent(searchValue) : '');
+    %>
+
+    <section class="cb-hero cb-hero--split">
       <div>
+        <span class="cb-kicker">Menu</span>
         <h1>Restaurant Menu</h1>
         <p class="cb-subtitle">Search foods and filter by category.</p>
+        <div class="cb-hero-actions">
+          <span class="cb-pill">Pickup only</span>
+          <span class="cb-pill">Pay on pickup</span>
+        </div>
       </div>
-    </div>
+      <div class="cb-hero-card">
+        <div class="cb-hero-image">
+          <span class="cb-hero-chip">Chef picks</span>
+        </div>
+        <div class="cb-hero-card-body">
+          <p class="cb-card-title">Hot today</p>
+          <p class="cb-muted">Fresh batches updated by merchants.</p>
+          <div class="cb-card-meta">
+            <span class="cb-badge">Fast pickup</span>
+            <span class="cb-badge cb-badge--muted">Student favorites</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <div class="cb-layout">
+    <div class="cb-shell">
       <aside class="cb-sidebar">
-        <form method="GET" action="<%= merchantId ? '/menu/' + merchantId : '/menu' %>">
-          <label>Search</label><br>
-          <input type="text" name="search" placeholder="Search food..." value="<%= search %>">
+        <div class="cb-sidecard">
+          <h3 class="cb-side-title">Filter</h3>
+          <form class="cb-form" method="GET" action="<%= menuBase %>">
+            <label>Search</label><br>
+            <input type="text" name="search" placeholder="Search food..." value="<%= searchValue %>">
 
-          <br><br>
+            <br><br>
 
-          <label>Category</label><br>
-          <select name="category">
-            <option value="">All Categories</option>
+            <label>Category</label><br>
+            <select name="category">
+              <option value="">All Categories</option>
+              <% (categories || []).forEach(function (cat) { %>
+                <option value="<%= cat %>" <%= category === cat ? "selected" : "" %>>
+                  <%= cat %>
+                </option>
+              <% }) %>
+            </select>
+
+            <br><br>
+            <button type="submit">Apply filters</button>
+            <a class="ml-2 cb-btn cb-btn--ghost" href="/shops">Back</a>
+          </form>
+        </div>
+
+        <div class="cb-sidecard">
+          <h3 class="cb-side-title">Quick categories</h3>
+          <div class="cb-pill-list">
+            <a class="cb-pill <%= !category ? 'cb-pill--active' : '' %>" href="<%= allLink %>">All</a>
             <% (categories || []).forEach(function (cat) { %>
-              <option value="<%= cat %>" <%= category === cat ? "selected" : "" %>>
-                <%= cat %>
-              </option>
+              <a class="cb-pill <%= category === cat ? 'cb-pill--active' : '' %>" href="<%= menuBase + '?category=' + encodeURIComponent(cat) + searchQuery %>"><%= cat %></a>
             <% }) %>
-          </select>
-
-          <br><br>
-          <button type="submit">Apply filters</button>
-          <a class="ml-2" href="/shops">Back</a>
-        </form>
+          </div>
+        </div>
       </aside>
 
       <section class="cb-main">
@@ -69,16 +107,16 @@
                 <div class="cb-card-body">
                   <p class="cb-card-title"><%= food.name %></p>
                   <p class="cb-card-meta">
-                    <span class="cb-badge cb-badge--primary">RM <%= food.priceText %></span>
+                    <span class="cb-badge">RM <%= food.priceText %></span>
                     <span class="cb-badge cb-badge--muted"><%= food.category %></span>
                   </p>
                   <p class="cb-muted"><%= food.description %></p>
                   <p class="cb-muted">
                     <strong>Status:</strong>
                     <% if (food.availability) { %>
-                      <span class="cb-badge cb-badge--primary">Available</span>
+                      <span class="cb-badge">Available</span>
                     <% } else { %>
-                      <span class="cb-badge">Unavailable</span>
+                      <span class="cb-badge cb-badge--muted">Unavailable</span>
                     <% } %>
                   </p>
 

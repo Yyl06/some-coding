@@ -16,51 +16,61 @@
   </header>
 
   <main class="page">
-    <div class="cb-hero">
-      <div>
-        <h1>Register</h1>
-        <p class="cb-subtitle">Create your account to start ordering.</p>
-      </div>
+    <div class="cb-auth">
+      <section class="cb-auth-hero">
+        <span class="cb-kicker">Join CampusBite</span>
+        <h1>Create your account.</h1>
+        <p class="cb-subtitle">Unlock menus, order ahead, and pick up on time.</p>
+        <div class="cb-pill-list">
+          <span class="cb-pill">Student friendly</span>
+          <span class="cb-pill">Merchant ready</span>
+          <span class="cb-pill">Fast pickup</span>
+        </div>
+      </section>
+
+      <section class="cb-auth-form">
+        <div class="cb-card">
+          <form class="cb-form" action="/auth/register" method="POST">
+            <label>Username</label><br>
+            <input type="text" name="username" placeholder="Username" required />
+            <br><br>
+
+            <label>Email</label><br>
+            <input type="email" name="email" placeholder="Email" required />
+            <br><br>
+
+            <label>Password</label><br>
+            <input type="password" name="password" placeholder="Password" required />
+            <br><br>
+
+            <label>Account type</label><br>
+            <select name="role" id="roleSelect">
+              <option value="student">Student</option>
+              <option value="merchant">Merchant</option>
+            </select>
+
+            <br><br>
+
+            <div id="merchantTypeWrap" style="display: none;">
+              <label>Merchant type (optional)</label><br>
+              <select name="merchantType" id="merchantTypeSelect" disabled>
+                <option value="">Select type</option>
+                <option value="Hawker Centre">Hawker Centre</option>
+                <option value="Cafe">Cafe</option>
+                <option value="Desserts">Desserts</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Other">Other</option>
+              </select>
+
+              <br><br>
+            </div>
+
+            <button type="submit">Register</button>
+            <a class="ml-2" href="/auth/login">Go to Login</a>
+          </form>
+        </div>
+      </section>
     </div>
-
-    <form action="/auth/register" method="POST">
-      <label>Username</label><br>
-      <input type="text" name="username" placeholder="Username" required />
-      <br><br>
-
-      <label>Email</label><br>
-      <input type="email" name="email" placeholder="Email" required />
-      <br><br>
-
-      <label>Password</label><br>
-      <input type="password" name="password" placeholder="Password" required />
-      <br><br>
-
-      <label>Account type</label><br>
-      <select name="role" id="roleSelect">
-        <option value="student">Student</option>
-        <option value="merchant">Merchant</option>
-      </select>
-
-      <br><br>
-
-      <div id="merchantTypeWrap" style="display: none;">
-        <label>Merchant type (optional)</label><br>
-        <select name="merchantType" id="merchantTypeSelect" disabled>
-          <option value="">Select type</option>
-          <option value="Hawker Centre">Hawker Centre</option>
-          <option value="Cafe">Cafe</option>
-          <option value="Desserts">Desserts</option>
-          <option value="Beverages">Beverages</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <br><br>
-      </div>
-
-      <button type="submit">Register</button>
-      <a class="ml-2" href="/auth/login">Go to Login</a>
-    </form>
   </main>
 
   <script>

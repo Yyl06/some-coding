@@ -22,6 +22,7 @@
   <main class="page">
     <div class="cb-hero">
       <div>
+        <span class="cb-kicker">User editor</span>
         <h1>Edit User</h1>
         <p class="cb-subtitle">Update account info, role, and (optional) password.</p>
       </div>
@@ -30,41 +31,69 @@
       </div>
     </div>
 
-    <form method="POST" action="/auth/users/<%= editUser._id %>/edit">
-      <label>Username</label><br>
-      <input type="text" name="username" value="<%= editUser.username %>" required>
+    <div class="cb-shell">
+      <aside class="cb-sidebar">
+        <div class="cb-sidecard">
+          <h3 class="cb-side-title">User summary</h3>
+          <p class="cb-muted">Username: <strong><%= editUser.username %></strong></p>
+          <p class="cb-muted">Email: <strong><%= editUser.email %></strong></p>
+          <p class="cb-muted">Role: <strong><%= editUser.role %></strong></p>
+          <p class="cb-muted">Merchant type: <strong><%= editUser.merchantType || 'N/A' %></strong></p>
+        </div>
 
-      <br><br>
+        <div class="cb-sidecard">
+          <h3 class="cb-side-title">Shortcuts</h3>
+          <div class="cb-pill-list">
+            <a class="cb-pill" href="/dashboard">Dashboard</a>
+            <a class="cb-pill" href="/auth/manageUser">Users</a>
+            <a class="cb-pill" href="/orders">Orders</a>
+            <a class="cb-pill" href="/auth/profile">Profile</a>
+          </div>
+        </div>
+      </aside>
 
-      <label>Email</label><br>
-      <input type="email" name="email" value="<%= editUser.email %>" required>
+      <section class="cb-main">
+        <div class="cb-card">
+          <div class="cb-card-body">
+            <form class="cb-form" method="POST" action="/auth/users/<%= editUser._id %>/edit">
+              <label>Username</label><br>
+              <input type="text" name="username" value="<%= editUser.username %>" required>
 
-      <br><br>
+              <br><br>
 
-      <label>Role</label><br>
-      <select name="role" required>
-        <option value="student" <%= editUser.role === 'student' ? 'selected' : '' %>>student</option>
-        <option value="merchant" <%= editUser.role === 'merchant' ? 'selected' : '' %>>merchant</option>
-        <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>admin</option>
-      </select>
+              <label>Email</label><br>
+              <input type="email" name="email" value="<%= editUser.email %>" required>
 
-      <br><br>
+              <br><br>
 
-      <label>Merchant Type (only if role = merchant)</label><br>
-      <input type="text" name="merchantType" value="<%= editUser.merchantType || '' %>" placeholder="e.g. Cafe">
+              <label>Role</label><br>
+              <select name="role" required>
+                <option value="student" <%= editUser.role === 'student' ? 'selected' : '' %>>student</option>
+                <option value="merchant" <%= editUser.role === 'merchant' ? 'selected' : '' %>>merchant</option>
+                <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>admin</option>
+              </select>
 
-      <br><br>
+              <br><br>
 
-      <label>New Password (leave blank to keep current)</label><br>
-      <input type="password" name="password" value="" placeholder="••••••••">
+              <label>Merchant Type (only if role = merchant)</label><br>
+              <input type="text" name="merchantType" value="<%= editUser.merchantType || '' %>" placeholder="e.g. Cafe">
 
-      <br><br>
+              <br><br>
 
-      <div class="cb-actions">
-        <button type="submit">Save changes</button>
-        <a href="/auth/manageUser"><button type="button">Cancel</button></a>
-      </div>
-    </form>
+              <label>New Password (leave blank to keep current)</label><br>
+              <input type="password" name="password" value="" placeholder="••••••••">
+
+              <br><br>
+
+              <div class="cb-actions">
+                <button type="submit">Save changes</button>
+                <a class="cb-btn cb-btn--ghost" href="/auth/manageUser">Cancel</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
 
   </main>
 

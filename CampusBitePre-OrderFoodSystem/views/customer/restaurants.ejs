@@ -19,65 +19,76 @@
 
   <main class="page">
 
-  <div class="cb-hero">
+  <section class="cb-hero cb-hero--split">
     <div>
+      <span class="cb-kicker">Restaurants</span>
       <h1>Choose a Restaurant</h1>
       <p class="cb-subtitle">Search by name and filter by merchant type.</p>
+      <div class="cb-hero-actions">
+        <span class="cb-pill">Pickup ready</span>
+        <span class="cb-pill">Pay on pickup</span>
+      </div>
     </div>
-  </div>
+    <div class="cb-hero-card">
+      <div class="cb-hero-image">
+        <span class="cb-hero-chip">New spots</span>
+      </div>
+      <div class="cb-hero-card-body">
+        <p class="cb-card-title">Local favorites</p>
+        <p class="cb-muted">Discover cafes, hawker stalls, and more.</p>
+        <div class="cb-card-meta">
+          <span class="cb-badge">Fast pickup</span>
+          <span class="cb-badge cb-badge--muted">Nearby</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <% 
     const selectedType = (typeof type !== "undefined") ? type : "";
     const searchValue = (typeof search !== "undefined") ? search : "";
     const shopsList = (typeof shops !== "undefined" && Array.isArray(shops)) ? shops : [];
+    const typeOptions = ["Hawker Centre", "Cafe", "Desserts", "Beverages", "Other"];
+    const searchQuery = searchValue ? "&search=" + encodeURIComponent(searchValue) : "";
   %>
 
-  <div class="cb-layout">
+  <div class="cb-shell">
     <aside class="cb-sidebar">
-      <form method="GET" action="/shops">
-        <label>Search</label><br>
-        <input
-          type="text"
-          name="search"
-          placeholder="Search restaurant..."
-          value="<%= searchValue %>"
-        >
+      <div class="cb-sidecard">
+        <h3 class="cb-side-title">Filter</h3>
+        <form class="cb-form" method="GET" action="/shops">
+          <label>Search</label><br>
+          <input
+            type="text"
+            name="search"
+            placeholder="Search restaurant..."
+            value="<%= searchValue %>"
+          >
 
-        <br><br>
+          <br><br>
 
-        <label>Type</label><br>
-        <select name="type">
-          <option value="">All Types</option>
+          <label>Type</label><br>
+          <select name="type">
+            <option value="">All Types</option>
+            <% typeOptions.forEach(function(option) { %>
+              <option value="<%= option %>" <%= selectedType === option ? "selected" : "" %>><%= option %></option>
+            <% }) %>
+          </select>
 
-          <option value="Hawker Centre"
-            <%= selectedType === "Hawker Centre" ? "selected" : "" %>>
-            Hawker Centre
-          </option>
+          <br><br>
+          <button type="submit">Apply filters</button>
+        </form>
+      </div>
 
-          <option value="Cafe"
-            <%= selectedType === "Cafe" ? "selected" : "" %>>
-            Cafe
-          </option>
-
-          <option value="Desserts"
-            <%= selectedType === "Desserts" ? "selected" : "" %>>
-            Desserts
-          </option>
-
-          <option value="Beverages"
-            <%= selectedType === "Beverages" ? "selected" : "" %>>
-            Beverages
-          </option>
-
-          <option value="Other"
-            <%= selectedType === "Other" ? "selected" : "" %>>
-            Other
-          </option>
-        </select>
-
-        <br><br>
-        <button type="submit">Apply filters</button>
-      </form>
+      <div class="cb-sidecard">
+        <h3 class="cb-side-title">Quick types</h3>
+        <div class="cb-pill-list">
+          <a class="cb-pill <%= !selectedType ? 'cb-pill--active' : '' %>" href="/shops<%= searchValue ? '?search=' + encodeURIComponent(searchValue) : '' %>">All</a>
+          <% typeOptions.forEach(function(option) { %>
+            <a class="cb-pill <%= selectedType === option ? 'cb-pill--active' : '' %>" href="/shops?type=<%= encodeURIComponent(option) %><%= searchQuery %>"><%= option %></a>
+          <% }) %>
+        </div>
+      </div>
     </aside>
 
     <section class="cb-main">
