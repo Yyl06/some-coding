@@ -599,6 +599,28 @@ form.inline-form {
   border-collapse: separate;
   border-spacing: 0 12px;
   border: 0;
+  min-width: 720px;
+}
+
+.cb-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.cb-table th:last-child,
+.cb-table td:last-child {
+  text-align: right;
+  padding-right: 18px;
+}
+
+.cb-table td:last-child button,
+.cb-table td:last-child .cb-btn {
+  white-space: nowrap;
+}
+
+.cb-table-card {
+  overflow: visible;
 }
 
 .cb-table thead th {

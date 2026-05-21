@@ -56,8 +56,9 @@
                                     <p class="cb-muted">Create an account first, then refresh.</p>
                                 </div>
                             <% } else { %>
-                                <div class="card">
-                                    <table class="cb-table" border="1" cellpadding="8" cellspacing="0">
+                                <div class="card cb-table-card">
+                                    <div class="cb-table-wrap">
+                                        <table class="cb-table" border="1" cellpadding="8" cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th>Username</th>
@@ -82,7 +83,8 @@
                                                 </tr>
                                             <% }) %>
                                         </tbody>
-                                    </table>
+                                        </table>
+                                    </div>
                                 </div>
                             <% } %>
                         </section>
