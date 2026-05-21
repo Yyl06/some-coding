@@ -148,6 +148,11 @@ router.post("/forgotPassword", async (req, res) => {
       return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Username and email do not match")}`);
     }
 
+    const isSamePassword = await bcrypt.compare(password, user.password);
+    if (isSamePassword) {
+      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("New password must be different from the current password")}`);
+    }
+
     user.password = await bcrypt.hash(password, 10);
     user.resetPasswordTokenHash = "";
     user.resetPasswordExpiresAt = null;
