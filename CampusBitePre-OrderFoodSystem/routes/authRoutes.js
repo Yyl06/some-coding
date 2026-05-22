@@ -257,7 +257,8 @@ router.get("/profile", async (req, res) => {
 //Update Profile
 router.post("/profile", async (req, res) => {
   try {
-    const { username, email, phoneNumber } = req.body;
+    const username = String(req.body.username || "").trim();
+    const email = String(req.body.email || "").trim();
     const password = String(req.body.password || "");
     const confirmPassword = String(req.body.confirmPassword || "");
 
@@ -266,37 +267,52 @@ router.post("/profile", async (req, res) => {
     }
 
     if (!username || !email || !password || !confirmPassword) {
-      return res.send("Required fields missing");
+      return res.redirect(`/auth/profile?error=${encodeURIComponent("Required fields missing")}`);
     }
 
     if (password.length < 6) {
-      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Password must be at least 6 characters")}`);
+      return res.redirect(`/auth/profile?error=${encodeURIComponent("Password must be at least 6 characters")}`);
     }
 
     if (password !== confirmPassword) {
-      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Passwords do not match")}`);
+      return res.redirect(`/auth/profile?error=${encodeURIComponent("Passwords do not match")}`);
     }
 
     const userId = req.session.user.id;
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { username, email, confirmPassword},
-      { new: true }
-    );
+    const updatedUser = await User.findById(userId);
 
     if (!updatedUser) {
-      return res.send("User not found");
+      return res.redirect(`/auth/profile?error=${encodeURIComponent("User not found")}`);
     }
 
-    const isSamePassword = await bcrypt.compare(password, updatedUser.password);
+    const duplicateUser = await User.findOne({
+      _id: { $ne: userId },
+      $or: [{ username }, { email }],
+    });
+
+    if (duplicateUser) {
+      if (duplicateUser.email === email) {
+        return res.redirect(`/auth/profile?error=${encodeURIComponent("Email already in use")}`);
+      }
+      if (duplicateUser.username === username) {
+        return res.redirect(`/auth/profile?error=${encodeURIComponent("Username already in use")}`);
+      }
+      return res.redirect(`/auth/profile?error=${encodeURIComponent("Username or email already in use")}`);
+    }
+
+    const isSamePassword = await bcrypt.compare(password, updatedUser.password || "");
     if (isSamePassword) {
-      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("New password must be different from the current password")}`);
+      return res.redirect(`/auth/profile?error=${encodeURIComponent("New password must be different from the current password")}`);
     }
 
+    updatedUser.username = username;
+    updatedUser.email = email;
     updatedUser.password = await bcrypt.hash(password, 10);
     updatedUser.resetPasswordTokenHash = "";
     updatedUser.resetPasswordExpiresAt = null;
+
+    await updatedUser.save();
 
     // sync session
     req.session.user.username = updatedUser.username;
@@ -306,7 +322,7 @@ router.post("/profile", async (req, res) => {
     return res.redirect(303, `/dashboard?success=${encodeURIComponent("Profile updated")}`);
   } catch (err) {
     console.log(err);
-    return res.send("Profile update failed");
+    return res.redirect(`/auth/profile?error=${encodeURIComponent("Profile update failed")}`);
   }
 });
 
