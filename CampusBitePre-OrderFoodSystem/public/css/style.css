@@ -559,6 +559,11 @@ input[type="reset"]:focus-visible,
   border-radius: 999px;
 }
 
+.cb-remark-input {
+  width: min(320px, 100%);
+  min-width: 0;
+}
+
 label {
   color: var(--cb-muted);
   font-weight: 700;

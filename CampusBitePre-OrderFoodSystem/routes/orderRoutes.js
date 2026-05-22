@@ -33,7 +33,7 @@ function getCart(req) {
   if (!req.session.cart) {
     req.session.cart = {
       merchantId: "",
-      items: {}, // { [foodId]: quantity }
+      items: {}, // { [foodId]: { quantity, remark } }
       lastAdd: { key: "", at: 0 },
     };
   }
@@ -43,11 +43,41 @@ function getCart(req) {
   if (!req.session.cart.lastAdd || typeof req.session.cart.lastAdd !== "object") {
     req.session.cart.lastAdd = { key: "", at: 0 };
   }
+
+  Object.keys(req.session.cart.items).forEach((foodId) => {
+    const entry = req.session.cart.items[foodId];
+    if (entry && typeof entry === "object" && !Array.isArray(entry)) {
+      const quantity = Math.max(0, parseInt(entry.quantity, 10) || 0);
+      const remark = String(entry.remark || "").trim();
+
+      if (quantity <= 0) {
+        delete req.session.cart.items[foodId];
+        return;
+      }
+
+      req.session.cart.items[foodId] = { quantity, remark };
+      return;
+    }
+
+    const quantity = Math.max(0, parseInt(entry, 10) || 0);
+    if (quantity <= 0) {
+      delete req.session.cart.items[foodId];
+      return;
+    }
+
+    req.session.cart.items[foodId] = { quantity, remark: "" };
+  });
+
   return req.session.cart;
 }
 
 function cartItemCount(cart) {
-  return Object.values(cart.items || {}).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
+  return Object.values(cart.items || {}).reduce((sum, item) => {
+    if (item && typeof item === "object") {
+      return sum + (Number(item.quantity) || 0);
+    }
+    return sum + (Number(item) || 0);
+  }, 0);
 }
 
 async function buildCheckoutSummary(cart) {
@@ -72,8 +102,14 @@ async function buildCheckoutSummary(cart) {
     const food = foodById.get(String(foodId));
     if (!food) continue;
 
-    const quantity = Math.max(0, parseInt(cart.items[foodId], 10) || 0);
+    const cartItem = cart.items[foodId];
+    const quantity = Math.max(
+      0,
+      parseInt(cartItem && typeof cartItem === "object" ? cartItem.quantity : cartItem, 10) || 0
+    );
     if (quantity <= 0) continue;
+
+    const remark = String(cartItem && typeof cartItem === "object" ? cartItem.remark : "").trim();
 
     const unit = Math.max(0, decimalToNumber(food.price));
     const lineTotal = unit * quantity;
@@ -86,6 +122,7 @@ async function buildCheckoutSummary(cart) {
       unitPrice: unit,
       quantity,
       lineTotal,
+      remark,
     });
 
     total += lineTotal;
@@ -105,6 +142,7 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
   try {
     const { foodId, merchantId } = req.body;
     const rawQty = req.body.quantity;
+    const remark = String(req.body.remark || "").trim().slice(0, 200);
 
     if (!foodId || !merchantId) {
       return res.redirect(`/shops?error=${encodeURIComponent("Invalid item")}`);
@@ -150,8 +188,13 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
     }
 
     cart.merchantId = String(merchantId);
-    const prev = parseInt(cart.items[String(foodId)], 10) || 0;
-    cart.items[String(foodId)] = Math.min(99, prev + quantity);
+    const existing = cart.items[String(foodId)];
+    const prevQuantity = parseInt(existing && typeof existing === "object" ? existing.quantity : existing, 10) || 0;
+    const existingRemark = String(existing && typeof existing === "object" ? existing.remark : "").trim();
+    cart.items[String(foodId)] = {
+      quantity: Math.min(99, prevQuantity + quantity),
+      remark: remark || existingRemark,
+    };
     cart.lastAdd = { key: addKey, at: now };
 
     return res.redirect(
@@ -166,6 +209,7 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
 router.post("/cart/update", isLoggedIn, checkRole("student"), async (req, res) => {
   try {
     const { foodId, quantity } = req.body;
+    const remark = String(req.body.remark || "").trim().slice(0, 200);
     const cart = getCart(req);
 
     if (!foodId) {
@@ -176,12 +220,16 @@ router.post("/cart/update", isLoggedIn, checkRole("student"), async (req, res) =
     if (!Number.isFinite(qty) || qty <= 0) {
       delete cart.items[String(foodId)];
     } else {
-      cart.items[String(foodId)] = Math.min(99, qty);
+      cart.items[String(foodId)] = {
+        quantity: Math.min(99, qty),
+        remark,
+      };
     }
 
     if (cartItemCount(cart) === 0) {
       cart.merchantId = "";
       cart.items = {};
+      cart.lastAdd = { key: "", at: 0 };
     }
 
     return res.redirect(`/orders/checkout?success=${encodeURIComponent("Cart updated")}`);
@@ -204,6 +252,7 @@ router.post("/cart/delete", isLoggedIn, checkRole("student"), (req, res) => {
   if (cartItemCount(cart) === 0) {
     cart.merchantId = "";
     cart.items = {};
+    cart.lastAdd = { key: "", at: 0 };
   }
 
   return res.redirect(`/orders/checkout?success=${encodeURIComponent("Item removed")}`);
@@ -213,6 +262,7 @@ router.post("/cart/clear", isLoggedIn, checkRole("student"), (req, res) => {
   const cart = getCart(req);
   cart.merchantId = "";
   cart.items = {};
+  cart.lastAdd = { key: "", at: 0 };
   return res.redirect(`/shops?info=${encodeURIComponent("Cart cleared")}`);
 });
 
@@ -256,6 +306,7 @@ router.post("/checkout", isLoggedIn, checkRole("student"), async (req, res) => {
         foodName: line.name,
         unitPrice: line.unitPrice.toFixed(2),
         quantity: line.quantity,
+        remark: line.remark || "",
       })),
       totalPrice: summary.total.toFixed(2),
       fulfillmentType: "pickup",
@@ -270,6 +321,7 @@ router.post("/checkout", isLoggedIn, checkRole("student"), async (req, res) => {
     // clear cart
     cart.merchantId = "";
     cart.items = {};
+    cart.lastAdd = { key: "", at: 0 };
 
     return res.redirect(`/orders?success=${encodeURIComponent("Order placed (pay on pickup)")}`);
   } catch (err) {

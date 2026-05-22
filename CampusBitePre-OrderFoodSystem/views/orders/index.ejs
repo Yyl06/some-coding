@@ -108,6 +108,11 @@
                         <div class="cb-muted">
                           <%= it.foodName %> × <%= it.quantity %><%= idx < order.items.length - 1 ? ',' : '' %>
                         </div>
+                        <% if (it.remark) { %>
+                          <div class="cb-muted" style="font-size: 12px;">
+                            Remark: <%= it.remark %>
+                          </div>
+                        <% } %>
                       <% }) %>
                     </div>
                   <% } %>

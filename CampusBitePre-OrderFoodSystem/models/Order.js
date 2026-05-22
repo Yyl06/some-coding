@@ -33,6 +33,10 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         default: 1,
       },
+      remark: {
+        type: String,
+        default: "",
+      },
     },
   ],
 
@@ -59,6 +63,11 @@ const orderSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+
+  remark: {
+    type: String,
+    default: "",
   },
 });
 
