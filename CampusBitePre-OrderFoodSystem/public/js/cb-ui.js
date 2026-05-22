@@ -186,11 +186,29 @@
     });
   }
 
+  function formatLocalTimes() {
+    var els = document.querySelectorAll('.js-local-time');
+    els.forEach(function (el) {
+      try {
+        var dt = el.getAttribute('datetime');
+        if (!dt) return;
+        var d = new Date(dt);
+        if (isNaN(d.getTime())) return;
+        // show localized string and set tooltip to ISO
+        el.textContent = d.toLocaleString();
+        el.setAttribute('title', d.toISOString());
+      } catch (_e) {
+        // ignore
+      }
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     activateNavLinks();
     handleQueryToasts();
     preventDoubleSubmits();
     confirmLogout();
     setupQuantityControls();
+    formatLocalTimes();
   });
 })();

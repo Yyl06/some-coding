@@ -81,7 +81,13 @@
           <tbody>
             <% orders.forEach(order => { %>
               <tr>
-                <td><%= order.createdAt ? new Date(order.createdAt).toLocaleString() : '' %></td>
+                <td>
+                  <% if (order.createdAt) { %>
+                    <time class="js-local-time" datetime="<%= new Date(order.createdAt).toISOString() %>">
+                      <%= new Date(order.createdAt).toLocaleString() %>
+                    </time>
+                  <% } %>
+                </td>
 
                 <% if (user.role === 'student' || user.role === 'admin') { %>
                   <td>

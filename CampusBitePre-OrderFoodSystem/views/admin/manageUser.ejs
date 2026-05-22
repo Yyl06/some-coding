@@ -77,7 +77,13 @@
                                                     <td><%= line.email %></td>
                                                     <td><%= line.role %></td>
                                                     <td><%= line.merchantType || '' %></td>
-                                                    <td><%= line.createdAt ? new Date(line.createdAt).toLocaleString() : '' %></td>
+                                                                                                        <td>
+                                                                                                            <% if (line.createdAt) { %>
+                                                                                                                <time class="js-local-time" datetime="<%= new Date(line.createdAt).toISOString() %>">
+                                                                                                                    <%= new Date(line.createdAt).toLocaleString() %>
+                                                                                                                </time>
+                                                                                                            <% } %>
+                                                                                                        </td>
                                                     <td>
                                                         <a href="/auth/users/<%= line._id %>/edit"><button type="button">Edit</button></a>
                                                     </td>
