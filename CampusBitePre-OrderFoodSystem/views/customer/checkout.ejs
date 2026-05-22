@@ -88,14 +88,11 @@
                 </form>
               </td>
               <td>
-                <input
-                  type="text"
-                  name="remark"
-                  value="<%= line.remark || '' %>"
-                  placeholder="Add remarks (optional)"
-                  form="update-<%= line.foodId %>"
-                  class="cb-remark-input"
-                >
+                <% if (line.remark) { %>
+                  <div class="cb-muted"><%= line.remark %></div>
+                <% } else { %>
+                  <div class="cb-muted">-</div>
+                <% } %>
               </td>
             </tr>
           <% }) %>

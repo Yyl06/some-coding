@@ -29,6 +29,11 @@ function moneyText(value) {
   return n.toFixed(2);
 }
 
+function normalizeRemark(value) {
+  const text = String(value || "").trim();
+  return text ? text.slice(0, 200) : "";
+}
+
 function getCart(req) {
   if (!req.session.cart) {
     req.session.cart = {
@@ -48,7 +53,7 @@ function getCart(req) {
     const entry = req.session.cart.items[foodId];
     if (entry && typeof entry === "object" && !Array.isArray(entry)) {
       const quantity = Math.max(0, parseInt(entry.quantity, 10) || 0);
-      const remark = String(entry.remark || "").trim();
+      const remark = normalizeRemark(entry.remark);
 
       if (quantity <= 0) {
         delete req.session.cart.items[foodId];
@@ -109,7 +114,7 @@ async function buildCheckoutSummary(cart) {
     );
     if (quantity <= 0) continue;
 
-    const remark = String(cartItem && typeof cartItem === "object" ? cartItem.remark : "").trim();
+    const remark = normalizeRemark(cartItem && typeof cartItem === "object" ? cartItem.remark : "");
 
     const unit = Math.max(0, decimalToNumber(food.price));
     const lineTotal = unit * quantity;
@@ -142,7 +147,7 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
   try {
     const { foodId, merchantId } = req.body;
     const rawQty = req.body.quantity;
-    const remark = String(req.body.remark || "").trim().slice(0, 200);
+    const remark = normalizeRemark(req.body.remark);
 
     if (!foodId || !merchantId) {
       return res.redirect(`/shops?error=${encodeURIComponent("Invalid item")}`);
@@ -190,7 +195,7 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
     cart.merchantId = String(merchantId);
     const existing = cart.items[String(foodId)];
     const prevQuantity = parseInt(existing && typeof existing === "object" ? existing.quantity : existing, 10) || 0;
-    const existingRemark = String(existing && typeof existing === "object" ? existing.remark : "").trim();
+    const existingRemark = normalizeRemark(existing && typeof existing === "object" ? existing.remark : "");
     cart.items[String(foodId)] = {
       quantity: Math.min(99, prevQuantity + quantity),
       remark: remark || existingRemark,
@@ -209,7 +214,8 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
 router.post("/cart/update", isLoggedIn, checkRole("student"), async (req, res) => {
   try {
     const { foodId, quantity } = req.body;
-    const remark = String(req.body.remark || "").trim().slice(0, 200);
+    const hasRemarkField = Object.prototype.hasOwnProperty.call(req.body, "remark");
+    const remark = hasRemarkField ? normalizeRemark(req.body.remark) : null;
     const cart = getCart(req);
 
     if (!foodId) {
@@ -220,9 +226,11 @@ router.post("/cart/update", isLoggedIn, checkRole("student"), async (req, res) =
     if (!Number.isFinite(qty) || qty <= 0) {
       delete cart.items[String(foodId)];
     } else {
+      const existing = cart.items[String(foodId)];
+      const existingRemark = normalizeRemark(existing && typeof existing === "object" ? existing.remark : "");
       cart.items[String(foodId)] = {
         quantity: Math.min(99, qty),
-        remark,
+        remark: remark === null ? existingRemark : remark,
       };
     }
 
