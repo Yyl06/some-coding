@@ -135,7 +135,7 @@ hr {
 .cb-topbar-inner {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 18px 20px 18px 56px;
+  padding: 18px 20px 18px 110px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -193,6 +193,11 @@ hr {
   top: 50%;
   transform: translateY(-50%);
   z-index: 30;
+}
+
+/* Hide back button on designated homepage views */
+.is-home .cb-nav-link--back {
+  display: none;
 }
 
 .cb-hero {
