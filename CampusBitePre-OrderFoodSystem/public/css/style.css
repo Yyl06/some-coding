@@ -140,6 +140,7 @@ hr {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  position: relative;
 }
 
 .cb-brand {
@@ -184,6 +185,14 @@ hr {
   background: linear-gradient(140deg, var(--cb-primary), var(--cb-primary-2));
   border-color: transparent;
   color: #fff;
+}
+
+.cb-nav-link--back {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
 }
 
 .cb-hero {

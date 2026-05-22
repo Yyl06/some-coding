@@ -11,7 +11,7 @@
       <a class="cb-brand" href="/dashboard">CampusBite</a>
       <nav class="cb-nav">
         <a class="cb-nav-link" href="/dashboard">Home</a>
-        <button type="button" class="cb-nav-link" onclick="history.back()">Back</button>
+        <button type="button" class="cb-nav-link cb-nav-link--back" onclick="history.back()">Back</button>
         <a class="cb-nav-link" href="/shops">Restaurants</a>
         <a class="cb-nav-link" href="/orders">My Orders</a>
         <a class="cb-nav-link" href="/auth/profile">Profile</a>
@@ -33,7 +33,6 @@
         </p>
       </div>
       <div class="cb-actions">
-        <button type="button" class="cb-btn cb-btn--ghost" onclick="history.back()">Back</button>
         <a href="/shops"><button type="button">Continue browsing</button></a>
         <form class="inline-form" method="POST" action="/orders/cart/clear" onsubmit="return confirm('Clear your cart?');">
           <button type="submit">Clear cart</button>
