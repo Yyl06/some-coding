@@ -258,26 +258,45 @@ router.get("/profile", async (req, res) => {
 router.post("/profile", async (req, res) => {
   try {
     const { username, email, phoneNumber } = req.body;
+    const password = String(req.body.password || "");
+    const confirmPassword = String(req.body.confirmPassword || "");
 
     if (!req.session.user) {
       return res.redirect("/auth/login");
     }
 
-    if (!username || !email) {
+    if (!username || !email || !password || !confirmPassword) {
       return res.send("Required fields missing");
+    }
+
+    if (password.length < 6) {
+      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Password must be at least 6 characters")}`);
+    }
+
+    if (password !== confirmPassword) {
+      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("Passwords do not match")}`);
     }
 
     const userId = req.session.user.id;
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { username, email},
+      { username, email, confirmPassword},
       { new: true }
     );
 
     if (!updatedUser) {
       return res.send("User not found");
     }
+
+    const isSamePassword = await bcrypt.compare(password, updatedUser.password);
+    if (isSamePassword) {
+      return res.redirect(`/auth/forgotPassword?error=${encodeURIComponent("New password must be different from the current password")}`);
+    }
+
+    updatedUser.password = await bcrypt.hash(password, 10);
+    updatedUser.resetPasswordTokenHash = "";
+    updatedUser.resetPasswordExpiresAt = null;
 
     // sync session
     req.session.user.username = updatedUser.username;
