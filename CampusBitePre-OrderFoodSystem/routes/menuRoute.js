@@ -15,6 +15,17 @@ function priceTextFromFood(food) {
   return safe.toFixed(2);
 }
 
+function cartCountFromSession(cart) {
+  if (!cart || !cart.items) return 0;
+
+  return Object.values(cart.items).reduce((sum, item) => {
+    if (item && typeof item === "object") {
+      return sum + (Number(item.quantity) || 0);
+    }
+    return sum + (Number(item) || 0);
+  }, 0);
+}
+
 // View Menu
 router.get("/", isLoggedIn, async (req, res) => {
   try {
@@ -35,12 +46,7 @@ router.get("/:merchantId", isLoggedIn, async (req, res) => {
     const search = req.query.search || "";
     const category = req.query.category || "";
 
-    const cartCount = req.session?.cart?.items
-      ? Object.values(req.session.cart.items).reduce(
-          (sum, qty) => sum + (Number(qty) || 0),
-          0
-        )
-      : 0;
+    const cartCount = cartCountFromSession(req.session.cart);
 
     let query = {
       availability: true,
