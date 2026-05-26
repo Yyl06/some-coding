@@ -203,6 +203,196 @@
     });
   }
 
+  function createBadge(statusText) {
+    var status = String(statusText || "Pending");
+    var lowered = status.toLowerCase();
+    var muted = lowered === "pending" || lowered === "cancelled" || lowered === "rejected";
+    var span = document.createElement("span");
+    span.className = "cb-badge " + (muted ? "cb-badge--muted" : "cb-badge--primary");
+    span.textContent = status;
+    return span;
+  }
+
+  function buildItemsCell(items) {
+    var td = document.createElement("td");
+    if (!items || !items.length) return td;
+
+    items.forEach(function (it, idx) {
+      var line = document.createElement("div");
+      line.className = "cb-muted";
+      line.textContent = String(it.foodName || "") + " × " + String(it.quantity || 0);
+      if (idx < items.length - 1) line.textContent += ",";
+      td.appendChild(line);
+
+      if (it.remark) {
+        var remark = document.createElement("div");
+        remark.className = "cb-muted";
+        remark.style.fontSize = "12px";
+        remark.textContent = "Remark: " + String(it.remark);
+        td.appendChild(remark);
+      }
+    });
+
+    return td;
+  }
+
+  function renderOrdersTable(orders, role) {
+    var tableCard = document.getElementById("orders-table");
+    if (!tableCard) return;
+    var emptyCard = document.getElementById("orders-empty");
+    var tbody = tableCard.querySelector("tbody");
+    if (!tbody) return;
+
+    if (!orders || !orders.length) {
+      if (emptyCard) emptyCard.style.display = "";
+      tableCard.style.display = "none";
+      return;
+    }
+
+    if (emptyCard) emptyCard.style.display = "none";
+    tableCard.style.display = "";
+
+    while (tbody.firstChild) {
+      tbody.removeChild(tbody.firstChild);
+    }
+
+    orders.forEach(function (order) {
+      var tr = document.createElement("tr");
+      tr.setAttribute("data-order-id", String(order.id || ""));
+
+      var tdDate = document.createElement("td");
+      if (order.createdAt) {
+        var time = document.createElement("time");
+        time.className = "js-local-time";
+        time.setAttribute("datetime", order.createdAt);
+        time.textContent = new Date(order.createdAt).toLocaleString();
+        tdDate.appendChild(time);
+      }
+      tr.appendChild(tdDate);
+
+      if (role === "student" || role === "admin") {
+        var tdMerchant = document.createElement("td");
+        tdMerchant.textContent = String(order.merchant || "");
+        tr.appendChild(tdMerchant);
+      }
+
+      if (role === "merchant" || role === "admin") {
+        var tdStudent = document.createElement("td");
+        tdStudent.textContent = String(order.student || "");
+        tr.appendChild(tdStudent);
+      }
+
+      tr.appendChild(buildItemsCell(order.items || []));
+
+      var tdTotal = document.createElement("td");
+      tdTotal.textContent = "RM " + String(order.totalPriceText || "");
+      tr.appendChild(tdTotal);
+
+      var tdStatus = document.createElement("td");
+      tdStatus.appendChild(createBadge(order.status || "Pending"));
+      tr.appendChild(tdStatus);
+
+      if (role === "student") {
+        var tdComplete = document.createElement("td");
+        if (String(order.status || "") === "Ready") {
+          var completeForm = document.createElement("form");
+          completeForm.className = "inline-form";
+          completeForm.method = "POST";
+          completeForm.action = "/orders/" + String(order.id) + "/complete";
+          completeForm.setAttribute(
+            "onsubmit",
+            "return confirm('Mark this order as completed?');"
+          );
+          var completeBtn = document.createElement("button");
+          completeBtn.type = "submit";
+          completeBtn.textContent = "Complete";
+          completeForm.appendChild(completeBtn);
+          tdComplete.appendChild(completeForm);
+        } else {
+          var completeDisabled = document.createElement("button");
+          completeDisabled.type = "button";
+          completeDisabled.disabled = true;
+          completeDisabled.textContent = "Complete";
+          tdComplete.appendChild(completeDisabled);
+        }
+        tr.appendChild(tdComplete);
+
+        var tdCancel = document.createElement("td");
+        if (String(order.status || "") === "Pending") {
+          var cancelForm = document.createElement("form");
+          cancelForm.className = "inline-form";
+          cancelForm.method = "POST";
+          cancelForm.action = "/orders/" + String(order.id) + "/cancel";
+          cancelForm.setAttribute(
+            "onsubmit",
+            "return confirm('Cancel this order?');"
+          );
+          var cancelBtn = document.createElement("button");
+          cancelBtn.type = "submit";
+          cancelBtn.textContent = "Cancel";
+          cancelForm.appendChild(cancelBtn);
+          tdCancel.appendChild(cancelForm);
+        } else {
+          var cancelDisabled = document.createElement("button");
+          cancelDisabled.type = "button";
+          cancelDisabled.disabled = true;
+          cancelDisabled.textContent = "Cancel";
+          tdCancel.appendChild(cancelDisabled);
+        }
+        tr.appendChild(tdCancel);
+      }
+
+      if (role === "merchant" || role === "admin") {
+        var tdUpdate = document.createElement("td");
+        var updateForm = document.createElement("form");
+        updateForm.className = "inline-form";
+        updateForm.method = "POST";
+        updateForm.action = "/orders/" + String(order.id) + "/status";
+
+        var select = document.createElement("select");
+        select.name = "status";
+        select.style.width = "170px";
+
+        var options = [
+          "Pending",
+          "Confirmed",
+          "Ready",
+          "Completed",
+          "Cancelled",
+          "Rejected",
+        ];
+
+        options.forEach(function (opt) {
+          var option = document.createElement("option");
+          option.value = opt;
+          option.textContent = opt;
+          if (opt === "Cancelled") option.disabled = true;
+          if (opt === order.status) option.selected = true;
+          select.appendChild(option);
+        });
+
+        var disabledUpdate =
+          String(order.status || "") === "Cancelled" ||
+          String(order.status || "") === "Rejected";
+        if (disabledUpdate) select.disabled = true;
+
+        var saveBtn = document.createElement("button");
+        saveBtn.type = "submit";
+        saveBtn.textContent = "Save";
+        if (disabledUpdate) saveBtn.disabled = true;
+
+        updateForm.appendChild(select);
+        updateForm.appendChild(saveBtn);
+        tdUpdate.appendChild(updateForm);
+        tr.appendChild(tdUpdate);
+      }
+
+      tbody.appendChild(tr);
+    });
+
+    formatLocalTimes();
+  }
+
   function pollOrderNotifications() {
     function loadCache(storageKey) {
       try {
@@ -273,6 +463,27 @@
       window.setInterval(checkUpdates, 30000);
     }
 
+    function startOrdersTablePoll() {
+      if (!document.getElementById("orders-table")) return;
+
+      function refresh() {
+        fetch("/orders/list", { credentials: "same-origin" })
+          .then(function (res) {
+            return res.ok ? res.json() : null;
+          })
+          .then(function (data) {
+            if (!data || !Array.isArray(data.orders)) return;
+            renderOrdersTable(data.orders, data.role || "student");
+          })
+          .catch(function () {
+            // ignore
+          });
+      }
+
+      refresh();
+      window.setInterval(refresh, 15000);
+    }
+
     function startMerchantPoll() {
       var storageKey = "cb-order-status-cache-merchant";
       var cache = loadCache(storageKey);
@@ -319,6 +530,7 @@
       })
       .then(function (data) {
         if (!data || !data.loggedIn) return;
+        startOrdersTablePoll();
         if (data.role === "student") {
           startStudentPoll();
         } else if (data.role === "merchant") {

@@ -31,6 +31,7 @@
   </header>
 
   <main class="page">
+    <% const hasOrders = orders && orders.length > 0; %>
     <div class="cb-hero">
       <div>
         <span class="cb-kicker">Orders</span>
@@ -58,15 +59,14 @@
       <% } %>
     </div>
 
-    <% if (!orders || orders.length === 0) { %>
-      <div class="card cb-empty">
-        <h3>No orders yet</h3>
-        <p class="cb-muted">Once you placed an order, it will show up here.</p>
-      </div>
-    <% } else { %>
-      <div class="card cb-table-card">
-        <div class="cb-table-wrap">
-          <table class="cb-table" border="1" cellpadding="8" cellspacing="0">
+    <div id="orders-empty" class="card cb-empty" style="<%= hasOrders ? 'display:none;' : '' %>">
+      <h3>No orders yet</h3>
+      <p class="cb-muted">Once you placed an order, it will show up here.</p>
+    </div>
+
+    <div id="orders-table" class="card cb-table-card" style="<%= hasOrders ? '' : 'display:none;' %>">
+      <div class="cb-table-wrap">
+        <table class="cb-table" border="1" cellpadding="8" cellspacing="0" data-orders-table="true">
           <thead>
             <tr>
               <th>Date</th>
@@ -90,7 +90,7 @@
           </thead>
           <tbody>
             <% orders.forEach(order => { %>
-              <tr>
+              <tr data-order-id="<%= order._id %>">
                 <td>
                   <% if (order.createdAt) { %>
                     <time class="js-local-time" datetime="<%= new Date(order.createdAt).toISOString() %>">
@@ -181,7 +181,7 @@
           </table>
         </div>
       </div>
-    <% } %>
+    </div>
 
   </main>
 

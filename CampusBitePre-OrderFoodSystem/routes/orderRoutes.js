@@ -154,6 +154,35 @@ async function buildCheckoutSummary(cart) {
   };
 }
 
+async function loadOrdersForUser(user) {
+  let orders = [];
+
+  if (user.role === "student") {
+    orders = await Order.find({ student: user.id })
+      .sort({ createdAt: -1 })
+      .populate("merchant", "username")
+      .lean();
+  } else if (user.role === "merchant") {
+    orders = await Order.find({ merchant: user.id })
+      .sort({ createdAt: -1 })
+      .populate("student", "username")
+      .lean();
+  } else if (user.role === "admin") {
+    orders = await Order.find({})
+      .sort({ createdAt: -1 })
+      .populate("student", "username")
+      .populate("merchant", "username")
+      .lean();
+  } else {
+    return [];
+  }
+
+  return (orders || []).map((o) => ({
+    ...o,
+    totalPriceText: moneyText(o.totalPrice),
+  }));
+}
+
 // Add to cart (student only)
 router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
   try {
@@ -350,6 +379,36 @@ router.post("/checkout", isLoggedIn, checkRole("student"), async (req, res) => {
   }
 });
 
+// Orders list JSON (auto-refresh)
+router.get("/list", isLoggedIn, async (req, res) => {
+  try {
+    const user = req.session.user;
+    const ordersForView = await loadOrdersForUser(user);
+
+    const orders = (ordersForView || []).map((o) => ({
+      id: String(o._id),
+      status: String(o.status || "Pending"),
+      createdAt: o.createdAt ? new Date(o.createdAt).toISOString() : "",
+      totalPriceText: o.totalPriceText || "",
+      merchant: o.merchant && o.merchant.username ? o.merchant.username : "",
+      student:
+        o.student && o.student.username
+          ? o.student.username
+          : (o.studentName || ""),
+      items: (o.items || []).map((it) => ({
+        foodName: it.foodName || "",
+        quantity: Number(it.quantity) || 0,
+        remark: it.remark || "",
+      })),
+    }));
+
+    return res.json({ role: user.role, orders });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ role: "", orders: [] });
+  }
+});
+
 // Customer notifications (polling endpoint)
 router.get("/notifications", isLoggedIn, checkRole("student"), async (req, res) => {
   try {
@@ -498,32 +557,11 @@ router.get("/reports/admin", isLoggedIn, checkRole("admin"), async (req, res) =>
 router.get("/", isLoggedIn, async (req, res) => {
   try {
     const user = req.session.user;
-    let orders = [];
+    const ordersForView = await loadOrdersForUser(user);
 
-    if (user.role === "student") {
-      orders = await Order.find({ student: user.id })
-        .sort({ createdAt: -1 })
-        .populate("merchant", "username")
-        .lean();
-    } else if (user.role === "merchant") {
-      orders = await Order.find({ merchant: user.id })
-        .sort({ createdAt: -1 })
-        .populate("student", "username")
-        .lean();
-    } else if (user.role === "admin") {
-      orders = await Order.find({})
-        .sort({ createdAt: -1 })
-        .populate("student", "username")
-        .populate("merchant", "username")
-        .lean();
-    } else {
+    if (!ordersForView) {
       return res.status(403).send("Access denied");
     }
-
-    const ordersForView = (orders || []).map((o) => ({
-      ...o,
-      totalPriceText: moneyText(o.totalPrice),
-    }));
 
     return res.render("orders/index", { user, orders: ordersForView });
   } catch (err) {
