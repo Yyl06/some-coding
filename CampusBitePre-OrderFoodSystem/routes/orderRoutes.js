@@ -374,6 +374,30 @@ router.get("/notifications", isLoggedIn, checkRole("student"), async (req, res) 
   }
 });
 
+// Merchant notifications (polling endpoint)
+router.get("/notifications/merchant", isLoggedIn, checkRole("merchant"), async (req, res) => {
+  try {
+    const user = req.session.user;
+    const orders = await Order.find({ merchant: user.id })
+      .sort({ createdAt: -1 })
+      .limit(30)
+      .populate("student", "username")
+      .lean();
+
+    const data = (orders || []).map((o) => ({
+      id: String(o._id),
+      status: String(o.status || "Pending"),
+      student: o.student && o.student.username ? o.student.username : (o.studentName || ""),
+      createdAt: o.createdAt ? new Date(o.createdAt).toISOString() : "",
+    }));
+
+    return res.json({ orders: data });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ orders: [] });
+  }
+});
+
 // Merchant daily report
 router.get("/reports/daily", isLoggedIn, checkRole("merchant", "admin"), async (req, res) => {
   try {

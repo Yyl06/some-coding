@@ -204,25 +204,18 @@
   }
 
   function pollOrderNotifications() {
-    var body = document.body;
-    if (!body) return;
-    if (body.getAttribute("data-order-notify") !== "true") return;
-    if (body.getAttribute("data-user-role") !== "student") return;
-
-    var storageKey = "cb-order-status-cache";
-    var cache = {};
-
-    try {
-      var raw = window.localStorage.getItem(storageKey);
-      if (raw) cache = JSON.parse(raw) || {};
-    } catch (_e) {
-      cache = {};
+    function loadCache(storageKey) {
+      try {
+        var raw = window.localStorage.getItem(storageKey);
+        return raw ? JSON.parse(raw) || {} : {};
+      } catch (_e) {
+        return {};
+      }
     }
 
-    function saveCache(next) {
-      cache = next;
+    function saveCache(storageKey, next) {
       try {
-        window.localStorage.setItem(storageKey, JSON.stringify(cache));
+        window.localStorage.setItem(storageKey, JSON.stringify(next));
       } catch (_e) {
         // ignore
       }
@@ -239,35 +232,102 @@
       }
     }
 
-    function checkUpdates() {
-      fetch("/orders/notifications", { credentials: "same-origin" })
-        .then(function (res) {
-          return res.ok ? res.json() : null;
-        })
-        .then(function (data) {
-          if (!data || !Array.isArray(data.orders)) return;
-
-          var nextCache = Object.assign({}, cache);
-          data.orders.forEach(function (order) {
-            var id = String(order.id || "");
-            if (!id) return;
-            var status = String(order.status || "Pending");
-            var prev = nextCache[id];
-            if (prev && prev !== status) {
-              notifyForStatus(order, status);
-            }
-            nextCache[id] = status;
-          });
-
-          saveCache(nextCache);
-        })
-        .catch(function () {
-          // ignore poll errors
-        });
+    function notifyMerchantNew(order) {
+      var student = order.student || "student";
+      showToast("New order from " + student, "info");
     }
 
-    checkUpdates();
-    window.setInterval(checkUpdates, 30000);
+    function startStudentPoll() {
+      var storageKey = "cb-order-status-cache-student";
+      var cache = loadCache(storageKey);
+
+      function checkUpdates() {
+        fetch("/orders/notifications", { credentials: "same-origin" })
+          .then(function (res) {
+            return res.ok ? res.json() : null;
+          })
+          .then(function (data) {
+            if (!data || !Array.isArray(data.orders)) return;
+
+            var nextCache = Object.assign({}, cache);
+            data.orders.forEach(function (order) {
+              var id = String(order.id || "");
+              if (!id) return;
+              var status = String(order.status || "Pending");
+              var prev = nextCache[id];
+              if (prev && prev !== status) {
+                notifyForStatus(order, status);
+              }
+              nextCache[id] = status;
+            });
+
+            cache = nextCache;
+            saveCache(storageKey, nextCache);
+          })
+          .catch(function () {
+            // ignore poll errors
+          });
+      }
+
+      checkUpdates();
+      window.setInterval(checkUpdates, 30000);
+    }
+
+    function startMerchantPoll() {
+      var storageKey = "cb-order-status-cache-merchant";
+      var cache = loadCache(storageKey);
+
+      function checkUpdates() {
+        fetch("/orders/notifications/merchant", { credentials: "same-origin" })
+          .then(function (res) {
+            return res.ok ? res.json() : null;
+          })
+          .then(function (data) {
+            if (!data || !Array.isArray(data.orders)) return;
+
+            var nextCache = Object.assign({}, cache);
+            data.orders.forEach(function (order) {
+              var id = String(order.id || "");
+              if (!id) return;
+              var status = String(order.status || "Pending");
+              var prev = nextCache[id];
+
+              if (!prev) {
+                notifyMerchantNew(order);
+              } else if (prev !== status && (status === "Cancelled" || status === "Rejected")) {
+                showToast("Order from " + (order.student || "student") + " was " + status, "error");
+              }
+
+              nextCache[id] = status;
+            });
+
+            cache = nextCache;
+            saveCache(storageKey, nextCache);
+          })
+          .catch(function () {
+            // ignore poll errors
+          });
+      }
+
+      checkUpdates();
+      window.setInterval(checkUpdates, 30000);
+    }
+
+    fetch("/auth/session", { credentials: "same-origin" })
+      .then(function (res) {
+        return res.ok ? res.json() : null;
+      })
+      .then(function (data) {
+        if (!data || !data.loggedIn) return;
+        if (data.role === "student") {
+          startStudentPoll();
+        } else if (data.role === "merchant") {
+          startMerchantPoll();
+        }
+      })
+      .catch(function () {
+        // ignore
+      });
   }
 
   document.addEventListener("DOMContentLoaded", function () {

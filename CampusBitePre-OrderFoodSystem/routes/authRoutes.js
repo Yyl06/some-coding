@@ -228,6 +228,21 @@ router.get("/logout", (req, res) => {
   });
 });
 
+// Session info (used for client-side notifications)
+router.get("/session", (req, res) => {
+  const user = req.session?.user;
+  if (!user) {
+    return res.json({ loggedIn: false });
+  }
+
+  return res.json({
+    loggedIn: true,
+    id: user.id,
+    role: user.role,
+    username: user.username,
+  });
+});
+
 //Get profile
 router.get("/profile", async (req, res) => {
   if (!req.session.user) {
