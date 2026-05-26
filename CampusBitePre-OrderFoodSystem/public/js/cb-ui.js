@@ -54,6 +54,53 @@
     }, 4500);
   }
 
+  var notificationsMuted = null;
+  var notificationsStorageKey = "cb-notifications-muted";
+
+  function isNotificationsMuted() {
+    if (notificationsMuted !== null) return notificationsMuted;
+    try {
+      notificationsMuted = window.localStorage.getItem(notificationsStorageKey) === "true";
+    } catch (_e) {
+      notificationsMuted = false;
+    }
+    return notificationsMuted;
+  }
+
+  function setNotificationsMuted(next) {
+    notificationsMuted = Boolean(next);
+    try {
+      window.localStorage.setItem(
+        notificationsStorageKey,
+        notificationsMuted ? "true" : "false"
+      );
+    } catch (_e) {
+      // ignore
+    }
+
+    var toggles = document.querySelectorAll("[data-notifications-toggle]");
+    toggles.forEach(function (toggle) {
+      if (toggle && toggle.type === "checkbox") {
+        toggle.checked = notificationsMuted;
+      }
+    });
+  }
+
+  function bindNotificationsToggle() {
+    var toggles = document.querySelectorAll("[data-notifications-toggle]");
+    if (!toggles.length) return;
+
+    var muted = isNotificationsMuted();
+    toggles.forEach(function (toggle) {
+      if (toggle && toggle.type === "checkbox") {
+        toggle.checked = muted;
+        toggle.addEventListener("change", function () {
+          setNotificationsMuted(toggle.checked);
+        });
+      }
+    });
+  }
+
   function activateNavLinks() {
     var current = normalizePathname(window.location.pathname);
     var links = document.querySelectorAll(".cb-nav-link[href]");
@@ -119,6 +166,26 @@
         if (form.dataset && form.dataset.cbSubmitted === "true") {
           event.preventDefault();
           return;
+        }
+
+        // If the form has an onsubmit attribute, call it and check the result
+        var attr = form.getAttribute("onsubmit");
+        if (attr) {
+          // This is a workaround for inline onsubmit="return confirm('...')"
+          // We must eval in the form's context
+          try {
+            var fn = new Function("event", "return (" + attr + ")");
+            var result = fn.call(form, event);
+            if (result === false) {
+              // User cancelled confirmation
+              event.preventDefault();
+              return;
+            }
+          } catch (_e) {
+            // If the handler throws, block submit
+            event.preventDefault();
+            return;
+          }
         }
 
         if (form.dataset) form.dataset.cbSubmitted = "true";
@@ -394,6 +461,7 @@
   }
 
   function pollOrderNotifications() {
+    var POLL_INTERVAL_MS = 5000;
     function loadCache(storageKey) {
       try {
         var raw = window.localStorage.getItem(storageKey);
@@ -412,6 +480,7 @@
     }
 
     function notifyForStatus(order, status) {
+        if (isNotificationsMuted()) return;
       var merchant = order.merchant || "merchant";
       if (status === "Ready") {
         showToast("Order from " + merchant + " is Ready", "success");
@@ -423,6 +492,7 @@
     }
 
     function notifyMerchantNew(order) {
+      if (isNotificationsMuted()) return;
       var student = order.student || "student";
       showToast("New order from " + student, "info");
     }
@@ -430,6 +500,7 @@
     function startStudentPoll() {
       var storageKey = "cb-order-status-cache-student";
       var cache = loadCache(storageKey);
+      var initialSync = true;
 
       function checkUpdates() {
         fetch("/orders/notifications", { credentials: "same-origin" })
@@ -445,7 +516,7 @@
               if (!id) return;
               var status = String(order.status || "Pending");
               var prev = nextCache[id];
-              if (prev && prev !== status) {
+              if (prev && prev !== status && !initialSync) {
                 notifyForStatus(order, status);
               }
               nextCache[id] = status;
@@ -453,6 +524,7 @@
 
             cache = nextCache;
             saveCache(storageKey, nextCache);
+            initialSync = false;
           })
           .catch(function () {
             // ignore poll errors
@@ -460,7 +532,7 @@
       }
 
       checkUpdates();
-      window.setInterval(checkUpdates, 30000);
+      window.setInterval(checkUpdates, POLL_INTERVAL_MS);
     }
 
     function startOrdersTablePoll() {
@@ -481,12 +553,13 @@
       }
 
       refresh();
-      window.setInterval(refresh, 15000);
+      window.setInterval(refresh, POLL_INTERVAL_MS);
     }
 
     function startMerchantPoll() {
       var storageKey = "cb-order-status-cache-merchant";
       var cache = loadCache(storageKey);
+      var initialSync = true;
 
       function checkUpdates() {
         fetch("/orders/notifications/merchant", { credentials: "same-origin" })
@@ -503,10 +576,15 @@
               var status = String(order.status || "Pending");
               var prev = nextCache[id];
 
-              if (!prev) {
+              if (!prev && !initialSync) {
                 notifyMerchantNew(order);
               } else if (prev !== status && (status === "Cancelled" || status === "Rejected")) {
-                showToast("Order from " + (order.student || "student") + " was " + status, "error");
+                if (!isNotificationsMuted()) {
+                  showToast(
+                    "Order from " + (order.student || "student") + " was " + status,
+                    "error"
+                  );
+                }
               }
 
               nextCache[id] = status;
@@ -514,6 +592,7 @@
 
             cache = nextCache;
             saveCache(storageKey, nextCache);
+            initialSync = false;
           })
           .catch(function () {
             // ignore poll errors
@@ -521,7 +600,7 @@
       }
 
       checkUpdates();
-      window.setInterval(checkUpdates, 30000);
+      window.setInterval(checkUpdates, POLL_INTERVAL_MS);
     }
 
     fetch("/auth/session", { credentials: "same-origin" })
@@ -549,6 +628,7 @@
     confirmLogout();
     setupQuantityControls();
     formatLocalTimes();
+    bindNotificationsToggle();
     pollOrderNotifications();
   });
 })();

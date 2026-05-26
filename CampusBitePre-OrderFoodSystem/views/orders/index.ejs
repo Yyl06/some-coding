@@ -47,10 +47,18 @@
       <% if (user.role === 'student') { %>
         <div class="cb-actions">
           <a href="/orders/checkout"><button type="button">Go to checkout</button></a>
+          <label class="cb-pill" style="display: inline-flex; align-items: center; gap: 6px;">
+            <input type="checkbox" data-notifications-toggle="true">
+            Mute notifications
+          </label>
         </div>
       <% } else if (user.role === 'merchant') { %>
         <div class="cb-actions">
           <a href="/orders/reports/daily"><button type="button">View daily report</button></a>
+          <label class="cb-pill" style="display: inline-flex; align-items: center; gap: 6px;">
+            <input type="checkbox" data-notifications-toggle="true">
+            Mute notifications
+          </label>
         </div>
       <% } else if (user.role === 'admin') { %>
         <div class="cb-actions">
