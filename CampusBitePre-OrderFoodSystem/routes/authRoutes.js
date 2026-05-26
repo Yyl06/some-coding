@@ -504,4 +504,27 @@ router.post("/users/:userId/edit", isLoggedIn, checkRole("admin"), async (req, r
   }
 });
 
+// Admin: delete user
+router.post("/users/:userId/delete", isLoggedIn, checkRole("admin"), async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (String(req.session.user.id) === String(userId)) {
+      return res.redirect(`/auth/manageUser?error=${encodeURIComponent("You cannot delete your own account")}`);
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.redirect(`/auth/manageUser?error=${encodeURIComponent("User not found")}`);
+    }
+
+    await User.deleteOne({ _id: userId });
+
+    return res.redirect(`/auth/manageUser?success=${encodeURIComponent("User deleted")}`);
+  } catch (err) {
+    console.log(err);
+    return res.redirect(`/auth/manageUser?error=${encodeURIComponent("Failed to delete user")}`);
+  }
+});
+
 module.exports = router;

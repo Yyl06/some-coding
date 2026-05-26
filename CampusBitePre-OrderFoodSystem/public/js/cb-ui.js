@@ -203,6 +203,73 @@
     });
   }
 
+  function pollOrderNotifications() {
+    var body = document.body;
+    if (!body) return;
+    if (body.getAttribute("data-order-notify") !== "true") return;
+    if (body.getAttribute("data-user-role") !== "student") return;
+
+    var storageKey = "cb-order-status-cache";
+    var cache = {};
+
+    try {
+      var raw = window.localStorage.getItem(storageKey);
+      if (raw) cache = JSON.parse(raw) || {};
+    } catch (_e) {
+      cache = {};
+    }
+
+    function saveCache(next) {
+      cache = next;
+      try {
+        window.localStorage.setItem(storageKey, JSON.stringify(cache));
+      } catch (_e) {
+        // ignore
+      }
+    }
+
+    function notifyForStatus(order, status) {
+      var merchant = order.merchant || "merchant";
+      if (status === "Ready") {
+        showToast("Order from " + merchant + " is Ready", "success");
+      } else if (status === "Confirmed") {
+        showToast("Order from " + merchant + " is Confirmed", "info");
+      } else if (status === "Rejected" || status === "Cancelled") {
+        showToast("Order from " + merchant + " was " + status, "error");
+      }
+    }
+
+    function checkUpdates() {
+      fetch("/orders/notifications", { credentials: "same-origin" })
+        .then(function (res) {
+          return res.ok ? res.json() : null;
+        })
+        .then(function (data) {
+          if (!data || !Array.isArray(data.orders)) return;
+
+          var nextCache = Object.assign({}, cache);
+          data.orders.forEach(function (order) {
+            var id = String(order.id || "");
+            if (!id) return;
+            var status = String(order.status || "Pending");
+            var prev = nextCache[id];
+            if (prev && prev !== status) {
+              notifyForStatus(order, status);
+            }
+            nextCache[id] = status;
+          });
+
+          saveCache(nextCache);
+        })
+        .catch(function () {
+          // ignore poll errors
+        });
+    }
+
+    checkUpdates();
+    window.setInterval(checkUpdates, 30000);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     activateNavLinks();
     handleQueryToasts();
@@ -210,5 +277,6 @@
     confirmLogout();
     setupQuantityControls();
     formatLocalTimes();
+    pollOrderNotifications();
   });
 })();

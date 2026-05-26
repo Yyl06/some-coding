@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Reports</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/dashboard">Home</a>
+        <button type="button" class="cb-nav-link cb-nav-link--back" onclick="history.back()">Back</button>
+        <a class="cb-nav-link" href="/auth/manageUser">Users</a>
+        <a class="cb-nav-link" href="/orders">Orders</a>
+        <a class="cb-nav-link" href="/orders/reports/admin">Reports</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <span class="cb-kicker">Admin</span>
+        <h1>Sales & Usage Reports</h1>
+        <p class="cb-subtitle">Summary for <strong><%= day.toLocaleDateString() %></strong>.</p>
+      </div>
+    </div>
+
+    <div class="cb-grid cb-grid--2" style="margin-top: 18px;">
+      <div class="cb-card">
+        <div class="cb-card-body">
+          <h3>Orders</h3>
+          <p class="cb-muted">Total orders: <strong><%= totalOrders %></strong></p>
+          <p class="cb-muted">Orders today: <strong><%= ordersToday %></strong></p>
+          <p class="cb-muted">Total revenue: <strong>RM <%= totalRevenue %></strong></p>
+          <p class="cb-muted">Revenue today: <strong>RM <%= revenueToday %></strong></p>
+        </div>
+      </div>
+      <div class="cb-card">
+        <div class="cb-card-body">
+          <h3>Users</h3>
+          <p class="cb-muted">Total users: <strong><%= totalUsers %></strong></p>
+          <p class="cb-muted">Students: <strong><%= totalStudents %></strong></p>
+          <p class="cb-muted">Merchants: <strong><%= totalMerchants %></strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb-card" style="margin-top: 18px;">
+      <div class="cb-card-body">
+        <h3>System data</h3>
+        <p class="cb-muted">Use the Users and Orders pages to edit or correct records.</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
+
+</body>
+</html>

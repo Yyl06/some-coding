@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Daily Orders Report</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/dashboard">Home</a>
+        <button type="button" class="cb-nav-link cb-nav-link--back" onclick="history.back()">Back</button>
+        <a class="cb-nav-link" href="/menu/<%= user.id %>">Menu</a>
+        <a class="cb-nav-link" href="/foods">Manage Foods</a>
+        <a class="cb-nav-link" href="/orders">Orders</a>
+        <a class="cb-nav-link" href="/orders/reports/daily">Daily Report</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <span class="cb-kicker">Reports</span>
+        <h1>Daily Orders Report</h1>
+        <p class="cb-subtitle">Summary for <strong><%= day.toLocaleDateString() %></strong>.</p>
+      </div>
+      <div class="cb-actions">
+        <a href="/orders"><button type="button">Back to orders</button></a>
+      </div>
+    </div>
+
+    <div class="cb-grid cb-grid--2" style="margin-top: 18px;">
+      <div class="cb-card">
+        <div class="cb-card-body">
+          <h3>Totals</h3>
+          <p class="cb-muted">Orders: <strong><%= orders.length %></strong></p>
+          <p class="cb-muted">Revenue: <strong>RM <%= totalRevenue %></strong></p>
+        </div>
+      </div>
+      <div class="cb-card">
+        <div class="cb-card-body">
+          <h3>Status counts</h3>
+          <div class="cb-pill-list">
+            <span class="cb-pill">Pending: <%= statusCounts.Pending || 0 %></span>
+            <span class="cb-pill">Confirmed: <%= statusCounts.Confirmed || 0 %></span>
+            <span class="cb-pill">Ready: <%= statusCounts.Ready || 0 %></span>
+            <span class="cb-pill">Completed: <%= statusCounts.Completed || 0 %></span>
+            <span class="cb-pill">Rejected: <%= statusCounts.Rejected || 0 %></span>
+            <span class="cb-pill">Cancelled: <%= statusCounts.Cancelled || 0 %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cb-card cb-table-card" style="margin-top: 18px;">
+      <h3>Orders</h3>
+      <div class="cb-table-wrap">
+        <table class="cb-table" border="1" cellpadding="8" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!orders || orders.length === 0) { %>
+            <tr>
+              <td colspan="5" class="cb-muted">No orders yet.</td>
+            </tr>
+          <% } else { %>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td>
+                  <% if (order.createdAt) { %>
+                    <time class="js-local-time" datetime="<%= new Date(order.createdAt).toISOString() %>">
+                      <%= new Date(order.createdAt).toLocaleString() %>
+                    </time>
+                  <% } %>
+                </td>
+                <td>
+                  <%= order.student && order.student.username ? order.student.username : (order.studentName || '') %>
+                </td>
+                <td>
+                  <% if (order.items && order.items.length) { %>
+                    <% order.items.forEach((it, idx) => { %>
+                      <div class="cb-muted">
+                        <%= it.foodName %> × <%= it.quantity %><%= idx < order.items.length - 1 ? ',' : '' %>
+                      </div>
+                    <% }) %>
+                  <% } %>
+                </td>
+                <td>RM <%= order.totalPriceText || '' %></td>
+                <td>
+                  <span class="cb-badge <%= ['pending','cancelled','rejected'].includes((order.status || '').toLowerCase()) ? 'cb-badge--muted' : 'cb-badge--primary' %>">
+                    <%= order.status || 'Pending' %>
+                  </span>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
+
+</body>
+</html>

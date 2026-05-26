@@ -34,6 +34,18 @@ function normalizeRemark(value) {
   return text ? text.slice(0, 200) : "";
 }
 
+function startOfDay(date) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function endOfDay(date) {
+  const d = new Date(date);
+  d.setHours(23, 59, 59, 999);
+  return d;
+}
+
 function getCart(req) {
   if (!req.session.cart) {
     req.session.cart = {
@@ -338,6 +350,126 @@ router.post("/checkout", isLoggedIn, checkRole("student"), async (req, res) => {
   }
 });
 
+// Customer notifications (polling endpoint)
+router.get("/notifications", isLoggedIn, checkRole("student"), async (req, res) => {
+  try {
+    const user = req.session.user;
+    const orders = await Order.find({ student: user.id })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .populate("merchant", "username")
+      .lean();
+
+    const data = (orders || []).map((o) => ({
+      id: String(o._id),
+      status: String(o.status || "Pending"),
+      merchant: o.merchant && o.merchant.username ? o.merchant.username : "",
+      createdAt: o.createdAt ? new Date(o.createdAt).toISOString() : "",
+    }));
+
+    return res.json({ orders: data });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ orders: [] });
+  }
+});
+
+// Merchant daily report
+router.get("/reports/daily", isLoggedIn, checkRole("merchant", "admin"), async (req, res) => {
+  try {
+    const user = req.session.user;
+    const day = startOfDay(new Date());
+    const dayEnd = endOfDay(new Date());
+
+    const match =
+      user.role === "admin"
+        ? { createdAt: { $gte: day, $lte: dayEnd } }
+        : { merchant: user.id, createdAt: { $gte: day, $lte: dayEnd } };
+
+    const orders = await Order.find(match)
+      .sort({ createdAt: -1 })
+      .populate("student", "username")
+      .populate("merchant", "username")
+      .lean();
+
+    const statusCounts = (orders || []).reduce((acc, o) => {
+      const key = String(o.status || "Pending");
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const totalRevenue = (orders || []).reduce(
+      (sum, o) => sum + decimalToNumber(o.totalPrice),
+      0
+    );
+
+    const ordersForView = (orders || []).map((o) => ({
+      ...o,
+      totalPriceText: moneyText(o.totalPrice),
+    }));
+
+    return res.render("merchant/dailyReport", {
+      user,
+      day,
+      orders: ordersForView,
+      statusCounts,
+      totalRevenue: totalRevenue.toFixed(2),
+    });
+  } catch (err) {
+    console.log(err);
+    return res.send("Error loading daily report");
+  }
+});
+
+// Admin reports
+router.get("/reports/admin", isLoggedIn, checkRole("admin"), async (req, res) => {
+  try {
+    const day = startOfDay(new Date());
+    const dayEnd = endOfDay(new Date());
+
+    const [
+      totalOrders,
+      ordersToday,
+      totalUsers,
+      totalMerchants,
+      totalStudents,
+      totalRevenueRaw,
+      revenueTodayRaw,
+    ] = await Promise.all([
+      Order.countDocuments({}),
+      Order.countDocuments({ createdAt: { $gte: day, $lte: dayEnd } }),
+      User.countDocuments({}),
+      User.countDocuments({ role: "merchant" }),
+      User.countDocuments({ role: "student" }),
+      Order.find({}).select("totalPrice").lean(),
+      Order.find({ createdAt: { $gte: day, $lte: dayEnd } }).select("totalPrice").lean(),
+    ]);
+
+    const totalRevenue = (totalRevenueRaw || []).reduce(
+      (sum, o) => sum + decimalToNumber(o.totalPrice),
+      0
+    );
+    const revenueToday = (revenueTodayRaw || []).reduce(
+      (sum, o) => sum + decimalToNumber(o.totalPrice),
+      0
+    );
+
+    return res.render("admin/reports", {
+      day,
+      totalOrders,
+      ordersToday,
+      totalUsers,
+      totalMerchants,
+      totalStudents,
+      totalRevenue: totalRevenue.toFixed(2),
+      revenueToday: revenueToday.toFixed(2),
+    });
+  } catch (err) {
+    console.log(err);
+    return res.send("Error loading admin reports");
+  }
+});
+
 // Orders list (role-based)
 router.get("/", isLoggedIn, async (req, res) => {
   try {
@@ -464,7 +596,13 @@ router.post(
       const { orderId } = req.params;
       const nextStatus = String(req.body.status || "").trim();
 
-      const allowedStatuses = new Set(["Pending", "Ready", "Completed"]);
+      const allowedStatuses = new Set([
+        "Pending",
+        "Confirmed",
+        "Ready",
+        "Completed",
+        "Rejected",
+      ]);
       if (!allowedStatuses.has(nextStatus)) {
         return res.redirect(`/orders?error=${encodeURIComponent("Invalid status")}`);
       }
@@ -474,8 +612,8 @@ router.post(
         return res.redirect(`/orders?error=${encodeURIComponent("Order not found")}`);
       }
 
-      if (String(order.status || "") === "Cancelled") {
-        return res.redirect(`/orders?error=${encodeURIComponent("Cancelled orders cannot be updated")}`);
+      if (String(order.status || "") === "Cancelled" || String(order.status || "") === "Rejected") {
+        return res.redirect(`/orders?error=${encodeURIComponent("Cancelled or Rejected orders cannot be updated")}`);
       }
 
       if (user.role === "merchant" && String(order.merchant) !== String(user.id)) {
