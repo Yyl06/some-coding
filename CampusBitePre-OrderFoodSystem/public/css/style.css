@@ -19,7 +19,7 @@
   --cb-body: "Plus Jakarta Sans", "Nunito", "Montserrat", sans-serif;
   --cb-bg-image: url("/images/foods/DSC09472.jpg");
   --cb-bg-decor-1: url("/images/foods/hawker_maxwell-56a40c3e3df78cf772808f56.jpg");
-  --cb-bg-decor-2: url("/images/foods/MAXWELL F C.jpg");
+  --cb-bg-decor-2: url("/images/foods/MAXWELL%20F%20C.JPG");
 }
 
 * {
@@ -38,6 +38,13 @@ body {
   color: var(--cb-ink);
   background: linear-gradient(180deg, #fff6ea 0%, #ffffff 48%, #fff1dd 100%);
   line-height: 1.5;
+  position: relative;
+  isolation: isolate;
+}
+
+body > * {
+  position: relative;
+  z-index: 2;
 }
 
 body::before {
@@ -49,7 +56,7 @@ body::before {
     radial-gradient(circle at 78% 16%, rgba(249, 115, 22, 0.12), transparent 48%),
     radial-gradient(circle at 22% 88%, rgba(251, 146, 60, 0.12), transparent 48%);
   pointer-events: none;
-  z-index: -1;
+  z-index: 1;
 }
 
 body::after {
@@ -60,10 +67,10 @@ body::after {
   background-size: cover, 420px auto, 360px auto;
   background-position: center, 6% 18%, 92% 76%;
   background-repeat: no-repeat;
-  opacity: 0.12;
-  filter: saturate(1.08) blur(0.6px);
+  opacity: 0.22;
+  filter: saturate(1.08) blur(0.4px);
   pointer-events: none;
-  z-index: -2;
+  z-index: 0;
 }
 
 img {
