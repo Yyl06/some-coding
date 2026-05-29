@@ -17,6 +17,7 @@
   --cb-radius-sm: 14px;
   --cb-display: "Playfair Display", "Fraunces", serif;
   --cb-body: "Plus Jakarta Sans", "Nunito", "Montserrat", sans-serif;
+  --cb-bg-image: url("/images/foods/69fd567df55653b5aa29eb8f-1779040066828.jpg");
 }
 
 * {
@@ -47,6 +48,19 @@ body::before {
     radial-gradient(circle at 22% 88%, rgba(251, 146, 60, 0.12), transparent 48%);
   pointer-events: none;
   z-index: -1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--cb-bg-image);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
+  filter: saturate(1.05) blur(0.4px);
+  pointer-events: none;
+  z-index: -2;
 }
 
 img {
@@ -428,6 +442,43 @@ hr {
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 16px;
   margin-top: 18px;
+}
+
+.cb-scroll-section {
+  margin-top: 24px;
+}
+
+.cb-scroll-row {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 12px 8px 18px;
+  scroll-snap-type: x mandatory;
+}
+
+.cb-scroll-row::-webkit-scrollbar {
+  height: 10px;
+}
+
+.cb-scroll-row::-webkit-scrollbar-thumb {
+  background: rgba(249, 115, 22, 0.35);
+  border-radius: 999px;
+}
+
+.cb-scroll-card {
+  min-width: 240px;
+  scroll-snap-align: start;
+  border-radius: calc(var(--cb-radius) - 2px);
+  border: 1px solid var(--cb-border);
+  background: linear-gradient(140deg, #fff8ef, #fff1de);
+  box-shadow: var(--cb-shadow-soft);
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.cb-scroll-card strong {
+  font-size: 18px;
 }
 
 .cb-tile {
