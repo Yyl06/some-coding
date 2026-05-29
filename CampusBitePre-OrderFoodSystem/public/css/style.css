@@ -37,6 +37,11 @@ body {
   font-family: var(--cb-body);
   color: var(--cb-ink);
   background-color: #fff6ea;
+  background-image: var(--cb-bg-image), var(--cb-bg-decor-1), var(--cb-bg-decor-2);
+  background-size: cover, 40vmin auto, 36vmin auto;
+  background-position: center, 8% 20%, 92% 78%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   line-height: 1.5;
   position: relative;
   isolation: isolate;
@@ -48,24 +53,6 @@ body > * {
 }
 
 body::before {
-  content: none;
-}
-
-body::after {
-  content: none;
-}
-
-  background-image: var(--cb-bg-image), var(--cb-bg-decor-1), var(--cb-bg-decor-2);
-  background-size: cover, 40vmin auto, 36vmin auto;
-  background-position: center, 8% 20%, 92% 78%;
-  background-repeat: no-repeat;
-  opacity: 0.35;
-  filter: saturate(1.1) blur(0.4px);
-  color: var(--cb-ink);
-  z-index: 0;
-  transition: color 140ms ease;
-}
-
   content: "";
   position: fixed;
   inset: 0;
@@ -77,7 +64,10 @@ body::after {
   );
   pointer-events: none;
   z-index: 1;
-  color: var(--cb-primary);
+}
+
+body::after {
+  content: none;
 }
 
 h1,
