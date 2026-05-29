@@ -36,7 +36,17 @@ body {
   padding: 0;
   font-family: var(--cb-body);
   color: var(--cb-ink);
-  background: linear-gradient(180deg, #fff6ea 0%, #ffffff 48%, #fff1dd 100%);
+  background-color: #fff6ea;
+  background-image:
+    var(--cb-bg-image),
+    var(--cb-bg-decor-1),
+    var(--cb-bg-decor-2),
+    linear-gradient(180deg, #fff6ea 0%, #ffffff 48%, #fff1dd 100%);
+  background-size: cover, 420px auto, 360px auto, cover;
+  background-position: center, 6% 18%, 92% 76%, center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-blend-mode: soft-light, soft-light, soft-light, normal;
   line-height: 1.5;
   position: relative;
   isolation: isolate;
@@ -60,17 +70,7 @@ body::before {
 }
 
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: var(--cb-bg-image), var(--cb-bg-decor-1), var(--cb-bg-decor-2);
-  background-size: cover, 420px auto, 360px auto;
-  background-position: center, 6% 18%, 92% 76%;
-  background-repeat: no-repeat;
-  opacity: 0.22;
-  filter: saturate(1.08) blur(0.4px);
-  pointer-events: none;
-  z-index: 0;
+  content: none;
 }
 
 img {
