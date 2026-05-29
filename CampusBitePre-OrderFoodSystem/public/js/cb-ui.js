@@ -163,29 +163,12 @@
         var method = (form.getAttribute("method") || "GET").toUpperCase();
         if (method !== "POST") return;
 
+        // If another handler (e.g. inline confirm) already cancelled, do nothing.
+        if (event.defaultPrevented) return;
+
         if (form.dataset && form.dataset.cbSubmitted === "true") {
           event.preventDefault();
           return;
-        }
-
-        // If the form has an onsubmit attribute, call it and check the result
-        var attr = form.getAttribute("onsubmit");
-        if (attr) {
-          // This is a workaround for inline onsubmit="return confirm('...')"
-          // We must eval in the form's context
-          try {
-            var fn = new Function("event", "return (" + attr + ")");
-            var result = fn.call(form, event);
-            if (result === false) {
-              // User cancelled confirmation
-              event.preventDefault();
-              return;
-            }
-          } catch (_e) {
-            // If the handler throws, block submit
-            event.preventDefault();
-            return;
-          }
         }
 
         if (form.dataset) form.dataset.cbSubmitted = "true";
@@ -199,7 +182,7 @@
           }
         });
       },
-      true
+      false
     );
   }
 
