@@ -37,16 +37,11 @@ body {
   font-family: var(--cb-body);
   color: var(--cb-ink);
   background-color: #fff6ea;
-  background-image:
-    var(--cb-bg-image),
-    var(--cb-bg-decor-1),
-    var(--cb-bg-decor-2),
-    linear-gradient(180deg, #fff6ea 0%, #ffffff 48%, #fff1dd 100%);
-  background-size: cover, 420px auto, 360px auto, cover;
-  background-position: center, 6% 18%, 92% 76%, center;
+  background-image: var(--cb-bg-image), var(--cb-bg-decor-1), var(--cb-bg-decor-2);
+  background-size: cover, 40vmin auto, 36vmin auto;
+  background-position: center, 8% 20%, 92% 78%;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-blend-mode: soft-light, soft-light, soft-light, normal;
   line-height: 1.5;
   position: relative;
   isolation: isolate;
@@ -61,10 +56,12 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background:
-    radial-gradient(circle at 12% 10%, rgba(251, 191, 36, 0.16), transparent 45%),
-    radial-gradient(circle at 78% 16%, rgba(249, 115, 22, 0.12), transparent 48%),
-    radial-gradient(circle at 22% 88%, rgba(251, 146, 60, 0.12), transparent 48%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 246, 234, 0.65) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 241, 221, 0.7) 100%
+  );
   pointer-events: none;
   z-index: 1;
 }
