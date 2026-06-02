@@ -542,4 +542,64 @@ router.post("/users/:userId/delete", isLoggedIn, checkRole("admin"), async (req,
   }
 });
 
+// Admin: Create new user (GET form)
+router.get("/admin/users/add", isLoggedIn, checkRole("admin"), (req, res) => {
+  res.render("admin/addUser", {
+    admin: req.session.user,
+    error: req.query.error || "",
+    success: req.query.success || "",
+  });
+});
+
+// Admin: Create new user (POST)
+router.post("/admin/users/add", isLoggedIn, checkRole("admin"), async (req, res) => {
+  try {
+    const { username, email, password, role, merchantType } = req.body;
+
+    // Validate required fields
+    if (!username || !email || !password || !role) {
+      return res.redirect(`/auth/admin/users/add?error=${encodeURIComponent("All fields are required")}`);
+    }
+
+    // Validate role
+    const allowedRoles = new Set(["student", "merchant", "admin"]);
+    if (!allowedRoles.has(role)) {
+      return res.redirect(`/auth/admin/users/add?error=${encodeURIComponent("Invalid role")}`);
+    }
+
+    // Check if username/email already exists
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+
+    if (existingUser) {
+      if (existingUser.email === email) {
+        return res.redirect(`/auth/admin/users/add?error=${encodeURIComponent("Email already registered")}`);
+      }
+      if (existingUser.username === username) {
+        return res.redirect(`/auth/admin/users/add?error=${encodeURIComponent("Username already exists")}`);
+      }
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      role,
+      merchantType: role === "merchant" ? (merchantType || "") : "",
+    });
+
+    await newUser.save();
+
+    return res.redirect(`/auth/manageUser?success=${encodeURIComponent(`User "${username}" created successfully`)}`);
+  } catch (err) {
+    console.error("Admin create user error:", err);
+    return res.redirect(`/auth/admin/users/add?error=${encodeURIComponent("Failed to create user")}`);
+  }
+});
+
 module.exports = router;

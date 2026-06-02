@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add User</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header class="cb-topbar">
+    <div class="cb-topbar-inner">
+      <a class="cb-brand" href="/dashboard">CampusBite</a>
+      <nav class="cb-nav">
+        <a class="cb-nav-link" href="/dashboard">Home</a>
+        <button type="button" class="cb-nav-link cb-nav-link--back" onclick="history.back()">Back</button>
+        <a class="cb-nav-link" href="/auth/manageUser">Users</a>
+        <a class="cb-nav-link" href="/orders">Orders</a>
+        <a class="cb-nav-link" href="/auth/profile">Profile</a>
+        <a class="cb-nav-link" href="/auth/logout">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="cb-hero">
+      <div>
+        <span class="cb-kicker">User creation</span>
+        <h1>Add New User</h1>
+        <p class="cb-subtitle">Create a new account with any role (student, merchant, or admin).</p>
+      </div>
+      <div class="cb-actions">
+        <a href="/auth/manageUser"><button type="button">Back to list</button></a>
+      </div>
+    </div>
+
+    <div class="cb-shell">
+      <aside class="cb-sidebar">
+        <div class="cb-sidecard">
+          <h3 class="cb-side-title">Admin panel</h3>
+          <p class="cb-muted">You can create accounts for any role and immediately assign permissions.</p>
+        </div>
+
+        <div class="cb-sidecard">
+          <h3 class="cb-side-title">Shortcuts</h3>
+          <div class="cb-pill-list">
+            <a class="cb-pill" href="/dashboard">Dashboard</a>
+            <a class="cb-pill cb-pill--active" href="/auth/manageUser">Users</a>
+            <a class="cb-pill" href="/orders">Orders</a>
+            <a class="cb-pill" href="/auth/profile">Profile</a>
+          </div>
+        </div>
+      </aside>
+
+      <section class="cb-main">
+        <% if(error) { %>
+          <div class="card cb-error-card" style="background: #fee; border: 1px solid #fcc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+            <p style="color: #c33; font-weight: 600; margin: 0;"><%= error %></p>
+          </div>
+        <% } %>
+
+        <% if(success) { %>
+          <div class="card cb-success-card" style="background: #efe; border: 1px solid #cfc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+            <p style="color: #3c3; font-weight: 600; margin: 0;"><%= success %></p>
+          </div>
+        <% } %>
+
+        <div class="card">
+          <div class="cb-card-body">
+            <form class="cb-form" method="POST" action="/auth/admin/users/add">
+              <label><strong>Username</strong></label><br>
+              <input type="text" name="username" placeholder="e.g. john_doe" required>
+
+              <br><br>
+
+              <label><strong>Email</strong></label><br>
+              <input type="email" name="email" placeholder="e.g. john@example.com" required>
+
+              <br><br>
+
+              <label><strong>Password</strong></label><br>
+              <input type="password" name="password" placeholder="••••••••" required>
+
+              <br><br>
+
+              <label><strong>Role</strong></label><br>
+              <select name="role" required>
+                <option value="">-- Select a role --</option>
+                <option value="student">Student</option>
+                <option value="merchant">Merchant</option>
+                <option value="admin">Admin</option>
+              </select>
+
+              <br><br>
+
+              <label><strong>Merchant Type</strong> (only for merchants)</label><br>
+              <input type="text" name="merchantType" placeholder="e.g. Cafe, Restaurant, Bakery (optional)">
+
+              <br><br>
+
+              <div class="cb-actions">
+                <button type="submit">Create user</button>
+                <a class="cb-btn cb-btn--ghost" href="/auth/manageUser">Cancel</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <script src="/js/cb-ui.js" defer></script>
+
+</body>
+</html>
