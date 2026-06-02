@@ -29,7 +29,7 @@
 html,
 body {
   min-height: 100%;
-  background-color: #fff6ea;
+  background-color: transparent;
 }
 
 body {
@@ -37,6 +37,7 @@ body {
   padding: 0;
   font-family: var(--cb-body);
   color: var(--cb-ink);
+  background-color: transparent;
   background-image: var(--cb-bg-image), var(--cb-bg-decor-1), var(--cb-bg-decor-2);
   background-size: cover, 52vmin auto, 44vmin auto;
   background-position: center, 6% 18%, 94% 80%;
@@ -53,21 +54,24 @@ body > * {
 }
 
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 248, 238, 0.18) 0%,
-    rgba(255, 255, 255, 0.12) 50%,
-    rgba(255, 241, 221, 0.2) 100%
-  );
-  pointer-events: none;
-  z-index: 1;
+  content: none;
 }
 
 body::after {
   content: none;
+}
+
+a {
+  color: var(--cb-ink);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+a:visited,
+a:hover,
+a:active,
+a:focus {
+  text-decoration: none;
 }
 
 h1,
@@ -81,14 +85,6 @@ h3 {
 p {
   margin: 0 0 10px;
   color: var(--cb-ink);
-}
-
-
-a:visited,
-a:hover,
-a:active,
-a:focus {
-  text-decoration: none;
 }
 .cb-muted {
   color: var(--cb-muted);
