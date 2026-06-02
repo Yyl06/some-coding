@@ -19,7 +19,6 @@ Thumbs.db
 coverage/
 *.log
 
-# user uploads
+# user uploads (but keep default images)
 public/uploads/
 public/images/profile/
-public/images/foods/
