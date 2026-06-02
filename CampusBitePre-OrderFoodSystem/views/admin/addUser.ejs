@@ -82,7 +82,7 @@
               <br><br>
 
               <label><strong>Role</strong></label><br>
-              <select name="role" required>
+              <select name="role" id="roleSelect" required>
                 <option value="">-- Select a role --</option>
                 <option value="student">Student</option>
                 <option value="merchant">Merchant</option>
@@ -91,10 +91,12 @@
 
               <br><br>
 
-              <label><strong>Merchant Type</strong> (only for merchants)</label><br>
-              <input type="text" name="merchantType" placeholder="e.g. Cafe, Restaurant, Bakery (optional)">
+              <div id="merchantTypeContainer" style="display: none;">
+                <label><strong>Merchant Type</strong> (only for merchants)</label><br>
+                <input type="text" name="merchantType" placeholder="e.g. Cafe, Restaurant, Bakery (optional)">
 
-              <br><br>
+                <br><br>
+              </div>
 
               <div class="cb-actions">
                 <button type="submit">Create user</button>
@@ -107,6 +109,20 @@
     </div>
 
   </main>
+
+  <script>
+    // Show/hide merchant type field based on role selection
+    const roleSelect = document.getElementById('roleSelect');
+    const merchantTypeContainer = document.getElementById('merchantTypeContainer');
+
+    roleSelect.addEventListener('change', function() {
+      if (this.value === 'merchant') {
+        merchantTypeContainer.style.display = 'block';
+      } else {
+        merchantTypeContainer.style.display = 'none';
+      }
+    });
+  </script>
 
   <script src="/js/cb-ui.js" defer></script>
 

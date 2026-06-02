@@ -68,7 +68,7 @@
               <br><br>
 
               <label>Role</label><br>
-              <select name="role" required>
+              <select name="role" id="roleSelect" required>
                 <option value="student" <%= editUser.role === 'student' ? 'selected' : '' %>>student</option>
                 <option value="merchant" <%= editUser.role === 'merchant' ? 'selected' : '' %>>merchant</option>
                 <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>admin</option>
@@ -76,10 +76,12 @@
 
               <br><br>
 
-              <label>Merchant Type (only if role = merchant)</label><br>
-              <input type="text" name="merchantType" value="<%= editUser.merchantType || '' %>" placeholder="e.g. Cafe">
+              <div id="merchantTypeContainer" style="<%= editUser.role === 'merchant' ? 'display: block;' : 'display: none;' %>">
+                <label>Merchant Type (only if role = merchant)</label><br>
+                <input type="text" name="merchantType" value="<%= editUser.merchantType || '' %>" placeholder="e.g. Cafe">
 
-              <br><br>
+                <br><br>
+              </div>
 
               <label>New Password (leave blank to keep current)</label><br>
               <input type="password" name="password" value="" placeholder="••••••••">
@@ -97,6 +99,20 @@
     </div>
 
   </main>
+
+  <script>
+    // Show/hide merchant type field based on role selection
+    const roleSelect = document.getElementById('roleSelect');
+    const merchantTypeContainer = document.getElementById('merchantTypeContainer');
+
+    roleSelect.addEventListener('change', function() {
+      if (this.value === 'merchant') {
+        merchantTypeContainer.style.display = 'block';
+      } else {
+        merchantTypeContainer.style.display = 'none';
+      }
+    });
+  </script>
 
   <script src="/js/cb-ui.js" defer></script>
 
