@@ -211,10 +211,9 @@ hr {
 
 .cb-nav-link--back {
   position: absolute;
-  right: 2px;
+  left: 380px; /* adjust until it sits after logo */
   top: 50%;
   transform: translateY(-50%);
-  z-index: 30;
 }
 
 /* Hide back button on designated homepage views */
