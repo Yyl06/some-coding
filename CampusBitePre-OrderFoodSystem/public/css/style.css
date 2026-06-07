@@ -211,7 +211,7 @@ hr {
 
 .cb-nav-link--back {
   position: absolute;
-  left: 380px; /* adjust until it sits after logo */
+  left: 350px; /* adjust until it sits after logo */
   top: 50%;
   transform: translateY(-50%);
 }
