@@ -211,7 +211,7 @@ hr {
 
 .cb-nav-link--back {
   position: absolute;
-  left: 18px;
+  left: auto;
   top: 50%;
   transform: translateY(-50%);
   z-index: 30;

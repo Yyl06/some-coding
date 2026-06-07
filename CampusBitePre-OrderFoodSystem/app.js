@@ -32,7 +32,7 @@ function createApp() {
       if (req.method === "POST" && typeof statusOrUrl === "string") {
         return originalRedirect(303, statusOrUrl);
       }
-      return originalRedirect(statusOrUrl, url);
+      return originalRedirect(statusOrUrl, url);P
     };
     next();
   });
