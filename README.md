@@ -285,11 +285,11 @@ Key deployment features:
 ## Authors
 
 Developed as part of an academic project for a Campus Food Pre-Ordering System.
-```Project Supervisor - Mr. Muhammad Mahfuz bin Zainuddin```
-Scrum Master - Wong Jing Xuan
-Yyl06 - Originally known as Yong Yuan Lin
-Tester - Tey Shu Ying 
-and some random friends from Yyl06, Special thanks for testing
+* ```Project Supervisor - Mr. Muhammad Mahfuz bin Zainuddin```
+* Scrum Master - Wong Jing Xuan
+* Yyl06 - Originally known as Yong Yuan Lin
+* Tester - Tey Shu Ying 
+* and some random friends from Yyl06, Special thanks for testing
 
 ## License
 
