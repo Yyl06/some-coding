@@ -61,10 +61,13 @@ function todayDateValue(timeZone = "Asia/Kuala_Lumpur") {
 
 function parseReportDate(value, timeZoneOffset = "+08:00") {
   const raw = String(value || "").trim();
-  const dateValue = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : todayDateValue();
+  const todayValue = todayDateValue();
+  const requestedDateValue = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : todayValue;
+  const dateValue = requestedDateValue > todayValue ? todayValue : requestedDateValue;
 
   return {
     dateValue,
+    todayValue,
     day: new Date(`${dateValue}T00:00:00${timeZoneOffset}`),
     dayEnd: new Date(`${dateValue}T23:59:59.999${timeZoneOffset}`),
   };
@@ -561,7 +564,7 @@ router.get("/reports/daily", isLoggedIn, checkRole("merchant", "admin"), async (
 // Admin reports
 router.get("/reports/admin", isLoggedIn, checkRole("admin"), async (req, res) => {
   try {
-    const { dateValue, day, dayEnd } = parseReportDate(req.query.date);
+    const { dateValue, todayValue, day, dayEnd } = parseReportDate(req.query.date);
     const dateMatch = { createdAt: { $gte: day, $lte: dayEnd } };
 
     const [
@@ -594,6 +597,7 @@ router.get("/reports/admin", isLoggedIn, checkRole("admin"), async (req, res) =>
     return res.render("admin/reports", {
       day,
       dateValue,
+      todayValue,
       totalOrders,
       ordersToday: ordersForDate,
       ordersForDate,

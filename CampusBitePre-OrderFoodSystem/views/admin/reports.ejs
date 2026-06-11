@@ -32,7 +32,7 @@
       </div>
       <div class="cb-actions">
         <form class="inline-form" method="GET" action="/orders/reports/admin">
-          <input type="date" name="date" value="<%= dateValue %>">
+          <input type="date" name="date" value="<%= dateValue %>" max="<%= todayValue %>">
           <button type="submit">View date</button>
         </form>
       </div>
