@@ -12,6 +12,8 @@ const shopRoutes = require("./routes/shopRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const mediaRoutes = require("./routes/mediaRoutes");
 
+const faviconPath = path.join(__dirname, "public", "images", "foods", "campusbite_logo.png");
+
 function createApp() {
   const app = express();
 
@@ -32,17 +34,19 @@ function createApp() {
       if (req.method === "POST" && typeof statusOrUrl === "string") {
         return originalRedirect(303, statusOrUrl);
       }
-      return originalRedirect(statusOrUrl, url);P
+      return originalRedirect(statusOrUrl, url);
     };
     next();
   });
 
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "views"));
-  app.use(express.static(path.join(__dirname, "public")));
-  app.get("/favicon.ico", (req, res) => {
-    res.redirect(302, "/images/foods/campusbite_logo.png");
+  app.get(["/favicon.ico", "/favicon.png", "/apple-touch-icon.png", "/icon.png"], (req, res) => {
+    res.type("png");
+    res.set("Cache-Control", "public, max-age=86400");
+    return res.sendFile(faviconPath);
   });
+  app.use(express.static(path.join(__dirname, "public")));
 
   // Session store: MemoryStore is not suitable for serverless.
   // If connect-mongo is available, use MongoDB-backed sessions.
