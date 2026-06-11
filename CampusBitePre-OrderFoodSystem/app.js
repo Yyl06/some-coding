@@ -40,6 +40,9 @@ function createApp() {
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "views"));
   app.use(express.static(path.join(__dirname, "public")));
+  app.get("/favicon.ico", (req, res) => {
+    res.redirect(302, "/images/foods/campusbite_logo.png");
+  });
 
   // Session store: MemoryStore is not suitable for serverless.
   // If connect-mongo is available, use MongoDB-backed sessions.

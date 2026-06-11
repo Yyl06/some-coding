@@ -54,25 +54,35 @@
     }, 4500);
   }
 
-  var notificationsMuted = null;
+  var notificationsMutedByKey = {};
   var notificationsStorageKey = "cb-notifications-muted";
+  var notificationsScope = "global";
+
+  function scopedNotificationsStorageKey() {
+    return notificationsStorageKey + ":" + notificationsScope;
+  }
 
   function isNotificationsMuted() {
-    if (notificationsMuted !== null) return notificationsMuted;
-    try {
-      notificationsMuted = window.localStorage.getItem(notificationsStorageKey) === "true";
-    } catch (_e) {
-      notificationsMuted = false;
+    var key = scopedNotificationsStorageKey();
+    if (Object.prototype.hasOwnProperty.call(notificationsMutedByKey, key)) {
+      return notificationsMutedByKey[key];
     }
-    return notificationsMuted;
+
+    try {
+      notificationsMutedByKey[key] = window.localStorage.getItem(key) === "true";
+    } catch (_e) {
+      notificationsMutedByKey[key] = false;
+    }
+    return notificationsMutedByKey[key];
   }
 
   function setNotificationsMuted(next) {
-    notificationsMuted = Boolean(next);
+    var key = scopedNotificationsStorageKey();
+    notificationsMutedByKey[key] = Boolean(next);
     try {
       window.localStorage.setItem(
-        notificationsStorageKey,
-        notificationsMuted ? "true" : "false"
+        key,
+        notificationsMutedByKey[key] ? "true" : "false"
       );
     } catch (_e) {
       // ignore
@@ -81,7 +91,7 @@
     var toggles = document.querySelectorAll("[data-notifications-toggle]");
     toggles.forEach(function (toggle) {
       if (toggle && toggle.type === "checkbox") {
-        toggle.checked = notificationsMuted;
+        toggle.checked = notificationsMutedByKey[key];
       }
     });
   }
@@ -94,6 +104,8 @@
     toggles.forEach(function (toggle) {
       if (toggle && toggle.type === "checkbox") {
         toggle.checked = muted;
+        if (toggle.dataset.cbNotificationsBound === "true") return;
+        toggle.dataset.cbNotificationsBound = "true";
         toggle.addEventListener("change", function () {
           setNotificationsMuted(toggle.checked);
         });
@@ -480,8 +492,12 @@
       showToast("New order from " + student, "info");
     }
 
-    function startStudentPoll() {
-      var storageKey = "cb-order-status-cache-student";
+    function scopedStorageKey(base, userId) {
+      return base + ":" + String(userId || "anonymous");
+    }
+
+    function startStudentPoll(userId) {
+      var storageKey = scopedStorageKey("cb-order-status-cache-student", userId);
       var cache = loadCache(storageKey);
       var initialSync = true;
 
@@ -539,8 +555,8 @@
       window.setInterval(refresh, POLL_INTERVAL_MS);
     }
 
-    function startMerchantPoll() {
-      var storageKey = "cb-order-status-cache-merchant";
+    function startMerchantPoll(userId) {
+      var storageKey = scopedStorageKey("cb-order-status-cache-merchant", userId);
       var cache = loadCache(storageKey);
       var initialSync = true;
 
@@ -592,11 +608,13 @@
       })
       .then(function (data) {
         if (!data || !data.loggedIn) return;
+        notificationsScope = String(data.role || "user") + ":" + String(data.id || "anonymous");
+        bindNotificationsToggle();
         startOrdersTablePoll();
         if (data.role === "student") {
-          startStudentPoll();
+          startStudentPoll(data.id);
         } else if (data.role === "merchant") {
-          startMerchantPoll();
+          startMerchantPoll(data.id);
         }
       })
       .catch(function () {

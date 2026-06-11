@@ -47,6 +47,29 @@ function endOfDay(date) {
   return d;
 }
 
+function todayDateValue(timeZone = "Asia/Kuala_Lumpur") {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function parseReportDate(value, timeZoneOffset = "+08:00") {
+  const raw = String(value || "").trim();
+  const dateValue = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : todayDateValue();
+
+  return {
+    dateValue,
+    day: new Date(`${dateValue}T00:00:00${timeZoneOffset}`),
+    dayEnd: new Date(`${dateValue}T23:59:59.999${timeZoneOffset}`),
+  };
+}
+
 function getCart(req) {
   if (!req.session.cart) {
     req.session.cart = {
@@ -538,45 +561,48 @@ router.get("/reports/daily", isLoggedIn, checkRole("merchant", "admin"), async (
 // Admin reports
 router.get("/reports/admin", isLoggedIn, checkRole("admin"), async (req, res) => {
   try {
-    const day = startOfDay(new Date());
-    const dayEnd = endOfDay(new Date());
+    const { dateValue, day, dayEnd } = parseReportDate(req.query.date);
+    const dateMatch = { createdAt: { $gte: day, $lte: dayEnd } };
 
     const [
       totalOrders,
-      ordersToday,
+      ordersForDate,
       totalUsers,
       totalMerchants,
       totalStudents,
       totalRevenueRaw,
-      revenueTodayRaw,
+      revenueForDateRaw,
     ] = await Promise.all([
       Order.countDocuments({}),
-      Order.countDocuments({ createdAt: { $gte: day, $lte: dayEnd } }),
+      Order.countDocuments(dateMatch),
       User.countDocuments({}),
       User.countDocuments({ role: "merchant" }),
       User.countDocuments({ role: "student" }),
       Order.find({}).select("totalPrice").lean(),
-      Order.find({ createdAt: { $gte: day, $lte: dayEnd } }).select("totalPrice").lean(),
+      Order.find(dateMatch).select("totalPrice").lean(),
     ]);
 
     const totalRevenue = (totalRevenueRaw || []).reduce(
       (sum, o) => sum + decimalToNumber(o.totalPrice),
       0
     );
-    const revenueToday = (revenueTodayRaw || []).reduce(
+    const revenueForDate = (revenueForDateRaw || []).reduce(
       (sum, o) => sum + decimalToNumber(o.totalPrice),
       0
     );
 
     return res.render("admin/reports", {
       day,
+      dateValue,
       totalOrders,
-      ordersToday,
+      ordersToday: ordersForDate,
+      ordersForDate,
       totalUsers,
       totalMerchants,
       totalStudents,
       totalRevenue: totalRevenue.toFixed(2),
-      revenueToday: revenueToday.toFixed(2),
+      revenueToday: revenueForDate.toFixed(2),
+      revenueForDate: revenueForDate.toFixed(2),
     });
   } catch (err) {
     console.log(err);

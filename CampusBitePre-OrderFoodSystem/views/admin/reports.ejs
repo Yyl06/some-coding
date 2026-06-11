@@ -25,23 +25,30 @@
       <div>
         <span class="cb-kicker">Admin</span>
         <h1>Sales & Usage Reports</h1>
-        <p class="cb-subtitle">Summary for <strong><%= day.toLocaleDateString() %></strong>.</p>
+        <p class="cb-subtitle">Daily summary for <strong><%= dateValue %></strong>.</p>
+      </div>
+      <div class="cb-actions">
+        <form class="inline-form" method="GET" action="/orders/reports/admin">
+          <input type="date" name="date" value="<%= dateValue %>">
+          <button type="submit">View date</button>
+        </form>
       </div>
     </div>
 
     <div class="cb-grid cb-grid--2" style="margin-top: 18px;">
       <div class="cb-card">
         <div class="cb-card-body">
-          <h3>Orders</h3>
-          <p class="cb-muted">Total orders: <strong><%= totalOrders %></strong></p>
-          <p class="cb-muted">Orders today: <strong><%= ordersToday %></strong></p>
-          <p class="cb-muted">Total revenue: <strong>RM <%= totalRevenue %></strong></p>
-          <p class="cb-muted">Revenue today: <strong>RM <%= revenueToday %></strong></p>
+          <h3>Selected date</h3>
+          <p class="cb-muted">Orders: <strong><%= ordersForDate %></strong></p>
+          <p class="cb-muted">Revenue: <strong>RM <%= revenueForDate %></strong></p>
+          <p class="cb-muted">Date range uses Malaysia/Singapore time.</p>
         </div>
       </div>
       <div class="cb-card">
         <div class="cb-card-body">
-          <h3>Users</h3>
+          <h3>All-time totals</h3>
+          <p class="cb-muted">Total orders: <strong><%= totalOrders %></strong></p>
+          <p class="cb-muted">Total revenue: <strong>RM <%= totalRevenue %></strong></p>
           <p class="cb-muted">Total users: <strong><%= totalUsers %></strong></p>
           <p class="cb-muted">Students: <strong><%= totalStudents %></strong></p>
           <p class="cb-muted">Merchants: <strong><%= totalMerchants %></strong></p>
