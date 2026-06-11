@@ -7,7 +7,6 @@ CampusBite is a web-based food pre-ordering system designed for campus environme
 ---
 [CampusBite Pre-Order Food System Website](https://campusbitepreorder-foodsystem-nu.vercel.app)
 
----
 [If the link didn't worked, Click here](https://some-coding-nu.vercel.app/)
 
 ---
