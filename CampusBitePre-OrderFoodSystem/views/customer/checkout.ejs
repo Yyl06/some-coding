@@ -46,6 +46,7 @@
         <table class="cb-table" border="1" cellpadding="8" cellspacing="0">
         <thead>
           <tr>
+            <th>Merchant</th>
             <th>Item</th>
             <th>Unit</th>
             <th>Qty</th>
@@ -56,45 +57,53 @@
           </tr>
         </thead>
         <tbody>
-          <% items.forEach(line => { %>
-            <tr>
-              <td>
-                <strong><%= line.name %></strong>
-                <div class="cb-muted"><%= line.category %></div>
-              </td>
-              <td>RM <%= line.unitPrice.toFixed(2) %></td>
-              <td>
-                <input
-                  type="number"
-                  name="quantity"
-                  min="0"
-                  max="99"
-                  value="<%= line.quantity %>"
-                  style="width: 90px;"
-                  form="update-<%= line.foodId %>"
-                >
-              </td>
-              <td>RM <%= line.lineTotal.toFixed(2) %></td>
-              <td>
-                <form class="inline-form" method="POST" action="/orders/cart/update" id="update-<%= line.foodId %>">
-                  <input type="hidden" name="foodId" value="<%= line.foodId %>">
-                  <button type="submit">Save</button>
-                </form>
-              </td>
-              <td>
-                <form class="inline-form" method="POST" action="/orders/cart/delete" onsubmit="return confirm('Remove this item?');">
-                  <input type="hidden" name="foodId" value="<%= line.foodId %>">
-                  <button type="submit">Delete</button>
-                </form>
-              </td>
-              <td>
-                <% if (line.remark) { %>
-                  <div class="cb-muted"><%= line.remark %></div>
-                <% } else { %>
-                  <div class="cb-muted">-</div>
-                <% } %>
-              </td>
-            </tr>
+          <% (groups || [{ merchant: merchant, items: items, total: total }]).forEach(group => { %>
+            <% (group.items || []).forEach((line, idx) => { %>
+              <tr>
+                <td>
+                  <% if (idx === 0) { %>
+                    <strong><%= group.merchant && group.merchant.username ? group.merchant.username : 'Merchant' %></strong>
+                    <div class="cb-muted">Subtotal: RM <%= group.total.toFixed(2) %></div>
+                  <% } %>
+                </td>
+                <td>
+                  <strong><%= line.name %></strong>
+                  <div class="cb-muted"><%= line.category %></div>
+                </td>
+                <td>RM <%= line.unitPrice.toFixed(2) %></td>
+                <td>
+                  <input
+                    type="number"
+                    name="quantity"
+                    min="0"
+                    max="99"
+                    value="<%= line.quantity %>"
+                    style="width: 90px;"
+                    form="update-<%= line.foodId %>"
+                  >
+                </td>
+                <td>RM <%= line.lineTotal.toFixed(2) %></td>
+                <td>
+                  <form class="inline-form" method="POST" action="/orders/cart/update" id="update-<%= line.foodId %>">
+                    <input type="hidden" name="foodId" value="<%= line.foodId %>">
+                    <button type="submit">Save</button>
+                  </form>
+                </td>
+                <td>
+                  <form class="inline-form" method="POST" action="/orders/cart/delete" onsubmit="return confirm('Remove this item?');">
+                    <input type="hidden" name="foodId" value="<%= line.foodId %>">
+                    <button type="submit">Delete</button>
+                  </form>
+                </td>
+                <td>
+                  <% if (line.remark) { %>
+                    <div class="cb-muted"><%= line.remark %></div>
+                  <% } else { %>
+                    <div class="cb-muted">-</div>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
           <% }) %>
         </tbody>
         </table>
@@ -111,7 +120,7 @@
         <div style="text-align: right;">
           <p><strong>Grand total:</strong> RM <%= total.toFixed(2) %></p>
           <form class="inline-form" method="POST" action="/orders/checkout" onsubmit="return confirm('Place this order?');">
-            <button type="submit">Place order</button>
+            <button type="submit">Place <%= groups && groups.length > 1 ? groups.length + ' orders' : 'order' %></button>
           </form>
         </div>
       </div>

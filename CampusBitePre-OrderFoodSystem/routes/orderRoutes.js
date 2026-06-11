@@ -6,6 +6,7 @@ const FoodItem = require("../models/FoodItem");
 const Order = require("../models/Order");
 const User = require("../models/User");
 
+
 function decimalToNumber(value) {
   if (value == null) return 0;
   if (typeof value === "number") return Number.isFinite(value) ? value : 0;
@@ -50,7 +51,7 @@ function getCart(req) {
   if (!req.session.cart) {
     req.session.cart = {
       merchantId: "",
-      items: {}, // { [foodId]: { quantity, remark } }
+      items: {}, // { [foodId]: { quantity, remark, merchantId } }
       lastAdd: { key: "", at: 0 },
     };
   }
@@ -66,13 +67,14 @@ function getCart(req) {
     if (entry && typeof entry === "object" && !Array.isArray(entry)) {
       const quantity = Math.max(0, parseInt(entry.quantity, 10) || 0);
       const remark = normalizeRemark(entry.remark);
+      const merchantId = String(entry.merchantId || req.session.cart.merchantId || "");
 
       if (quantity <= 0) {
         delete req.session.cart.items[foodId];
         return;
       }
 
-      req.session.cart.items[foodId] = { quantity, remark };
+      req.session.cart.items[foodId] = { quantity, remark, merchantId };
       return;
     }
 
@@ -82,7 +84,11 @@ function getCart(req) {
       return;
     }
 
-    req.session.cart.items[foodId] = { quantity, remark: "" };
+    req.session.cart.items[foodId] = {
+      quantity,
+      remark: "",
+      merchantId: String(req.session.cart.merchantId || ""),
+    };
   });
 
   return req.session.cart;
@@ -98,18 +104,18 @@ function cartItemCount(cart) {
 }
 
 async function buildCheckoutSummary(cart) {
-  const merchantId = cart.merchantId;
   const foodIds = Object.keys(cart.items || {}).filter(Boolean);
 
-  if (!merchantId || foodIds.length === 0) {
+  if (foodIds.length === 0) {
     return {
       merchant: null,
       items: [],
+      groups: [],
       total: 0,
     };
   }
 
-  const foods = await FoodItem.find({ _id: { $in: foodIds }, merchant: merchantId });
+  const foods = await FoodItem.find({ _id: { $in: foodIds } });
   const foodById = new Map(foods.map((f) => [String(f._id), f]));
 
   const lines = [];
@@ -127,6 +133,7 @@ async function buildCheckoutSummary(cart) {
     if (quantity <= 0) continue;
 
     const remark = normalizeRemark(cartItem && typeof cartItem === "object" ? cartItem.remark : "");
+    const merchantId = String(food.merchant);
 
     const unit = Math.max(0, decimalToNumber(food.price));
     const lineTotal = unit * quantity;
@@ -140,16 +147,40 @@ async function buildCheckoutSummary(cart) {
       quantity,
       lineTotal,
       remark,
+      merchantId,
     });
 
     total += lineTotal;
   }
 
-  const merchant = await User.findById(merchantId).select("username");
+  const merchantIds = [...new Set(lines.map((line) => String(line.merchantId)).filter(Boolean))];
+  const merchants = await User.find({ _id: { $in: merchantIds } }).select("username").lean();
+  const merchantById = new Map(merchants.map((m) => [String(m._id), m]));
+  const groupsByMerchant = new Map();
+
+  for (const line of lines) {
+    const key = String(line.merchantId);
+    const merchant = merchantById.get(key) || { _id: key, username: "Merchant" };
+
+    if (!groupsByMerchant.has(key)) {
+      groupsByMerchant.set(key, {
+        merchant,
+        items: [],
+        total: 0,
+      });
+    }
+
+    const group = groupsByMerchant.get(key);
+    group.items.push(line);
+    group.total += line.lineTotal;
+  }
+
+  const groups = [...groupsByMerchant.values()];
 
   return {
-    merchant,
+    merchant: groups.length === 1 ? groups[0].merchant : null,
     items: lines,
+    groups,
     total,
   };
 }
@@ -226,13 +257,6 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
       );
     }
 
-    // Enforce a single-merchant cart (simplest/cleanest checkout)
-    if (cart.merchantId && String(cart.merchantId) !== String(merchantId)) {
-      cart.merchantId = String(merchantId);
-      cart.items = {};
-      cart.lastAdd = { key: "", at: 0 };
-    }
-
     cart.merchantId = String(merchantId);
     const existing = cart.items[String(foodId)];
     const prevQuantity = parseInt(existing && typeof existing === "object" ? existing.quantity : existing, 10) || 0;
@@ -240,6 +264,7 @@ router.post("/cart/add", isLoggedIn, checkRole("student"), async (req, res) => {
     cart.items[String(foodId)] = {
       quantity: Math.min(99, prevQuantity + quantity),
       remark: remark || existingRemark,
+      merchantId: String(merchantId),
     };
     cart.lastAdd = { key: addKey, at: now };
 
@@ -269,9 +294,11 @@ router.post("/cart/update", isLoggedIn, checkRole("student"), async (req, res) =
     } else {
       const existing = cart.items[String(foodId)];
       const existingRemark = normalizeRemark(existing && typeof existing === "object" ? existing.remark : "");
+      const existingMerchantId = String(existing && typeof existing === "object" ? existing.merchantId || "" : "");
       cart.items[String(foodId)] = {
         quantity: Math.min(99, qty),
         remark: remark === null ? existingRemark : remark,
+        merchantId: existingMerchantId,
       };
     }
 
@@ -329,6 +356,7 @@ router.get("/checkout", isLoggedIn, checkRole("student"), async (req, res) => {
       user: req.session.user,
       merchant: summary.merchant,
       items: summary.items,
+      groups: summary.groups,
       total: summary.total,
     });
   } catch (err) {
@@ -342,37 +370,40 @@ router.post("/checkout", isLoggedIn, checkRole("student"), async (req, res) => {
     const cart = getCart(req);
     const summary = await buildCheckoutSummary(cart);
 
-    if (!summary.items.length || !cart.merchantId) {
+    if (!summary.groups.length) {
       return res.redirect(`/shops?info=${encodeURIComponent("Your cart is empty")}`);
     }
 
-    const order = new Order({
+    const orders = summary.groups.map((group) => new Order({
       student: req.session.user.id,
       studentName: req.session.user.username,
-      merchant: cart.merchantId,
-      items: summary.items.map((line) => ({
+      merchant: group.merchant._id,
+      items: group.items.map((line) => ({
         food: line.foodId,
         foodName: line.name,
         unitPrice: line.unitPrice.toFixed(2),
         quantity: line.quantity,
         remark: line.remark || "",
       })),
-      totalPrice: summary.total.toFixed(2),
+      totalPrice: group.total.toFixed(2),
       fulfillmentType: "pickup",
       paymentMethod: "pay_on_pickup",
       status: "Pending",
-    });
+    }));
 
-    await order.save();
-
-    
+    await Promise.all(orders.map((order) => order.save()));
 
     // clear cart
     cart.merchantId = "";
     cart.items = {};
     cart.lastAdd = { key: "", at: 0 };
 
-    return res.redirect(`/orders?success=${encodeURIComponent("Order placed (pay on pickup)")}`);
+    const message =
+      orders.length === 1
+        ? "Order placed (pay on pickup)"
+        : `${orders.length} orders placed (pay on pickup)`;
+
+    return res.redirect(`/orders?success=${encodeURIComponent(message)}`);
   } catch (err) {
     console.log(err);
     return res.redirect(`/orders/checkout?error=${encodeURIComponent("Checkout failed")}`);
