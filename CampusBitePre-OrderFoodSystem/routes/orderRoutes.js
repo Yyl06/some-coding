@@ -518,8 +518,7 @@ router.get("/notifications/merchant", isLoggedIn, checkRole("merchant"), async (
 router.get("/reports/daily", isLoggedIn, checkRole("merchant", "admin"), async (req, res) => {
   try {
     const user = req.session.user;
-    const day = startOfDay(new Date());
-    const dayEnd = endOfDay(new Date());
+    const { dateValue, todayValue, day, dayEnd } = parseReportDate(req.query.date);
 
     const match =
       user.role === "admin"
@@ -551,6 +550,8 @@ router.get("/reports/daily", isLoggedIn, checkRole("merchant", "admin"), async (
     return res.render("merchant/dailyReport", {
       user,
       day,
+      dateValue,
+      todayValue,
       orders: ordersForView,
       statusCounts,
       totalRevenue: totalRevenue.toFixed(2),

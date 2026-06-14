@@ -29,9 +29,13 @@
       <div>
         <span class="cb-kicker">Reports</span>
         <h1>Daily Orders Report</h1>
-        <p class="cb-subtitle">Summary for <strong><%= day.toLocaleDateString() %></strong>.</p>
+        <p class="cb-subtitle">Summary for <strong><%= dateValue %></strong>.</p>
       </div>
       <div class="cb-actions">
+        <form class="inline-form" method="GET" action="/orders/reports/daily">
+          <input type="date" name="date" value="<%= dateValue %>" max="<%= todayValue %>">
+          <button type="submit">View date</button>
+        </form>
         <a href="/orders"><button type="button">Back to orders</button></a>
       </div>
     </div>
