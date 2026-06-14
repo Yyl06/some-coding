@@ -294,7 +294,9 @@ Developed as part of an academic project for a Campus Food Pre-Ordering System.
 * Scrum Master - Wong Jing Xuan
 * Yyl06 - Originally known as Yong Yuan Lin
 * Tester - Tey Shu Ying 
-* and some random friends from Yyl06, Special thanks for testing
+* and some random friends from Yyl06:
+* Yyl06's friend 1 - Lee Xuan Hui
+* Yyl06's friend 2 - Ngoo Jun Yu, Special thanks for helping to testing, recommend some features and providing some feedbacks for the project.
 
 ## License
 
